@@ -1,9 +1,9 @@
 <template>
   <Fragment>
     <div class="modal-title">Регистрация</div>
-    <form action="" class="modal-form">
+    <form action="" class="modal-form" @submit.prevent="register">
       <div class="modal-form__input-item">
-        <InputField label="E-mail" clazz="input-field__input_mail" v-model="login"/>
+        <InputField label="E-mail" clazz="input-field__input_mail" v-model="login" :error="loginError"/>
       </div>
       <div class="modal-form__input-item">
         <InputField label="Пароль"
@@ -37,6 +37,7 @@
   import InputField from "@/shared-components/InputField";
   import Btn from "@/shared-components/Btn";
   import {Fragment} from 'vue-fragment';
+  import {AuthService} from "@/services/auth_service";
 
   export default {
     name: "Register",
@@ -45,9 +46,19 @@
       return {
         showPromotionField: false,
 
+        loginError: '',
+
         login: '',
         password: '',
         code: ''
+      }
+    },
+    methods: {
+      async register() {
+        const service = new AuthService();
+        const status = await service.register(this.login, this.password);
+
+        this.loginError = status ? '' : 'Произошла ошибка';
       }
     }
   }

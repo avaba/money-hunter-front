@@ -1,7 +1,6 @@
 export default {
   state: () => ({
-    token: null,
-    info: {}
+    email: null
   }),
   mutations: {},
   actions: {}

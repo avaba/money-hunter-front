@@ -3,6 +3,7 @@ import VueRouter, {RouteConfig} from "vue-router";
 import Auth from '../views/Auth.vue';
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
+import Temp from '../components/auth/Temp.vue';
 
 Vue.use(VueRouter);
 
@@ -15,10 +16,10 @@ const routes: Array<RouteConfig> = [
     path: "/auth",
     name: 'auth',
     component: Auth,
-    redirect: {name: 'auth.login'},
     children: [
       {path: 'login', name: 'auth.login', component: Login},
-      {path: 'register', name: 'auth.register', component: Register}
+      {path: 'register', name: 'auth.register', component: Register},
+      {path: 'temp', name: 'auth.temp', component: Temp}
     ],
   },
 ];
