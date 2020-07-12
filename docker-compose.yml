@@ -8,10 +8,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./dist:/usr/share/nginx/html:ro
+    ports:
+      - 8080:80
 
   app:
     image: node:12
     volumes:
       - ./:/app
     working_dir: /app
-    command: bash -c "yarn install &&yarn build && sleep 365d"
+    command: bash -c "yarn install && yarn build && sleep 365d"
