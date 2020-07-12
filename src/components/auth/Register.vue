@@ -58,7 +58,7 @@
         const service = new AuthService();
         const status = await service.register(this.login, this.password);
 
-        this.loginError = status ? '' : 'Произошла ошибка';
+        this.loginError = typeof status === 'boolean' && status ? '' : status;
       }
     }
   }

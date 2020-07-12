@@ -25,11 +25,17 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string): Promise<boolean> {
+  async register(email: string, password: string): Promise<boolean|string> {
     try {
       const response = await this.authRepo.register(email, password);
       return response.status === 201;
     } catch (e) {
+      const _e = e as AxiosError;
+
+      if(_e.response && _e.response.status===400){
+        return _e.response.data['detail'];
+      }
+
       return false;
     }
   }
