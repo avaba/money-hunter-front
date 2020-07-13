@@ -59,7 +59,6 @@ export class AuthService {
     try {
       return await cb();
     } catch (e) {
-      console.log('refresh wrapper catch', e);
       const _e = e as AxiosError;
       if (_e.response && _e.response.status === 401 && await this.refreshToken()) {
         return await cb();
