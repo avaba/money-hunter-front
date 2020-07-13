@@ -2,7 +2,6 @@
   <Fragment>
     <div class="overlay"></div>
     <div class="modal modal_small">
-      <div class="close-modal"></div>
       <div class="modal-company">
         <img src="../assets/img/logo_modal.svg" alt="">
         <span>MoneyHunter</span>

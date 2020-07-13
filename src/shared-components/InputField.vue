@@ -34,7 +34,7 @@
       },
       error: {
         type: String,
-        default: '',
+        default: null,
       },
       range: {
         type: Boolean,

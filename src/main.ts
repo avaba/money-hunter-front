@@ -7,6 +7,8 @@ const fragment = require('vue-fragment');
 
 Vue.use(fragment.Plugin);
 
+import './extenders';
+
 Vue.config.productionTip = false;
 
 new Vue({
