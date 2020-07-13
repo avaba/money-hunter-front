@@ -64,7 +64,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const tokenService = new TokenService();
-  if (to.name !== 'auth.login' && !tokenService.isLoggedIn()) {
+  if (!to.name?.startsWith('auth.') && !tokenService.isLoggedIn()) {
     next({name: 'auth.login'})
   } else {
     next();

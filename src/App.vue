@@ -30,7 +30,9 @@
       }
     },
     created() {
-      this.$store.dispatch('user/' + GET_ABOUT_ACTION);
+      if (this.isLoggedIn) {
+        this.$store.dispatch('user/' + GET_ABOUT_ACTION);
+      }
     }
   }
 </script>
