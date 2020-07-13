@@ -15,4 +15,8 @@ export class TokenService {
   hasToken(tokenType: TokenType): boolean {
     return !!localStorage.getItem(tokenType);
   }
+
+  isLoggedIn(){
+    return this.hasToken(TokenType.ACCESS_TOKEN) || this.hasToken(TokenType.REFRESH_TOKEN)
+  }
 }

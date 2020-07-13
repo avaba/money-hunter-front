@@ -13,21 +13,10 @@
 
 <script>
   import {Fragment} from 'vue-fragment';
-  import {TokenService, TokenType} from "@/services/token_service";
 
   export default {
     name: "Auth",
     components: {Fragment},
-    created() {
-      const tokenService = new TokenService();
-      if (tokenService.hasToken(TokenType.ACCESS_TOKEN) || tokenService.hasToken(TokenType.REFRESH_TOKEN)) {
-        if (this.$route.name !== 'auth.temp') {
-          this.$router.push({name: 'auth.temp'})
-        }
-      } else {
-        this.$router.push({name: 'auth.login'})
-      }
-    }
   };
 </script>
 
