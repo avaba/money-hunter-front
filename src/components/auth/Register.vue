@@ -32,7 +32,7 @@
           </template>
         </div>
         <div class="modal-form__submit-item">
-          <Btn label="Войти" type="submit"/>
+          <Btn label="Зарегистрироваться" type="submit"/>
         </div>
         <div class="modal-form__links">
           <router-link :to="{name: 'auth.login'}">Уже есть учетная запись? Войти</router-link>
