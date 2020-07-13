@@ -1,5 +1,5 @@
 <template>
-  <button :class="'button '+clazz" :type="type">{{label}}</button>
+  <button :class="'button '+clazz" :type="type" @click="$emit('click', $event.target.value)">{{label}}</button>
 </template>
 
 <script>

@@ -1,28 +1,32 @@
 <template>
   <Fragment>
-    <div class="overlay"></div>
-    <div class="modal-title">Это заглушка, {{user}}</div>
-
+    <div class="modal-title">Это заглушка, {{user.detail}}</div>
   </Fragment>
 </template>
 
 <script>
   import {Fragment} from "vue-fragment";
-  import {UserService} from "../../services/user_service";
+  import {mapActions, mapState} from "vuex";
+  import {GET_ABOUT_ACTION} from "@/store/modules/user/constants";
 
   export default {
     name: "Temp",
     components: {Fragment},
     data() {
       return {
-        user: null
+        email: null
       }
     },
-    async created() {
-      const userService = new UserService();
-      const response = await userService.getAbout();
-
-      this.user = response['detail'];
+    computed: {
+      ...mapState({
+        user: state => state.user,
+      })
+    },
+    methods: {
+      ...mapActions('user', [GET_ABOUT_ACTION])
+    },
+    created() {
+      this[GET_ABOUT_ACTION]();
     }
   }
 </script>
