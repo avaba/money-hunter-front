@@ -7,7 +7,6 @@ import Tracking from '../views/Tracking.vue';
 
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
-import Temp from '../components/auth/Temp.vue';
 import {TokenService} from "@/services/token_service";
 
 Vue.use(VueRouter);
@@ -15,6 +14,7 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: '/',
+    name: 'root',
     redirect: () => {
       const tokenService = new TokenService();
 
@@ -52,7 +52,6 @@ const routes: Array<RouteConfig> = [
     children: [
       {path: 'login', name: 'auth.login', component: Login},
       {path: 'register', name: 'auth.register', component: Register},
-      {path: 'temp', name: 'auth.temp', component: Temp}
     ],
   },
 ];

@@ -58,7 +58,7 @@
 
         const result = await authService.authorize(this.login, this.password);
         if (typeof result === 'boolean' && result) {
-          await this.$router.push({name: 'auth.temp'});
+          await this.$router.push({name: 'root'});
         } else {
           this.loginError = result;
         }

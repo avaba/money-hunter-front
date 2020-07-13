@@ -60,6 +60,11 @@ export class AuthService {
     }
   }
 
+  async logout(): Promise<void> {
+    const tokenService = new TokenService();
+    tokenService.clear();
+  }
+
   async refreshWrapper(cb: () => Promise<AxiosResponse>) {
     try {
       return await cb();

@@ -16,7 +16,12 @@ export class TokenService {
     return !!localStorage.getItem(tokenType);
   }
 
-  isLoggedIn(){
+  clear(): void {
+    localStorage.removeItem(TokenType.REFRESH_TOKEN);
+    localStorage.removeItem(TokenType.ACCESS_TOKEN);
+  }
+
+  isLoggedIn() {
     return this.hasToken(TokenType.ACCESS_TOKEN) || this.hasToken(TokenType.REFRESH_TOKEN)
   }
 }

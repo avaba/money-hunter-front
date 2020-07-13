@@ -12,14 +12,14 @@
       </div>
       <div class="user-name">
         <span class="user-name__text">{{detail}}</span>
-        <img src="../assets/img/ikons/logout.svg" alt="">
+        <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
       </div>
     </div>
   </header>
 </template>
 
 <script>
-  import {mapState} from "vuex";
+  import {mapActions, mapState} from "vuex";
 
   export default {
     name: "Header",
@@ -31,6 +31,9 @@
     },
     computed: {
       ...mapState('user', ['detail'])
+    },
+    methods: {
+      ...mapActions('user', ['logout'])
     }
   }
 </script>
@@ -91,6 +94,10 @@
     display: flex;
     align-items: center;
     border-left: 1px solid $drayDevider;
+
+    img {
+      cursor: pointer;
+    }
   }
 
   .user-name__text {
