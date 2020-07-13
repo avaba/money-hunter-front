@@ -141,6 +141,7 @@
   }
 
   .modal-form__promocod-link {
+    cursor: pointer;
     text-align: center;
     font-weight: bold;
     letter-spacing: .2px;
@@ -149,6 +150,7 @@
   }
 
   .modal-form__promocod-done {
+    cursor: pointer;
     position: absolute;
     width: 2.85rem;
     height: 2.85rem;

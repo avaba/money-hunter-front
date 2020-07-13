@@ -26,6 +26,7 @@
   @import "../assets/scss/variables";
 
   .button {
+    cursor: pointer;
     background: $yellow;
     height: 2.85rem;
     border-radius: 4px;
