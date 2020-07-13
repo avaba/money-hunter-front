@@ -1,5 +1,4 @@
 import {UserRepository} from "@/repositories/user_repository";
-import router from "@/router";
 import {AuthService} from "@/services/auth_service";
 
 export class UserService {
@@ -12,7 +11,7 @@ export class UserService {
       const response = await authService.refreshWrapper(this.userRepository.getAbout.bind(this.userRepository));
       return response.data;
     } catch (e) {
-      await router.push({name: 'auth.login'});
+      console.log(e)
     }
   }
 }

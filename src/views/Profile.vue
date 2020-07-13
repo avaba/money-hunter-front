@@ -1,13 +1,21 @@
 <template>
-  <div><h3 style="text-align: center">profile</h3></div>
+  <Fragment>
+    <UserData/>
+    <TariffList/>
+  </Fragment>
 </template>
 
 <script>
+  import TariffList from "@/components/TariffList";
+  import UserData from "@/components/UserData";
+  import {Fragment} from 'vue-fragment';
+
   export default {
-    name: "Profile"
+    name: "Profile",
+    components: {TariffList, UserData, Fragment}
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

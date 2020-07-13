@@ -1,6 +1,7 @@
 import {AuthRepository} from "@/repositories/auth_repository";
 import {TokenService, TokenType} from "@/services/token_service";
 import {AxiosError, AxiosResponse} from "axios";
+import router from "@/router";
 
 export class AuthService {
   private authRepo = new AuthRepository();
@@ -71,7 +72,15 @@ export class AuthService {
     } catch (e) {
       const _e = e as AxiosError;
       if (_e.response && _e.response.status === 401 && await this.refreshToken()) {
-        return await cb();
+        try {
+          return await cb();
+        } catch (e) {
+          const tokenService = new TokenService();
+          tokenService.clear();
+          await router.push(({name: 'auth.login'}));
+
+          throw e;
+        }
       }
 
       throw e;

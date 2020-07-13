@@ -4,12 +4,12 @@
       <Sidebar/>
       <main>
         <Header :header="$route.meta.title"/>
-
+        <router-view/>
         <!--        Content must be here -->
       </main>
     </template>
 
-    <router-view/>
+    <router-view v-else/>
   </div>
 </template>
 
