@@ -1,8 +1,8 @@
 <template>
   <Fragment>
     <div class="modal-title">Регистрация</div>
-    <ValidationObserver v-slot="{handleSubmit}">
-      <form action="" class="modal-form" @submit.prevent="handleSubmit(register)">
+    <ValidationObserver v-slot="{}">
+      <form action="" class="modal-form" @submit.prevent="register">
         <div class="modal-form__input-item">
           <ValidationProvider v-slot="{errors}" name="E-mail" :rules="{required: true, email: true}">
             <InputField label="E-mail"

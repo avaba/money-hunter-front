@@ -5,6 +5,11 @@ import {AxiosError, AxiosResponse} from "axios";
 export class AuthService {
   private authRepo = new AuthRepository();
 
+  private errorsMap = {
+    401: 'Неверный Email или пароль',
+    400: 'Email занят',
+  };
+
   async authorize(email: string, password: string): Promise<boolean | string> {
     try {
       const response = await this.authRepo.obtainToken(email, password);
@@ -18,22 +23,22 @@ export class AuthService {
     } catch (e) {
       const _e = e as AxiosError;
       if (_e.response && _e.response.status === 401) {
-        return _e.response.data['detail'];
+        return this.errorsMap[401];
       }
 
       return e;
     }
   }
 
-  async register(email: string, password: string): Promise<boolean|string> {
+  async register(email: string, password: string): Promise<boolean | string> {
     try {
       const response = await this.authRepo.register(email, password);
       return response.status === 201;
     } catch (e) {
       const _e = e as AxiosError;
 
-      if(_e.response && _e.response.status===400){
-        return _e.response.data['detail'];
+      if (_e.response && _e.response.status === 400) {
+        return this.errorsMap[400];
       }
 
       return false;
