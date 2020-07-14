@@ -19,6 +19,7 @@ module.exports = {
     "prettier/prettier": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-var-requires": "off"
+    "no-var-requires": "off",
+    "@typescript-eslint/camelcase": "off"
   }
 };

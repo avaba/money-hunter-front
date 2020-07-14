@@ -1,17 +1,17 @@
 <template>
   <Fragment>
-    <tr class="tracking-table__row" :class="{'tracking-table__row_open': rowOpened}" @click="rowOpened=!rowOpened">
+    <tr class="tracking-table__row" :class="{'tracking-table__row_open': rowOpened}" @click="open">
       <td class="tracking-table__cell"
-          :class="{[item.clazz]: true, 'tracking-table__cell_open': idx===0 && rowOpened, 'tracking-table__cell_dropdown': idx===0 && !rowOpened}"
-          v-for="(item, idx) in list"
+          :class="{[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
+          v-for="(item, idx) in mappedList"
           :key="idx">
         <component v-bind:is="item.content" v-if="typeof item.content==='object'"/>
         <template v-else>{{item.content}}</template>
       </td>
     </tr>
-    <tr class="tracking-table-dropdown tracking-table__row_open" v-if="nested!==null && rowOpened">
-      <td class="tracking-table-dropdown__item" :colspan="list.length">
-        <ProductNestedSizesTable/>
+    <tr class="tracking-table-dropdown tracking-table__row_open" v-if="rowData.nested && rowOpened">
+      <td class="tracking-table-dropdown__item" :colspan="mappedList.length">
+        <component v-bind:is="rowData.nested"/>
       </td>
     </tr>
   </Fragment>
@@ -19,36 +19,46 @@
 
 <script>
   import {Fragment} from 'vue-fragment';
-  import ProductNestedSizesTable from "@/components/tracking-table/ProductNestedSizesTable";
-  import ProductContent from "../components/tracking-table/ProductContent";
-  import ProductPrice from "../components/tracking-table/ProductPrice";
-  import ProductRating from "../components/tracking-table/ProductRating";
-  import ProductAction from "../components/tracking-table/ProductAction";
 
   export default {
     name: "TrackingTableRow",
-    components: {ProductNestedSizesTable, Fragment},
+    components: {Fragment},
     props: {
-      nested: {
+      rowData: {
         type: Object,
-        default: () => null,
-      }
+        required: true,
+      },
+      headerKeys: {
+        type: Array,
+        required: true,
+      },
     },
     data() {
       return {
         rowOpened: false,
-        list: [
-          {content: ProductContent, clazz: 'width30'},
-          {content: ProductPrice, clazz: 'width10'},
-          {content: ProductRating},
-          {content: 1},
-          {content: 1},
-          {content: 0},
-          {content: 0},
-          {content: 3},
-          {content: ProductAction}
-        ],
       };
+    },
+    computed: {
+      mappedList() {
+        const result = [];
+
+        this.headerKeys.forEach(name => result.push(this.rowData[name]));
+
+        return result;
+      }
+    },
+    methods: {
+      open() {
+        if (this.rowData.nested) {
+          this.rowOpened = !this.rowOpened;
+        }
+      },
+      isCellOpen(idx) {
+        return idx === 0 && this.rowOpened;
+      },
+      isCellDropDown(idx) {
+        return idx === 0 && !this.rowOpened && this.rowData.nested;
+      }
     }
   }
 </script>

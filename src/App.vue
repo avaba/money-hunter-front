@@ -3,7 +3,7 @@
     <template v-if="$isLoggedIn">
       <Sidebar/>
       <main>
-        <Header :header="$route.meta.title"/>
+        <Header :header="getTitle()"/>
         <router-view/>
         <!--        Content must be here -->
       </main>
@@ -26,6 +26,17 @@
     created() {
       if (this.$isLoggedIn) {
         this.$store.dispatch('user/' + GET_ABOUT_ACTION);
+      }
+    },
+    methods: {
+      getTitle() {
+        // Находим ближайший роут, у которого есть title в meta
+
+        return ([...this.$route.matched]
+          .reverse()
+          .find(route => route.meta && route.meta.title) || {meta: {title: 'MoneyHunter'}})
+          .meta
+          .title;
       }
     }
   }

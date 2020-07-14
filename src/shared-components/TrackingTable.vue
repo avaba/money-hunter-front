@@ -13,8 +13,7 @@
       </tr>
     </table>
     <table class="tracking-table">
-      <TrackingTableRow nested/>
-      <TrackingTableRow nested/>
+      <TrackingTableRow :row-data="item" :header-keys="headers.map(h=>h.name)" v-for="(item, idx) in items" :key="idx"/>
     </table>
   </div>
 </template>
@@ -26,21 +25,16 @@
   export default {
     name: "TrackingTable",
     components: {TrackingTableRow, Btn},
-    data() {
-      return {
-        headers: [
-          {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'price', label: 'Цена', clazz: 'tracking-table__header-item_align-center width10'},
-          {name: 'rating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-center'},
-          {name: 'available_count', label: 'Доступно к заказу'},
-          {name: 'ordered_today_count', label: 'Заказы Сегодня'},
-          {name: 'ordered_yesterday_count', label: 'Заказы Вчера'},
-          {name: 'ordered_week_count', label: 'Заказы Неделя'},
-          {name: 'ordered_month_count', label: 'Заказы Месяц'},
-          {name: 'actions', label: 'Действия', sortable: false},
-        ]
+    props: {
+      headers: {
+        type: Array,
+        required: true
+      },
+      items: {
+        type: Array,
+        required: true,
       }
-    }
+    },
   }
 </script>
 

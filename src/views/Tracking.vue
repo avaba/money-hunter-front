@@ -9,18 +9,7 @@
       <Btn clazz="tracking-add-category"/>
     </div>
 
-    <div class="tracking-body">
-      <div class="tracking-info">
-        <div class="tracking-add-product">
-          <Btn clazz="button_add" label="Добавить товары"/>
-        </div>
-        <div class="tracking-actions">
-          <RowWithIcon :list="trackingActionList"/>
-        </div>
-      </div>
-
-      <TrackingTable/>
-    </div>
+    <router-view/>
 
     <div class="tracking-pagination">
       <div class="tracking-pagination__amount">
@@ -48,21 +37,15 @@
 
 <script>
   import TrackingNav from "@/components/TrackingNav";
-  import TrackingTable from "@/shared-components/TrackingTable";
   import Btn from "@/shared-components/Btn";
-  import RowWithIcon from "@/shared-components/RowWithIcon";
-
-  import AlertImg from '../assets/img/ikons/alert.svg';
-  import AutosortImg from '../assets/img/ikons/autosort.svg';
-  import DownloadImg from '../assets/img/ikons/download.svg';
 
   export default {
     name: "Tracking",
-    components: {TrackingTable, TrackingNav, Btn, RowWithIcon},
+    components: {TrackingNav, Btn},
     data() {
       return {
         trackingList: [
-          {label: "Список групп"},
+          {label: "Список групп", system: true},
           {label: "Спортивные костюмы"},
           {label: "Кросовки", actions: true, active: true},
           {label: "Носки"},
@@ -74,20 +57,7 @@
           {label: "пиджаки"},
           {label: "джинсы"},
           {label: "рубашки"},
-          {label: "кепки"},
-          {label: "очки"},
-          {label: "Сумочки"},
-          {label: "трусы"},
-          {label: "ремни"},
-          {label: "пиджаки"},
-          {label: "джинсы"},
-          {label: "рубашки"},
         ],
-        trackingActionList: [
-          {label: "Добавить оповещения для групп", img: AlertImg},
-          {label: "Автоподсорт", img: AutosortImg},
-          {label: "Скачать", img: DownloadImg},
-        ]
       }
     }
   }
@@ -113,29 +83,6 @@
     height: 4.14rem;
     background: url("../assets/img/ikons/plus2.svg") no-repeat center, $yellow;
     border-radius: 4px 4px 0 0;
-  }
-
-  .tracking-body {
-    background: white;
-    border: 1px solid $drayDevider;
-  }
-
-  .tracking-info {
-    padding: 1.14rem;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid $drayDevider;
-  }
-
-  .tracking-add-product {
-    width: 11.85rem;
-  }
-
-  .tracking-actions {
-    flex: 1 0 auto;
-    margin-left: 2.14em;
-    display: flex;
-    align-items: center;
   }
 
   .tracking-pagination {

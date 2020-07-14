@@ -1,9 +1,10 @@
 <template>
   <ul class="tracking-navlist">
     <li class="tracking-navlist__item"
+        @click="navigateTo(item)"
         v-for="(item, idx) in list"
         :key="idx"
-        :class="{'tracking-navlist__item_active': item.active, 'tracking-navlist__item_actions': item.actions}">
+        :class="{'tracking-navlist__item_active':  isActive(item) , 'tracking-navlist__item_actions': item.actions}">
       <span>{{item.label}}</span>
       <template v-if="item.actions">
         <button class="tracking-navlist-trigger"></button>
@@ -30,6 +31,22 @@
         type: Array,
         required: true
       },
+    },
+    methods: {
+      isActive(item) {
+        if (item.system) {
+          return this.$route.name === 'tracking.group_list';
+        }
+
+        return this.$route.params.name === item.label
+      },
+      navigateTo(item) {
+        if (item.system) {
+          this.$router.push({name: 'tracking.group_list'});
+        } else {
+          this.$router.push({name: 'tracking.group', params: {name: item.label}});
+        }
+      }
     }
   }
 </script>
@@ -42,6 +59,7 @@
   }
 
   .tracking-navlist__item {
+    cursor: pointer;
     flex: 1 0 auto;
     padding: 0.71rem 1.42rem;
     background: $drayDevider;

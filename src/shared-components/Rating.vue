@@ -1,7 +1,7 @@
 <template>
   <Fragment>
     <img src="../assets/img/ikons/star_yellow.svg" alt="" v-for="item in getStarredSequence" :key="item">
-    <img src="../assets/img/ikons/star_gray.svg" alt="" v-for="item in getTailSequence" :key="item">
+    <img src="../assets/img/ikons/star_gray.svg" alt="" v-for="item in getTailSequence" :key="item+totalAmount">
   </Fragment>
 </template>
 

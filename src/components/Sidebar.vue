@@ -10,7 +10,7 @@
           <li class="sidebar-navigation-item"
               :class="{'sidebar-navigation-item_active': isActive(item.systemName)}"
               v-for="item in links"
-              @click="$router.push(item.systemName)"
+              @click="$router.push({name: item.systemName})"
               :key="item.name">
             <span class="sidebar-navigation-item__text">{{item.name}}</span>
           </li>

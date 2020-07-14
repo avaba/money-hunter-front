@@ -7,6 +7,10 @@ import Tracking from '../views/Tracking.vue';
 
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
+
+import GroupList from '../components/tracking/GroupList.vue';
+import Group from '../components/tracking/Group.vue';
+
 import {TokenService} from "@/services/token_service";
 
 Vue.use(VueRouter);
@@ -41,9 +45,14 @@ const routes: Array<RouteConfig> = [
     path: '/tracking',
     name: 'tracking',
     component: Tracking,
+    redirect: {name: 'tracking.group_list'},
     meta: {
       title: 'Отслеживание',
-    }
+    },
+    children: [
+      {path: 'groups', name: 'tracking.group_list', component: GroupList},
+      {path: 'group/:name', name: 'tracking.group', component: Group}
+    ]
   },
   {
     path: "/auth",
