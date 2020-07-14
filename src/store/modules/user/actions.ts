@@ -1,8 +1,8 @@
 import {
   CLEAR_USER_MUTATION,
-  GET_ABOUT_ACTION,
+  GET_PROFILE_ACTION,
   LOGOUT_ACTION,
-  SET_USER_DETAIL_MUTATION
+  SET_USER_MUTATION
 } from "@/store/modules/user/constants";
 import {ActionContext} from "vuex";
 import {UserService} from "@/services/user_service";
@@ -10,17 +10,17 @@ import router from "@/router";
 import {AuthService} from "@/services/auth_service";
 
 export default {
-  async [GET_ABOUT_ACTION](context: ActionContext<any, any>) {
+  async [GET_PROFILE_ACTION](context: ActionContext<any, any>) {
     const userService = new UserService();
-    const response = await userService.getAbout();
+    const response = await userService.getProfile();
 
-    await context.commit(SET_USER_DETAIL_MUTATION, response);
+    await context.commit(SET_USER_MUTATION, response);
   },
-  async [LOGOUT_ACTION](context: any) {
+  async [LOGOUT_ACTION](context: ActionContext<any, any>) {
     const authService = new AuthService();
     await authService.logout();
 
-    await context.commit(CLEAR_USER_MUTATION);
+    context.commit(CLEAR_USER_MUTATION);
     await router.push({name: 'auth.login'})
   }
 }

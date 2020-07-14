@@ -2,6 +2,8 @@ import {AuthRepository} from "@/repositories/auth_repository";
 import {TokenService, TokenType} from "@/services/token_service";
 import {AxiosError, AxiosResponse} from "axios";
 import router from "@/router";
+import store from "@/store";
+import {LOGIN_MUTATION, LOGOUT_MUTATION} from "@/store/modules/auth/constants";
 
 export class AuthService {
   private authRepo = new AuthRepository();
@@ -19,6 +21,11 @@ export class AuthService {
       const tokenService = new TokenService();
       tokenService.persistToken(TokenType.ACCESS_TOKEN, tokens['access']);
       tokenService.persistToken(TokenType.REFRESH_TOKEN, tokens['refresh']);
+
+      store.commit('auth/' + LOGIN_MUTATION, {
+        [TokenType.ACCESS_TOKEN]: tokens['access'],
+        [TokenType.REFRESH_TOKEN]: tokens['refresh']
+      });
 
       return true;
     } catch (e) {
@@ -64,6 +71,8 @@ export class AuthService {
   async logout(): Promise<void> {
     const tokenService = new TokenService();
     tokenService.clear();
+
+    store.commit(`auth/${LOGOUT_MUTATION}`);
   }
 
   async refreshWrapper(cb: () => Promise<AxiosResponse>) {

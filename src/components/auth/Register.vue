@@ -68,7 +68,11 @@
         const service = new AuthService();
         const status = await service.register(this.login, this.password);
 
-        this.loginError = typeof status === 'boolean' && status ? '' : status;
+        if (typeof status === 'boolean' && status) {
+          await this.$router.push({name: 'root'})
+        } else {
+          this.loginError = status;
+        }
       }
     }
   }

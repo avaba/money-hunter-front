@@ -11,7 +11,7 @@
         <div class="notifications__circle"><span></span></div>
       </div>
       <div class="user-name">
-        <span class="user-name__text">{{detail}}</span>
+        <span class="user-name__text">{{email}}</span>
         <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
       </div>
     </div>
@@ -30,7 +30,7 @@
       }
     },
     computed: {
-      ...mapState('user', ['detail'])
+      ...mapState('user', ['email'])
     },
     methods: {
       ...mapActions('user', ['logout'])

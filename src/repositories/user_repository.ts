@@ -1,9 +1,9 @@
 import {ApiClient} from "@/http/api_client";
 
 export class UserRepository {
-  private aboutUrl = 'user/about';
+  private aboutUrl = 'user/profile/';
 
-  async getAbout() {
+  async getProfile() {
     const client = new ApiClient();
 
     return await client.sendGet(this.aboutUrl);

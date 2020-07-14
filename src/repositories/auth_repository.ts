@@ -1,9 +1,9 @@
 import {ApiClient} from "@/http/api_client";
 
 export class AuthRepository {
-  private tokenObtainUrl = 'token/obtain';
-  private tokenRefreshUrl = 'token/refresh';
-  private registerUrl = 'user/register';
+  private tokenObtainUrl = 'user/token/obtain/';
+  private tokenRefreshUrl = 'user/token/refresh/';
+  private registerUrl = 'user/register/';
 
   refreshToken(token: string): Promise<any> {
     const client = new ApiClient();

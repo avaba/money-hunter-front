@@ -1,14 +1,14 @@
 <template>
   <div id="app" class="root">
-    <template v-if="$isLoggedIn">
+    <template v-if="isLoggedIn">
       <Sidebar/>
       <main>
         <Header :header="getTitle()"/>
         <router-view/>
-        <!--        Content must be here -->
       </main>
     </template>
 
+    <!--    login/register and other similar windows-->
     <router-view v-else/>
   </div>
 </template>
@@ -16,27 +16,40 @@
 <script>
   import Sidebar from "@/components/Sidebar";
   import Header from "@/components/Header";
-  import {GET_ABOUT_ACTION} from "@/store/modules/user/constants";
+  import {GET_PROFILE_ACTION} from "@/store/modules/user/constants";
+  import {mapActions, mapState} from "vuex";
+  import {TokenService} from "@/services/token_service";
 
   export default {
     components: {Sidebar, Header},
     data() {
       return {}
     },
+    computed: {
+      ...mapState('auth', ['isLoggedIn'])
+    },
     created() {
-      if (this.$isLoggedIn) {
-        this.$store.dispatch('user/' + GET_ABOUT_ACTION);
+      const tokenService = new TokenService();
+      if (tokenService.isLoggedIn()) {
+        this[GET_PROFILE_ACTION]();
       }
     },
     methods: {
       getTitle() {
         // Находим ближайший роут, у которого есть title в meta
-
         return ([...this.$route.matched]
           .reverse()
           .find(route => route.meta && route.meta.title) || {meta: {title: 'MoneyHunter'}})
           .meta
           .title;
+      },
+      ...mapActions('user', [GET_PROFILE_ACTION])
+    },
+    watch: {
+      isLoggedIn: function (newState) {
+        if (newState) {
+          this[GET_PROFILE_ACTION]();
+        }
       }
     }
   }
