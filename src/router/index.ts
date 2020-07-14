@@ -30,7 +30,7 @@ const routes: Array<RouteConfig> = [
     name: 'blackbox',
     component: Blackbox,
     meta: {
-      title: 'BlackBox'
+      title: 'Black Box'
     },
   },
   {
