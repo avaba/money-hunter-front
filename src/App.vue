@@ -15,7 +15,6 @@
 
 <script>
   import Sidebar from "@/components/Sidebar";
-  import {TokenService} from "@/services/token_service";
   import Header from "@/components/Header";
   import {GET_ABOUT_ACTION} from "@/store/modules/user/constants";
 
@@ -24,13 +23,8 @@
     data() {
       return {}
     },
-    computed: {
-      isLoggedIn() {
-        return (new TokenService()).isLoggedIn();
-      }
-    },
     created() {
-      if (this.isLoggedIn) {
+      if (this.$isLoggedIn) {
         this.$store.dispatch('user/' + GET_ABOUT_ACTION);
       }
     }
