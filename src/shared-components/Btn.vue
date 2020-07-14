@@ -1,5 +1,7 @@
 <template>
-  <button :class="'button '+clazz" :type="type" @click="$emit('click', $event.target.value)">{{label}}</button>
+  <button :class="`${defaultClass} ${clazz}`" :type="type" @click="$emit('click', $event.target.value)">{{label}}
+    <slot/>
+  </button>
 </template>
 
 <script>
@@ -17,6 +19,15 @@
       label: {
         type: String,
         default: '',
+      },
+      withoutDefaultClass: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computed: {
+      defaultClass() {
+        return this.withoutDefaultClass ? '' : 'button';
       }
     }
   }
@@ -25,8 +36,11 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
-  .button {
+  button {
     cursor: pointer;
+  }
+
+  .button {
     background: $yellow;
     height: 2.85rem;
     border-radius: 4px;

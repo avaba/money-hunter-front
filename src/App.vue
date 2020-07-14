@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="root">
-    <template v-if="isLoggedIn">
+    <template v-if="$isLoggedIn">
       <Sidebar/>
       <main>
         <Header :header="$route.meta.title"/>
