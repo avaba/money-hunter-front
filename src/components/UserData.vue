@@ -13,10 +13,10 @@
           </ValidationProvider>
         </div>
         <div class="user-data__item">
-          <ValidationProvider :rules="{required: true}" v-slot="{errors}">
+          <ValidationProvider :rules="{required: true, phonenumber: true}" v-slot="{errors}">
             <InputField label="Телефонный номер"
                         v-model="phoneNumber"
-                        :mask="{mask: '8 (999) 999 99 99'}"
+                        :mask="{mask: '8 (999) 999-99-99'}"
                         :error="$getValidationError(errors)"/>
           </ValidationProvider>
         </div>
