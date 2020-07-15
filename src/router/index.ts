@@ -59,8 +59,8 @@ const routes: Array<RouteConfig> = [
     name: 'auth',
     component: Auth,
     children: [
-      {path: 'login', name: 'auth.login', component: Login},
-      {path: 'register', name: 'auth.register', component: Register},
+      {path: 'login', name: 'auth.login', component: Login, meta: {title: 'Вход'}},
+      {path: 'register', name: 'auth.register', component: Register, meta: {title: 'Регистрация'}},
     ],
   },
 ];

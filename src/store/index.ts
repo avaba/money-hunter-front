@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import user from './modules/user';
 import auth from './modules/auth';
+import modal from './modules/modal';
 
 Vue.use(Vuex);
 
@@ -11,7 +12,8 @@ export const store = new Vuex.Store({
   actions: {},
   modules: {
     user,
-    auth
+    auth,
+    modal
   }
 });
 

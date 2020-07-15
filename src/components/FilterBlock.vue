@@ -27,7 +27,17 @@
           <div class="filter-form__searchs-count">58</div>
         </div>
         <div class="filter-form__buttons">
-          <ButtonGroup :items="buttonGroupItems"/>
+          <Btn without-default-class
+               label="Загрузить проект"
+               clazz="filter-form__action-button filter-form__action-button_download"
+               @click="loadProject"/>
+          <Btn without-default-class
+               label="Сохранить проект"
+               clazz="filter-form__action-button filter-form__action-button_save"
+               @click="saveProject"/>
+          <Btn without-default-class
+               label="Очистить фильтры"
+               clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
           <Btn label="Найти" clazz="button_save"/>
@@ -41,29 +51,62 @@
   import SelectField from "../shared-components/SelectField";
   import InputField from "../shared-components/InputField";
   import RowWithIcon from "../shared-components/RowWithIcon";
-  import ButtonGroup from "../shared-components/ButtonGroup";
 
   import SearchImage from '../assets/img/ikons/search.svg';
   import Btn from "@/shared-components/Btn";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
+  import SaveProject from "@/components/blackbox/SaveProject";
+  import LoadProject from "@/components/blackbox/LoadProject";
 
   export default {
     name: "FilterBlock",
-    components: {Btn, SelectField, InputField, RowWithIcon, ButtonGroup},
+    components: {Btn, SelectField, InputField, RowWithIcon},
     data() {
       return {
         searchIcon: SearchImage,
-        buttonGroupItems: [
-          {clazz: "filter-form__action-button filter-form__action-button_download", label: "Загрузить поиск "},
-          {clazz: "filter-form__action-button filter-form__action-button_save", label: "Сохранить поиск"},
-          {clazz: "filter-form__action-button filter-form__action-button_clear", label: "Очистить фильтры"}
-        ]
       }
+    },
+    methods: {
+      loadProject() {
+        this[SHOW_MODAL_MUTATION]({component: LoadProject});
+      },
+      saveProject() {
+        this[SHOW_MODAL_MUTATION]({component: SaveProject});
+      },
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
+
+  .filter-form__action-button {
+    border: 1px solid $drayDevider;
+    border-radius: 4px;
+    color: $titleColor;
+    padding-left: 2.28rem;
+    padding-right: 1rem;
+    height: 2.57rem;
+    background: white;
+
+    &:not(:last-child) {
+      margin-right: 1.07rem;
+    }
+
+    &.filter-form__action-button_download {
+      background: url("../assets/img/ikons/download2.svg") no-repeat .92rem center, white;
+    }
+
+    &.filter-form__action-button_save {
+      background: url("../assets/img/ikons/save.svg") no-repeat .85rem center, white;
+    }
+
+    &.filter-form__action-button_clear {
+      background: url("../assets/img/ikons/clear.svg") no-repeat .78rem center, white;
+    }
+  }
 
   .filter {
     margin: 1.42rem 2.28rem 0;

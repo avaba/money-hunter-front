@@ -41,9 +41,6 @@
   export default {
     name: "UserData",
     components: {InputField, Btn, ValidationObserver, ValidationProvider},
-    mounted() {
-      this.userName = 'some val'
-    },
     computed: {
       user() {
         return this.$store.state.user.data;

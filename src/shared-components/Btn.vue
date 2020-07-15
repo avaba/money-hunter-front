@@ -1,5 +1,5 @@
 <template>
-  <button :class="`${defaultClass} ${clazz}`" :type="type" @click="$emit('click', $event.target.value)">{{label}}
+  <button :class="`${defaultClass} ${_clazz}`" :type="type" @click="$emit('click', $event.target.value)">{{label}}
     <slot/>
   </button>
 </template>
@@ -13,7 +13,7 @@
         default: 'button',
       },
       clazz: {
-        type: String,
+        value: [String, Object],
         default: '',
       },
       label: {
@@ -28,6 +28,13 @@
     computed: {
       defaultClass() {
         return this.withoutDefaultClass ? '' : 'button';
+      },
+      _clazz() {
+        if (typeof this.clazz === 'string') {
+          return this.clazz;
+        }
+
+        return Object.keys(this.clazz).filter(key => this.clazz[key]).join(' ');
       }
     }
   }

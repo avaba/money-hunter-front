@@ -1,6 +1,5 @@
 <template>
   <Fragment>
-    <div class="modal-title">Вход</div>
     <ValidationObserver v-slot="{handleSubmit}">
       <form action="" class="modal-form" @submit.prevent="handleSubmit(handleLoginBtn)">
         <div class="modal-form__input-item">

@@ -6,6 +6,7 @@
         <Header :header="getTitle()"/>
         <router-view/>
       </main>
+      <component v-bind:is="component" v-if="isShow"/>
     </template>
 
     <!--    login/register and other similar windows-->
@@ -26,7 +27,8 @@
       return {}
     },
     computed: {
-      ...mapState('auth', ['isLoggedIn'])
+      ...mapState('auth', ['isLoggedIn']),
+      ...mapState('modal', ['isShow', 'component']),
     },
     created() {
       const tokenService = new TokenService();
