@@ -5,7 +5,7 @@
       <form action="" class="modal-form">
         <div class="modal-form__download-project">
           <div class="modal-form__download-project-item" v-for="(item, idx) in positions" :key="idx">
-            <Btn :label="item.label"
+            <Btn :label="item.name"
                  :clazz="{'button_align-left': true, 'button_empty':idx!==checked, 'button_check': idx===checked}"
                  @click="checked=idx"/>
           </div>
@@ -15,7 +15,7 @@
             <Btn label="Отмена" clazz="button_gray" @click="hideModal"/>
           </div>
           <div class="modal-form__double-submit-item">
-            <Btn label="Сохранить"/>
+            <Btn label="Сохранить" @click="saveHandler"/>
           </div>
         </div>
       </form>
@@ -25,9 +25,11 @@
 
 <script>
   import Modal from "../Modal";
-  import {mapMutations} from "vuex";
+  import {mapActions, mapMutations} from "vuex";
   import {HIDE_MODAL_MUTATION} from "../../store/modules/modal/constants";
   import Btn from "../../shared-components/Btn";
+  import {BlackboxService} from "@/services/blackbox_service";
+  import {FIND_SEARCH_ID_BY_NAME_ACTION} from "@/store/modules/blackbox/constants";
 
 
   export default {
@@ -36,16 +38,32 @@
     data() {
       return {
         checked: null,
-        positions: [
-          {label: 'Красота'},
-          {label: 'Костюмы'},
-          {label: 'Компьютеры'},
-          {label: 'Первый поиск'},
-        ]
+        positions: []
       }
     },
+    computed: {
+      checkedPositionName() {
+        return this.checked === null ? null : this.positions[this.checked].name;
+      }
+    },
+    async created() {
+      const blackboxService = new BlackboxService();
+      const searches = await blackboxService.getSavedSearches();
+
+      this.positions = [...searches.userSavedSearches];
+    },
     methods: {
-      ...mapMutations('modal', [HIDE_MODAL_MUTATION])
+      async saveHandler() {
+        if (this.checkedPositionName === null) {
+          return;
+        }
+
+        await this[FIND_SEARCH_ID_BY_NAME_ACTION](this.checkedPositionName);
+
+        this[HIDE_MODAL_MUTATION]();
+      },
+      ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
+      ...mapActions('blackbox', [FIND_SEARCH_ID_BY_NAME_ACTION])
     }
   }
 </script>

@@ -5,7 +5,6 @@ export class UserRepository {
   private subscriptionUrl = 'user/subscription/';
   private client = new ApiClient();
 
-
   getProfile() {
     return this.client.sendGet(this.profileUrl);
   }

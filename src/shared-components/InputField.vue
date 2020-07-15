@@ -5,9 +5,19 @@
     <span class="input-field__error" v-if="!!error">{{error}}</span>
 
     <div class="input-field__range" v-if="range">
-      <input type="text" class="input-field__input_range" placeholder="Min">
+      <input type="number"
+             class="input-field__input_range"
+             placeholder="Min"
+             :disabled="disabled"
+             v-model.number="val[0]"
+             @input="$emit('input', val)">
       <span>-</span>
-      <input type="text" class="input-field__input_range" placeholder="Max">
+      <input type="number"
+             class="input-field__input_range"
+             placeholder="Max"
+             :disabled="disabled"
+             v-model.number="val[1]"
+             @input="$emit('input', val)">
     </div>
 
     <input v-else
@@ -47,7 +57,7 @@
         default: 'text',
       },
       value: {
-        type: String,
+        value: [String | Array],
         default: '',
       },
       clazz: {
@@ -70,6 +80,7 @@
     data() {
       return {
         showPassword: false,
+        val: Array.isArray(this.value) ? [...this.value] : String(this.value),
       }
     },
     computed: {

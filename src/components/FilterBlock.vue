@@ -3,22 +3,22 @@
     <form action="" class="filter-form">
       <div class="filter-form__fields">
         <div class="filter-form__item">
-          <SelectField label="Выберите категории" :options="[{option: 'Спортивные костюмы'}]"/>
+          <SelectField label="Выберите категории" :options="[{value: 0, option: 'Спортивные костюмы'}]"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Цена" range/>
+          <InputField label="Цена" range v-model="priceRange"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Рейтинг" range/>
+          <InputField label="Рейтинг" range v-model="ratingRange"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Отзывы" range/>
+          <InputField label="Отзывы" range v-model="feedbackRange"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Заказы в день" range/>
+          <InputField label="Заказы в день" range v-model="ordersRange"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Доход в день" range/>
+          <InputField label="Доход в день" range v-model="revenueRange"/>
         </div>
       </div>
       <div class="filter-form__actions">
@@ -65,6 +65,13 @@
     data() {
       return {
         searchIcon: SearchImage,
+
+        priceRange: [],
+        ordersRange: [],
+        ratingRange: [],
+        feedbackRange: [],
+        revenueRange: [],
+        categories: [],
       }
     },
     methods: {
@@ -72,7 +79,7 @@
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
       },
       saveProject() {
-        this[SHOW_MODAL_MUTATION]({component: SaveProject});
+        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
