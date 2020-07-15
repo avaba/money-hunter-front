@@ -2,16 +2,23 @@ import {UserRepository} from "@/repositories/user_repository";
 import {AuthService} from "@/services/auth_service";
 
 export class UserService {
+  private authService = new AuthService();
+  private repo = new UserRepository();
+
   async getProfile() {
-    const repo = new UserRepository();
-
     try {
-      const authService = new AuthService();
-
-      const response = await authService.refreshWrapper(repo.getProfile.bind(repo));
+      const response = await this.authService.refreshWrapper(this.repo.getProfile.bind(this.repo));
       return response.data;
     } catch (e) {
       console.log(e)
+    }
+  }
+
+  async postProfile(user: any) {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.postProfile.bind(this.repo, user))).data
+    } catch (e) {
+      console.log(e);
     }
   }
 }

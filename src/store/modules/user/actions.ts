@@ -1,7 +1,7 @@
 import {
   CLEAR_USER_MUTATION,
   GET_PROFILE_ACTION,
-  LOGOUT_ACTION,
+  LOGOUT_ACTION, POST_USER_ACTION,
   SET_USER_MUTATION
 } from "@/store/modules/user/constants";
 import {ActionContext} from "vuex";
@@ -22,5 +22,17 @@ export default {
 
     context.commit(CLEAR_USER_MUTATION);
     await router.push({name: 'auth.login'})
+  },
+  async [POST_USER_ACTION](context: ActionContext<any, any>) {
+    const userService = new UserService();
+
+    const data = {...context.state};
+
+    data.name = data.userName;
+    delete data.email;
+    delete data.userName;
+
+
+    await userService.postProfile(data);
   }
 }

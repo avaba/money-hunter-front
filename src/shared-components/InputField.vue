@@ -11,10 +11,12 @@
     </div>
 
     <input v-else
+           :disabled="disabled"
            :type="_type"
            :value="value"
            :class="`input-field__input ${!!error ? 'input-field__input_error ' : ''}`+clazz"
            :placeholder="placeholder"
+           v-mask="mask"
            @input="$emit('input', $event.target.value)"/>
     <button class="vision-password vision-password_error"
             :class="{'vision-password_visible': !showPassword}"
@@ -55,6 +57,14 @@
       placeholder: {
         type: String,
         default: ''
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      mask: {
+        type: Object,
+        default: undefined
       }
     },
     data() {
