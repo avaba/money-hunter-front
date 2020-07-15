@@ -1,20 +1,31 @@
 import actions from "@/store/modules/user/actions";
 import mutations from "@/store/modules/user/mutations";
+import {Moment} from 'moment';
+
+export interface VuexUserStateDataInterface {
+  email: string;
+  userName: string;
+  companyName: string;
+  phoneNumber: string;
+}
+
+export interface VuexUserStateSubscriptionInterface {
+  blackBoxSearches: number;
+  expDate: Moment;
+  maxTrackingProducts: number;
+  subscriptionType: string;
+}
 
 export interface VuexUserStateInterface {
-  email: string | null;
-  userName: string | null;
-  companyName: string | null;
-  phoneNumber: string | null;
+  data: VuexUserStateDataInterface | null;
+  subscription: VuexUserStateSubscriptionInterface | null
 }
 
 export default {
   namespaced: true,
   state: (): VuexUserStateInterface => ({
-    email: null,
-    userName: null,
-    companyName: null,
-    phoneNumber: null
+    data: null,
+    subscription: null
   }),
   mutations: mutations,
   actions: actions

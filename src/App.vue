@@ -16,7 +16,7 @@
 <script>
   import Sidebar from "@/components/Sidebar";
   import Header from "@/components/Header";
-  import {GET_PROFILE_ACTION} from "@/store/modules/user/constants";
+  import {GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION} from "@/store/modules/user/constants";
   import {mapActions, mapState} from "vuex";
   import {TokenService} from "@/services/token_service";
 
@@ -32,6 +32,7 @@
       const tokenService = new TokenService();
       if (tokenService.isLoggedIn()) {
         this[GET_PROFILE_ACTION]();
+        this[GET_SUBSCRIPTION_ACTION]();
       }
     },
     methods: {
@@ -43,7 +44,7 @@
           .meta
           .title;
       },
-      ...mapActions('user', [GET_PROFILE_ACTION])
+      ...mapActions('user', [GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION])
     },
     watch: {
       isLoggedIn: function (newState) {

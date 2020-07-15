@@ -16,7 +16,15 @@ export class UserService {
 
   async postProfile(user: any) {
     try {
-      return (await this.authService.refreshWrapper(this.repo.postProfile.bind(this.repo, user))).data
+      return (await this.authService.refreshWrapper(this.repo.postProfile.bind(this.repo, user))).data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getSubscription() {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.getSubscription.bind(this.repo))).data;
     } catch (e) {
       console.log(e);
     }

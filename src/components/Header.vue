@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import {mapActions, mapState} from "vuex";
+  import {mapActions} from "vuex";
 
   export default {
     name: "Header",
@@ -30,7 +30,9 @@
       }
     },
     computed: {
-      ...mapState('user', ['email'])
+      email() {
+        return this.$store.state.user.data?.email;
+      }
     },
     methods: {
       ...mapActions('user', ['logout'])

@@ -21,7 +21,7 @@
           </ValidationProvider>
         </div>
         <div class="user-data__item">
-          <InputField label="Ваш тариф" value="Базовый" disabled/>
+          <InputField label="Ваш тариф" :value="subscriptionType" disabled/>
         </div>
       </form>
 
@@ -46,33 +46,29 @@
     },
     computed: {
       user() {
-        return this.$store.state.user
+        return this.$store.state.user.data;
       },
       userName: {
-        get: context => context.user.userName,
+        get: context => context.user?.userName,
         set(value) {
           this.setUserData('userName', value);
         }
       },
       companyName: {
-        get: context => context.user.companyName,
+        get: context => context.user?.companyName,
         set(value) {
           this.setUserData('companyName', value);
         }
       },
       phoneNumber: {
-        get: context => context.user.phoneNumber,
+        get: context => context.user?.phoneNumber,
         set(value) {
           this.setUserData('phoneNumber', value);
         }
       },
-      email: {
-        get: context => context.user.email,
-        set(value) {
-          this.setUserData('email', value);
-        }
+      subscriptionType(){
+        return this.$store.state.user.subscription?.subscriptionType;
       }
-
     },
     methods: {
       postUser() {
