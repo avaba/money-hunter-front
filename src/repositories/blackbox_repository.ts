@@ -19,6 +19,7 @@ export class BlackboxRepository {
   private getGoodsBySearchIDUrl = 'wb/blackbox/search/';
   private findSearchIDByNameUrl = 'wb/blackbox/user/searches/{name}/';
   private searchesUrl = 'wb/blackbox/user/searches/';
+  private getImagePathUrl = 'wb/blackbox/product/image/{articul}/';
 
   getNewSearchID(data: GetSearchIDDataInterface) {
     return this.client.sendPost(this.getNewSearchIDUrl, data);
@@ -44,5 +45,9 @@ export class BlackboxRepository {
     _data.name = name;
 
     return this.client.sendPost(this.searchesUrl, _data);
+  }
+
+  getImagePath(articul: string) {
+    return this.client.sendGet(queryStringBuilder(this.getImagePathUrl, {articul}))
   }
 }

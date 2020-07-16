@@ -7,7 +7,7 @@
             <span :class="{'tracking-table__header-label': isSortable(item)}"
                   @click="headerClickHandler(item)">{{item.label}}</span>
             <Btn v-if="isSortable(item) && getSortClass(item)"
-                 @click="orderHandler(item.name)"
+                 @click="headerClickHandler(item)"
                  without-default-class
                  :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
           </div>
@@ -59,6 +59,11 @@
         return null;
       },
       headerClickHandler(item) {
+        // если сортировка уже осуществляется по этой колонке и колонка являе
+        if (this.order === item.name && item.isOnlyAscSorting) {
+          return;
+        }
+
         if (this.isSortable(item)) {
           this.orderHandler(item.name);
         }

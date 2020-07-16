@@ -78,4 +78,12 @@ export class BlackboxService {
       return e.message;
     }
   }
+
+  async getImagePath(articul: string) {
+    try {
+      return (await this.service.refreshWrapper(this.repo.getImagePath.bind(this.repo, articul))).data.imageLink;
+    } catch {
+      return null;
+    }
+  }
 }

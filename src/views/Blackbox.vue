@@ -45,7 +45,7 @@
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'articul', label: 'Артикул'},
+          {name: 'articul', label: 'Артикул', isOnlyAscSorting: true},
           {name: 'currentPrice', label: 'Цена'},
           {name: 'currentQty', label: 'Остаток'},
           {name: 'avOrdersSpeed', label: 'Заказов в день'},
@@ -110,7 +110,7 @@
         return {
           content: ProductContent,
           clazz: 'width30',
-          component_data: {goodsName: item.name, imageLink: item.imageLink, brand: item.brand}
+          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link}
         };
       },
       map_currentPrice(item) {

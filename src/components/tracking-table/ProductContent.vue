@@ -1,19 +1,30 @@
 <template>
   <div class="tracking-table__product">
     <div class="tracking-table__product-photo">
-      <!--      <img src="../../assets/img/product-photo.jpg" alt="">-->
-      <img :src="imageLink" alt="">
+      <template v-if="imagePath">
+        <a :href="link" target="_blank" v-if="link && link!=='None'">
+          <AsyncImg :src="imagePath" v-if="imagePath"/>
+        </a>
+        <AsyncImg :src="imagePath" v-else/>
+      </template>
     </div>
     <div class="tracking-table__product-info">
       <div class="tracking-table__product-name">{{goodsName}} - {{brand}}</div>
-      <div class="tracking-table__product-see">Посмотреть на Wildberries</div>
+      <div class="tracking-table__product-see" v-if="link && link!=='None'">
+        <a :href="link" target="_blank">Посмотреть на Wildberries</a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import AsyncImg from "@/shared-components/AsyncImg";
+
+  import {BlackboxService} from "@/services/blackbox_service";
+
   export default {
     name: "ProductContent",
+    components: {AsyncImg},
     props: {
       goodsName: {
         type: String
@@ -21,13 +32,33 @@
       brand: {
         type: String
       },
-      imageLink: {
+      articul: {
         type: String
+      },
+      link: {
+        type: String,
+        default: null,
       }
     },
     data() {
-      return {}
+      return {
+        imagePath: null,
+      }
     },
+    created() {
+      this.loadPath();
+    },
+    methods: {
+      async loadPath() {
+        const service = new BlackboxService();
+        this.imagePath = await service.getImagePath(this.articul);
+      }
+    },
+    watch: {
+      articul: async function () {
+        this.loadPath()
+      }
+    }
   }
 </script>
 
