@@ -2,10 +2,19 @@
   <div class="tracking-pagination" v-if="totalCount>0">
     <div class="tracking-pagination__amount">
       <span>Количество на странице:</span>
-      <div class="tracking-pagination__count">25</div>
-      <Btn without-default-class>
+      <div class="tracking-pagination__count">{{perPage}}</div>
+      <Btn without-default-class @click="perPagePopupOpened=!perPagePopupOpened">
         <img src="../assets/img/ikons/tracking-open.svg" alt="">
       </Btn>
+      <div :class="{'tracking-pagination__dropdown_open': perPagePopupOpened, 'tracking-pagination__dropdown': true}">
+        <ul class="tracking-pagination__dropdown-list">
+          <li class="tracking-pagination__dropdown-item"
+              @click="$perPageHandler(item)"
+              v-for="(item, idx) in perPageValues"
+              :key="idx">{{item}}
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="tracking-pagination__range">
       <div class="tracking-pagination__current">{{(page-1)*perPage + 1}}-{{page*perPage}} из</div>
@@ -48,9 +57,26 @@
       nextHandler: {
         type: Function,
         required: true,
+      },
+      perPageHandler: {
+        type: Function,
+        required: true,
+      },
+      perPageValues: {
+        type: Array,
+        default: () => [25, 50, 100],
+      }
+    },
+    data() {
+      return {
+        perPagePopupOpened: false
       }
     },
     methods: {
+      $perPageHandler(value) {
+        this.perPagePopupOpened = false;
+        this.perPageHandler(value);
+      },
       $prevHandler() {
         if (this.page > 1) {
           this.prevHandler();
@@ -82,6 +108,7 @@
     display: flex;
     align-items: center;
     margin-right: 3.35rem;
+    position: relative;
 
     span {
       letter-spacing: .3px;
@@ -113,5 +140,33 @@
         margin-right: .85rem;
       }
     }
+  }
+
+  .tracking-pagination__dropdown {
+    position: absolute;
+    width: 50px;
+    padding: 10px 15px;
+    background: #fff;
+    top: 20px;
+    right: -20px;
+    border: 1px solid #dfe0eb;
+    transition: all ease-in .1s;
+    opacity: 0;
+    z-index: -1;
+
+    &.tracking-pagination__dropdown_open {
+      top: 30px;
+      opacity: 1;
+      z-index: 10;
+    }
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .tracking-pagination__dropdown-item {
+    margin-bottom: 5px;
+    cursor: pointer;
   }
 </style>

@@ -8,7 +8,6 @@ import {VuexBlackBoxStateInterface} from "@/store/modules/blackbox/index";
 import {BlackboxService} from "@/services/blackbox_service";
 import {GetSearchIDDataInterface} from "@/repositories/blackbox_repository";
 import {DECREASE_BLACKBOX_SEARCHES_MUTATION} from "@/store/modules/user/constants";
-import {VuexRootState} from "@/store";
 
 export default {
   async [GET_NEW_SEARCH_ID_ACTION](context: ActionContext<VuexBlackBoxStateInterface, any>, payload: Record<string, any>) {

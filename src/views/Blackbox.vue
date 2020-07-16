@@ -13,6 +13,7 @@
       <TrackingPagination :total-count="paginationData.totalCount"
                           :page="paginationData.page"
                           :per-page="paginationData.perPage"
+                          :per-page-handler="perPageHandler"
                           :prev-handler="$paginationPrevHandler"
                           :next-handler="$paginationNextHandler"/>
     </div>
@@ -72,6 +73,12 @@
         this.orderType = DEFAULT_ORDER_TYPE;
 
         await this.debounceLoadGoods();
+      },
+      perPageHandler(value) {
+        this.paginationData.page = 1;
+        this.paginationData.perPage = value;
+
+        this.loadGoods();
       },
       prevHandler() {
         this.paginationData.page -= 1;
