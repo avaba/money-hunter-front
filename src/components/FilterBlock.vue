@@ -24,7 +24,7 @@
       <div class="filter-form__actions">
         <div class="filter-form__searchs">
           <RowWithIcon :list="[{img: searchIcon, label: 'У вас осталось поисков:'}]"/>
-          <div class="filter-form__searchs-count">58</div>
+          <div class="filter-form__searchs-count">{{blackboxSearches}}</div>
         </div>
         <div class="filter-form__buttons">
           <Btn without-default-class
@@ -36,11 +36,13 @@
                clazz="filter-form__action-button filter-form__action-button_save"
                @click="saveProject"/>
           <Btn without-default-class
+               @click="resetFilters"
                label="Очистить фильтры"
+               type="reset"
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn label="Найти" clazz="button_save"/>
+          <Btn label="Найти" clazz="button_save" @click="searchHandler"/>
         </div>
       </div>
     </form>
@@ -53,6 +55,7 @@
   import RowWithIcon from "../shared-components/RowWithIcon";
 
   import SearchImage from '../assets/img/ikons/search.svg';
+
   import Btn from "@/shared-components/Btn";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {mapMutations} from "vuex";
@@ -62,6 +65,12 @@
   export default {
     name: "FilterBlock",
     components: {Btn, SelectField, InputField, RowWithIcon},
+    props: {
+      searchHandler: {
+        type: Function,
+        required: true,
+      }
+    },
     data() {
       return {
         searchIcon: SearchImage,
@@ -74,7 +83,20 @@
         categories: [],
       }
     },
+    computed: {
+      blackboxSearches() {
+        return this.$store.state.user.subscription?.blackBoxSearches;
+      },
+    },
     methods: {
+      resetFilters() {
+        this.priceRange = [];
+        this.ordersRange = [];
+        this.ratingRange = [];
+        this.feedbackRange = [];
+        this.revenueRange = [];
+        this.categories = [];
+      },
       loadProject() {
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
       },

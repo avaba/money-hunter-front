@@ -10,6 +10,7 @@
     </div>
 
     <TrackingTable :headers="tableHeaders" :items="tableData"/>
+
   </div>
 </template>
 

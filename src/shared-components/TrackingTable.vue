@@ -4,15 +4,17 @@
       <tr class="tracking-table__header">
         <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
           <div>
-            <span>{{item.label}}</span>
-            <Btn v-if="item.sortable || item.sortable===undefined"
+            <span :class="{'tracking-table__header-label': isSortable(item)}"
+                  @click="headerClickHandler(item)">{{item.label}}</span>
+            <Btn v-if="isSortable(item) && getSortClass(item)"
+                 @click="orderHandler(item.name)"
                  without-default-class
-                 clazz="tracking-table__sort tracking-table__sort_down"/>
+                 :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
           </div>
         </th>
       </tr>
     </table>
-    <table class="tracking-table">
+    <table class="tracking-table" v-if="items.length>0">
       <TrackingTableRow :row-data="item" :header-keys="headers.map(h=>h.name)" v-for="(item, idx) in items" :key="idx"/>
     </table>
   </div>
@@ -33,8 +35,35 @@
       items: {
         type: Array,
         required: true,
+      },
+      order: {
+        type: String,
+        required: true,
+      },
+      orderHandler: {
+        type: Function,
+        required: true,
       }
     },
+    data() {
+      return {}
+    },
+    methods: {
+      isSortable(item) {
+        return item.sortable || item.sortable === undefined;
+      },
+      getSortClass(item) {
+        if (this.order === item.name) return 'tracking-table__sort_up';
+        if (this.order === `-${item.name}`) return 'tracking-table__sort_down';
+
+        return null;
+      },
+      headerClickHandler(item) {
+        if (this.isSortable(item)) {
+          this.orderHandler(item.name);
+        }
+      }
+    }
   }
 </script>
 
@@ -66,6 +95,10 @@
   .tracking-table__header {
     position: sticky;
     top: 0px;
+  }
+
+  .tracking-table__header-label {
+    cursor: pointer;
   }
 
   .tracking-table__header-item {

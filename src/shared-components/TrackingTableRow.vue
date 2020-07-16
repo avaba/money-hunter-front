@@ -5,7 +5,7 @@
           :class="{[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
           v-for="(item, idx) in mappedList"
           :key="idx">
-        <component v-bind:is="item.content" v-if="typeof item.content==='object'"/>
+        <component v-bind:is="item.content" v-if="typeof item.content==='object'" v-bind="item.component_data"/>
         <template v-else>{{item.content}}</template>
       </td>
     </tr>

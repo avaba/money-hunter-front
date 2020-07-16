@@ -1,16 +1,19 @@
 <template>
-  <div class="tracking-body">
-    <div class="tracking-info">
-      <div class="tracking-add-product">
-        <Btn clazz="button_add" label="Добавить товары"/>
+  <Fragment>
+    <div class="tracking-body">
+      <div class="tracking-info">
+        <div class="tracking-add-product">
+          <Btn clazz="button_add" label="Добавить товары"/>
+        </div>
+        <div class="tracking-actions">
+          <RowWithIcon :list="trackingActionList"/>
+        </div>
       </div>
-      <div class="tracking-actions">
-        <RowWithIcon :list="trackingActionList"/>
-      </div>
-    </div>
 
-    <TrackingTable :headers="tableHeaders" :items="tableData"/>
-  </div>
+      <TrackingTable :headers="tableHeaders" :items="tableData" order="articul"/>
+    </div>
+    <TrackingPagination :total-count="1000" :prev-handler="prevHandler" :next-handler="nextHandler"/>
+  </Fragment>
 </template>
 
 <script>
@@ -21,15 +24,22 @@
   import AlertImg from "@/assets/img/ikons/alert.svg";
   import AutosortImg from "@/assets/img/ikons/autosort.svg";
   import DownloadImg from "@/assets/img/ikons/download.svg";
+
   import ProductContent from "@/components/tracking-table/ProductContent";
   import ProductPrice from "@/components/tracking-table/ProductPrice";
   import ProductRating from "@/components/tracking-table/ProductRating";
   import ProductAction from "@/components/tracking-table/ProductAction";
+
   import ProductNestedSizesTable from "@/components/tracking-table/ProductNestedSizesTable";
+  import {tableMixins} from "@/extenders/mixins/table_mixins";
+  import TrackingPagination from "@/shared-components/TrackingPagination";
+
+  import {Fragment} from 'vue-fragment'
 
   export default {
     name: "Group",
-    components: {Btn, RowWithIcon, TrackingTable},
+    components: {Btn, RowWithIcon, TrackingTable, TrackingPagination, Fragment},
+    mixins: [tableMixins],
     data() {
       return {
         tableHeaders: [
@@ -62,6 +72,19 @@
           {label: "Автоподсорт", img: AutosortImg},
           {label: "Скачать", img: DownloadImg},
         ]
+      }
+    },
+    computed: {
+      tablePositions() {
+        return this.tableData.map(item => this.$mapItemListToTableItem(item));
+      }
+    },
+    methods: {
+      prevHandler() {
+        console.log('prev');
+      },
+      nextHandler() {
+        console.log('next');
       }
     }
   }
