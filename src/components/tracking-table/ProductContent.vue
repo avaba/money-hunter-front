@@ -3,9 +3,9 @@
     <div class="tracking-table__product-photo">
       <template v-if="imagePath">
         <a :href="link" target="_blank" v-if="link && link!=='None'">
-          <AsyncImg :src="imagePath" v-if="imagePath"/>
+          <AsyncImg :src="imagePath" v-if="imagePath" class="tracking-table__product-photo-img"/>
         </a>
-        <AsyncImg :src="imagePath" v-else/>
+        <AsyncImg :src="imagePath" v-else class="tracking-table__product-photo-img"/>
       </template>
     </div>
     <div class="tracking-table__product-info">
@@ -68,6 +68,12 @@
   .tracking-table__product {
     display: flex;
     align-items: center;
+  }
+
+  /deep/ .tracking-table__product-photo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
   }
 
   .tracking-table__product-info {
