@@ -4,6 +4,7 @@ import {AxiosError, AxiosResponse} from "axios";
 import router from "@/router";
 import store from "@/store";
 import {LOGIN_MUTATION, LOGOUT_MUTATION} from "@/store/modules/auth/constants";
+import {LOGOUT_ACTION} from "@/store/modules/user/constants";
 
 export class AuthService {
   private authRepo = new AuthRepository();
@@ -80,12 +81,16 @@ export class AuthService {
       return await cb();
     } catch (e) {
       const _e = e as AxiosError;
-      if (_e.response && _e.response.status === 401 && await this.refreshToken()) {
+      if (_e.response && _e.response.status === 401) {
         try {
+          await this.refreshToken();
           return await cb();
         } catch (e) {
+
           const tokenService = new TokenService();
           tokenService.clear();
+
+          await store.commit(`auth/${LOGOUT_ACTION}`);
           await router.push(({name: 'auth.login'}));
 
           throw e;
