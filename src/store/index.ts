@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, {Store} from "vuex";
 import user from './modules/user';
 import auth from './modules/auth';
 import modal from './modules/modal';
@@ -7,8 +7,14 @@ import blackbox from './modules/blackbox';
 
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
-  state: {},
+export interface VuexRootState extends Store<{}> {
+
+}
+
+export const store = new Vuex.Store<VuexRootState>({
+  state: () => {
+    return {} as VuexRootState
+  },
   mutations: {},
   actions: {},
   modules: {

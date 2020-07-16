@@ -1,5 +1,5 @@
 <template>
-  <div class="tracking-pagination">
+  <div class="tracking-pagination" v-if="totalCount>0">
     <div class="tracking-pagination__amount">
       <span>Количество на странице:</span>
       <div class="tracking-pagination__count">25</div>
@@ -8,14 +8,14 @@
       </Btn>
     </div>
     <div class="tracking-pagination__range">
-      <div class="tracking-pagination__current">1-25 из</div>
+      <div class="tracking-pagination__current">{{(page-1)*perPage + 1}}-{{page*perPage}} из</div>
       <div class="tracking-pagination__all">{{totalCount}}</div>
     </div>
     <div class="tracking-pagination__actions">
-      <Btn without-default-class @click="prevHandler">
+      <Btn without-default-class @click="$prevHandler">
         <img src="../assets/img/ikons/prev.svg" alt="">
       </Btn>
-      <Btn without-default-class @click="nextHandler">
+      <Btn without-default-class @click="$nextHandler">
         <img src="../assets/img/ikons/next.svg" alt="">
       </Btn>
     </div>
@@ -33,6 +33,14 @@
         type: Number,
         required: true,
       },
+      perPage: {
+        type: Number,
+        required: true,
+      },
+      page: {
+        type: Number,
+        required: true,
+      },
       prevHandler: {
         type: Function,
         required: true,
@@ -40,6 +48,18 @@
       nextHandler: {
         type: Function,
         required: true,
+      }
+    },
+    methods: {
+      $prevHandler() {
+        if (this.page > 1) {
+          this.prevHandler();
+        }
+      },
+      $nextHandler() {
+        if (this.page < (this.totalCount % this.perPage)) {
+          this.nextHandler();
+        }
       }
     }
   }

@@ -10,7 +10,8 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
-    "moment": "^2.27.0",
+    "lodash": "^4.17.19",
+    "rxjs": "^6.6.0",
     "vee-validate": "^3.3.7",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",

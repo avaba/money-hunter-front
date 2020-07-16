@@ -1,6 +1,5 @@
 import actions from "@/store/modules/user/actions";
 import mutations from "@/store/modules/user/mutations";
-import {Moment} from 'moment';
 
 export interface VuexUserStateDataInterface {
   email: string;
@@ -11,7 +10,7 @@ export interface VuexUserStateDataInterface {
 
 export interface VuexUserStateSubscriptionInterface {
   blackBoxSearches: number;
-  expDate: Moment;
+  expDate: string;
   maxTrackingProducts: number;
   subscriptionType: string;
 }

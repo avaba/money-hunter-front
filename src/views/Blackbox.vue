@@ -3,11 +3,18 @@
     <FilterBlock :searchHandler="searchHandler"/>
 
     <div class="blackbox">
-      <TrackingTable :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler.bind(this)"/>
+      <TrackingTable :headers="tableHeaders"
+                     :items="tablePositions"
+                     :order="orderType"
+                     :order-handler="$orderHandler"/>
     </div>
 
     <div class="block_container">
-      <TrackingPagination :total-count="1000" :prev-handler="prevHandler" :next-handler="nextHandler"/>
+      <TrackingPagination :total-count="paginationData.totalCount"
+                          :page="paginationData.page"
+                          :per-page="paginationData.perPage"
+                          :prev-handler="$paginationPrevHandler"
+                          :next-handler="$paginationNextHandler"/>
     </div>
 
   </Fragment>
@@ -22,28 +29,18 @@
   import {tableMixins} from "@/extenders/mixins/table_mixins";
   import {BlackboxService} from "@/services/blackbox_service";
   import TrackingPagination from "@/shared-components/TrackingPagination";
+  import {paginationMixin} from "@/extenders/mixins/pagination_mixin";
+  import {debounce} from 'lodash'
+
+  const DEFAULT_ORDER_TYPE = 'articul';
 
   export default {
     name: "Blackbox",
     components: {TrackingPagination, TrackingTable, FilterBlock, Fragment},
-    mixins: [tableMixins],
+    mixins: [tableMixins, paginationMixin],
     data() {
       return {
-        list: [
-          {
-            name: 'Футболка',
-            imageLink: 'https://is4-ssl.mzstatic.com/image/thumb/Music49/v4/34/0a/b7/340ab7f9-fa74-31d7-4998-105e6f9878d0/dj.oypqltuv.jpg/44x44sr-60.jpeg',
-            brand: 'Натали',
-            articul: '11254837',
-            currentPrice: 853,
-            currentQty: 5,
-            avOrdersSpeed: 5,
-            avRevenue: 5,
-            currentRating: 3,
-            currentFeedBackCount: 5,
-            add: 'add',
-          }
-        ],
+        list: [],
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
@@ -56,25 +53,51 @@
           {name: 'currentFeedBackCount', label: 'Кол-во отзывов'},
           {name: 'add', label: 'Добавить в мои товары', sortable: false},
         ],
-        orderType: 'articul',
+        orderType: DEFAULT_ORDER_TYPE,
 
-        page: 1,
+        debounceLoadGoods: debounce(this.loadGoods, 200),
       }
     },
     computed: {
       tablePositions() {
         return this.list.map(item => this.$mapItemListToTableItem(item));
+      },
+      searchID() {
+        return this.$store.state.blackbox.searchID;
       }
     },
     methods: {
       async searchHandler() {
-        const service = new BlackboxService();
+        this.paginationData.page = 1;
+        this.orderType = DEFAULT_ORDER_TYPE;
+
+        await this.debounceLoadGoods();
       },
       prevHandler() {
-        console.log('prev clicked')
+        this.paginationData.page -= 1;
+
+        this.loadGoods();
       },
       nextHandler() {
-        console.log('next clicked')
+        this.paginationData.page += 1;
+
+        this.loadGoods();
+      },
+
+      async loadGoods() {
+        if (this.$store.state.blackbox.searchID) {
+          const service = new BlackboxService();
+
+          const result = await service.getGoodsBySearchID(
+            this.searchID,
+            this.orderType,
+            this.paginationData.page,
+            this.paginationData.perPage
+          );
+
+          this.paginationData.totalCount = result.countAll;
+          this.list = result.products;
+        }
       },
       map_goods(item) {
         return {
@@ -90,6 +113,14 @@
         return {content: ProductRating, component_data: {rating: item.currentRating}};
       }
 
+    },
+    mounted() {
+      this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
+    },
+    watch: {
+      orderType: function () {
+        this.debounceLoadGoods();
+      }
     }
   }
 </script>

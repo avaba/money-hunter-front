@@ -6,3 +6,4 @@ export const GET_SUBSCRIPTION_ACTION = 'getSubscription';
 export const SET_USER_MUTATION = 'setUserDetail';
 export const CLEAR_USER_MUTATION = 'clearUser';
 export const SET_SUBSCRIPTION_MUTATION = 'setSubscription';
+export const DECREASE_BLACKBOX_SEARCHES_MUTATION = 'decreaseBlackBoxSearches';

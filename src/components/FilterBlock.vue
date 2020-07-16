@@ -3,7 +3,7 @@
     <form action="" class="filter-form">
       <div class="filter-form__fields">
         <div class="filter-form__item">
-          <SelectField label="Выберите категории" :options="[{value: 0, option: 'Спортивные костюмы'}]"/>
+          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>
         </div>
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange"/>
@@ -42,7 +42,7 @@
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn label="Найти" clazz="button_save" @click="searchHandler"/>
+          <Btn label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -61,6 +61,7 @@
   import {mapMutations} from "vuex";
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
+  import {GET_NEW_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
 
   export default {
     name: "FilterBlock",
@@ -80,7 +81,7 @@
         ratingRange: [],
         feedbackRange: [],
         revenueRange: [],
-        categories: [],
+        categories: [1],
       }
     },
     computed: {
@@ -89,6 +90,12 @@
       },
     },
     methods: {
+      async searchBtnHandler() {
+        if (!this.$store.state.blackbox.searchID) {
+          await this.$store.dispatch(`blackbox/${GET_NEW_SEARCH_ID_ACTION}`, this.$data);
+        }
+        this.searchHandler();
+      },
       resetFilters() {
         this.priceRange = [];
         this.ordersRange = [];

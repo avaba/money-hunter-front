@@ -32,7 +32,7 @@ export class BlackboxService {
       const _data = this.normalizeFilterData(data);
       return (await this.service.refreshWrapper(this.repo.getNewSearchID.bind(this.repo, _data))).data;
     } catch (e) {
-      console.log(e);
+      return false;
     }
   }
 
@@ -40,7 +40,7 @@ export class BlackboxService {
     try {
       return (await this.service.refreshWrapper(this.repo.findSearchIDByName.bind(this.repo, name))).data;
     } catch (e) {
-      console.log(e);
+      return false;
     }
   }
 
@@ -49,7 +49,10 @@ export class BlackboxService {
       const closure = this.repo.getGoodsBySearchID.bind(this.repo, searchID, orderType, pageNum, onPage);
       return (await this.service.refreshWrapper(closure)).data;
     } catch (e) {
-      console.log(e);
+      return {
+        countAll: 0,
+        products: [],
+      }
     }
   }
 

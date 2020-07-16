@@ -52,6 +52,7 @@
       isLoggedIn: function (newState) {
         if (newState) {
           this[GET_PROFILE_ACTION]();
+          this[GET_SUBSCRIPTION_ACTION]();
         }
       }
     }
