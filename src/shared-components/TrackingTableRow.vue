@@ -66,6 +66,14 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
+  .width5 {
+    width: 5%;
+  }
+
+  .width23 {
+    width: 23%;
+  }
+
   .width30 {
     width: 30%;
   }
@@ -84,8 +92,13 @@
   .tracking-table__cell {
     border-top: 1px solid $drayDevider;
     padding: 1.71rem .5rem;
-    text-align: center;
+    text-align: left;
     letter-spacing: .2px;
+
+    &.tracking-table__align-center {
+      text-align: center;
+      padding-left: 0;
+    }
 
     &.tracking-table__cell_dropdown {
       background: url("../assets/img/ikons/tracking-open.svg") no-repeat .71rem center;

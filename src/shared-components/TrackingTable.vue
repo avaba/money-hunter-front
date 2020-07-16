@@ -75,6 +75,14 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
+  .width5{
+    width: 5%;
+  }
+
+  .width23{
+    width: 23%;
+  }
+
   .width30 {
     width: 30%;
   }

@@ -8,7 +8,7 @@
     props: {
       price: {
         type: Number,
-        default: 100
+        required: true,
       }
     }
   }

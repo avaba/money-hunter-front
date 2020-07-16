@@ -10,9 +10,14 @@
         </div>
       </div>
 
-      <TrackingTable :headers="tableHeaders" :items="tableData" order="articul"/>
+      <TrackingTable :headers="tableHeaders" :items="tableData" order="articul" :order-handler="()=>{}"/>
     </div>
-    <TrackingPagination :total-count="1000" :prev-handler="prevHandler" :next-handler="nextHandler"/>
+    <TrackingPagination :total-count="1000"
+                        :prev-handler="prevHandler"
+                        :next-handler="nextHandler"
+                        :page="1"
+                        :per-page="25"
+                        :per-page-handler="()=>{}"/>
   </Fragment>
 </template>
 
@@ -55,8 +60,8 @@
         ],
         tableData: [
           {
-            goods: {content: ProductContent, clazz: 'width30'},
-            price: {content: ProductPrice, clazz: 'width10'},
+            goods: {content: ProductContent, component_data: {goodsName: 'Шляпа'}, clazz: 'width30'},
+            price: {content: ProductPrice, component_data: {price: 100500}, clazz: 'width10'},
             rating: {content: ProductRating},
             available_count: {content: 1},
             ordered_today_count: {content: 1},
