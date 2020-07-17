@@ -45,14 +45,14 @@
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'articul', label: 'Артикул', isOnlyAscSorting: true},
-          {name: 'currentPrice', label: 'Цена'},
-          {name: 'currentQty', label: 'Остаток'},
-          {name: 'avOrdersSpeed', label: 'Заказов в день'},
-          {name: 'avRevenue', label: 'Доход в день'},
-          {name: 'currentRating', label: 'Рейтинг'},
-          {name: 'currentFeedBackCount', label: 'Кол-во отзывов'},
-          {name: 'add', label: 'Добавить в мои товары', sortable: false},
+          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true},
+          {name: 'currentPrice', label: 'Цена', clazz: 'width9'},
+          {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
+          {name: 'avOrdersSpeed', label: 'Заказов в день', clazz: 'width9'},
+          {name: 'avRevenue', label: 'Доход в день', clazz: 'width9'},
+          {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-center width9'},
+          {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width5'},
+          {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9'},
         ],
         orderType: DEFAULT_ORDER_TYPE,
 
@@ -107,7 +107,7 @@
 
           this.paginationData.totalCount = result.countAll;
           this.list = [];
-          this.$nextTick(()=>{
+          this.$nextTick(() => {
             this.list = result.products;
           })
         }
@@ -120,12 +120,14 @@
         };
       },
       map_currentPrice(item) {
-        return {content: `${item.currentPrice} ₽`};
+        return {content: `${item.currentPrice} ₽`, clazz: 'width9'};
       },
       map_currentRating(item) {
-        return {content: ProductRating, component_data: {rating: item.currentRating}};
+        return {content: ProductRating, component_data: {rating: item.currentRating}, clazz: 'width9'};
+      },
+      map_add() {
+        return {content: 'add', clazz: 'width9'}
       }
-
     },
     async mounted() {
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
