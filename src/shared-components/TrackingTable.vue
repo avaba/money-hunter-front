@@ -59,7 +59,6 @@
         return null;
       },
       headerClickHandler(item) {
-        // если сортировка уже осуществляется по этой колонке и колонка являе
         if (this.order === item.name && item.isOnlyAscSorting) {
           return;
         }
@@ -77,6 +76,10 @@
 
   .width5{
     width: 5%;
+  }
+
+  .width9{
+    width: 9%;
   }
 
   .width23{

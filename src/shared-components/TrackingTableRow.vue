@@ -78,6 +78,10 @@
     width: 5%;
   }
 
+  .width9 {
+    width: 9%;
+  }
+
   .width23 {
     width: 23%;
   }
@@ -99,7 +103,7 @@
 
   .tracking-table__cell {
     border-top: 1px solid $drayDevider;
-    padding: 1.71rem .5rem;
+    padding: 1.71rem .5rem 1.71rem 20px;
     text-align: left;
     letter-spacing: .2px;
 
@@ -139,6 +143,7 @@
         justify-content: center;
       }
 
+      /* для charts js - либа генерит div*/
       /deep/ & div {
         background-color: white;
       }

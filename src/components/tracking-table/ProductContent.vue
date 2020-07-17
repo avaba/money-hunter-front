@@ -70,6 +70,10 @@
     align-items: center;
   }
 
+  .tracking-table__product-photo {
+    margin-right: 1.42rem;
+  }
+
   /deep/ .tracking-table__product-photo-img {
     width: 44px;
     height: 44px;
@@ -77,8 +81,7 @@
   }
 
   .tracking-table__product-info {
-    margin-left: 1.42rem;
-    text-align-last: left;
+    text-align: left;
   }
 
   .tracking-table__product-name {

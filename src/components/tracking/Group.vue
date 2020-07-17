@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <TrackingTable :headers="tableHeaders" :items="tableData" order="articul" :order-handler="()=>{}"/>
+      <TrackingTable :headers="tableHeaders" :items="tableData" :order="orderType" :order-handler="$orderHandler"/>
     </div>
     <TrackingPagination :total-count="1000"
                         :prev-handler="prevHandler"
@@ -40,35 +40,40 @@
   import TrackingPagination from "@/shared-components/TrackingPagination";
 
   import {Fragment} from 'vue-fragment'
+  import {orderHandler} from "@/extenders/mixins/order_handler";
 
   export default {
     name: "Group",
     components: {Btn, RowWithIcon, TrackingTable, TrackingPagination, Fragment},
-    mixins: [tableMixins],
+    mixins: [tableMixins, orderHandler],
     data() {
       return {
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'price', label: 'Цена', clazz: 'tracking-table__header-item_align-center width10'},
-          {name: 'rating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-center'},
-          {name: 'available_count', label: 'Доступно к заказу'},
-          {name: 'ordered_today_count', label: 'Заказы Сегодня'},
-          {name: 'ordered_yesterday_count', label: 'Заказы Вчера'},
-          {name: 'ordered_week_count', label: 'Заказы Неделя'},
-          {name: 'ordered_month_count', label: 'Заказы Месяц'},
-          {name: 'actions', label: 'Действия', sortable: false},
+          {name: 'price', label: 'Цена', clazz: 'width9 tracking-table__header-item_align-center'},
+          {name: 'rating', label: 'Рейтинг', clazz: 'width9 tracking-table__header-item_align-center'},
+          {name: 'available_count', label: 'Доступно к заказу', clazz: 'width9'},
+          {name: 'ordered_today_count', label: 'Заказы Сегодня', clazz: 'width9'},
+          {name: 'ordered_yesterday_count', label: 'Заказы Вчера', clazz: 'width9'},
+          {name: 'ordered_week_count', label: 'Заказы Неделя', clazz: 'width9'},
+          {name: 'ordered_month_count', label: 'Заказы Месяц', clazz: 'width9'},
+          {name: 'actions', label: 'Действия', sortable: false, clazz: 'width5'},
         ],
         tableData: [
           {
-            goods: {content: ProductContent, component_data: {goodsName: 'Шляпа'}, clazz: 'width30'},
-            price: {content: ProductPrice, component_data: {price: 100500}, clazz: 'width10'},
-            rating: {content: ProductRating},
-            available_count: {content: 1},
-            ordered_today_count: {content: 1},
-            ordered_yesterday_count: {content: 0},
-            ordered_week_count: {content: 0},
-            ordered_month_count: {content: 3},
-            actions: {content: ProductAction},
+            goods: {content: ProductContent, component_data: {goodsName: 'Шляпа', articul: '10000200'}, clazz: 'width30'},
+            price: {
+              content: ProductPrice,
+              component_data: {price: 100500},
+              clazz: 'width9 tracking-table__align-center'
+            },
+            rating: {content: ProductRating, clazz: 'width9 tracking-table__align-center'},
+            available_count: {content: 1, clazz: 'width9'},
+            ordered_today_count: {content: 1, clazz: 'width9'},
+            ordered_yesterday_count: {content: 0, clazz: 'width9'},
+            ordered_week_count: {content: 0, clazz: 'width9'},
+            ordered_month_count: {content: 3, clazz: 'width9'},
+            actions: {content: ProductAction, clazz: 'width5 tracking-table__align-center'},
             nested: ProductNestedSizesTable
           }
         ],
@@ -76,7 +81,8 @@
           {label: "Добавить оповещения для групп", img: AlertImg},
           {label: "Автоподсорт", img: AutosortImg},
           {label: "Скачать", img: DownloadImg},
-        ]
+        ],
+        orderType: 'price'
       }
     },
     computed: {
