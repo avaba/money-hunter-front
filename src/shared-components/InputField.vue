@@ -9,15 +9,15 @@
              class="input-field__input_range"
              placeholder="Min"
              :disabled="disabled"
-             v-model.number="val[0]"
-             @input="$emit('input', val)">
+             v-model.number="value[0]"
+             @input="$emit('input', value)">
       <span>-</span>
       <input type="number"
              class="input-field__input_range"
              placeholder="Max"
              :disabled="disabled"
-             v-model.number="val[1]"
-             @input="$emit('input', val)">
+             v-model.number="value[1]"
+             @input="$emit('input', value)">
     </div>
 
     <input v-else
@@ -80,7 +80,6 @@
     data() {
       return {
         showPassword: false,
-        val: Array.isArray(this.value) ? [...this.value] : String(this.value),
       }
     },
     computed: {

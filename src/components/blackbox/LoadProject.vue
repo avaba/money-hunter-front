@@ -58,7 +58,10 @@
           return;
         }
 
-        await this[FIND_SEARCH_ID_BY_NAME_ACTION](this.checkedPositionName);
+        const searchResult = await this[FIND_SEARCH_ID_BY_NAME_ACTION](this.checkedPositionName);
+        if (searchResult) {
+          this.$eventBus.$emit('find_search_id_data', searchResult);
+        }
 
         this[HIDE_MODAL_MUTATION]();
       },

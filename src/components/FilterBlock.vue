@@ -106,6 +106,14 @@
       },
       loadProject() {
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
+        this.$eventBus.$once('find_search_id_data', ({data}) => {
+          this.priceRange = data.priceRange;
+          this.ordersRange = data.ordersRange;
+          this.ratingRange = data.ratingRange;
+          this.feedbackRange = data.feedbackRange;
+          this.revenueRange = data.revenueRange;
+          this.categories = data.categories;
+        })
       },
       saveProject() {
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});

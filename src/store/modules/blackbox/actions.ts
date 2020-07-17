@@ -26,6 +26,10 @@ export default {
     if (response) {
       context.commit(`user/${DECREASE_BLACKBOX_SEARCHES_MUTATION}`, undefined, {root: true});
       context.commit(SET_SEARCH_ID_MUTATION, {searchID: response.searchID});
+
+      return response;
     }
+
+    return false;
   }
 }
