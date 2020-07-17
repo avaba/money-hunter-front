@@ -106,7 +106,10 @@
           );
 
           this.paginationData.totalCount = result.countAll;
-          this.list = result.products;
+          this.list = [];
+          this.$nextTick(()=>{
+            this.list = result.products;
+          })
         }
       },
       map_goods(item) {
