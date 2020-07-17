@@ -3,7 +3,7 @@
     <form action="" class="filter-form">
       <div class="filter-form__fields">
         <div class="filter-form__item">
-          <TreeSelect label="Выберите категории"/>
+          <!--          <MultiSelect/>-->
           <!--          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>-->
         </div>
         <div class="filter-form__item">
@@ -62,11 +62,10 @@
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
   import {GET_NEW_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
-  import TreeSelect from "@/shared-components/TreeSelect";
 
   export default {
     name: "FilterBlock",
-    components: {TreeSelect, Btn, InputField, RowWithIcon},
+    components: {Btn, InputField, RowWithIcon},
     props: {
       searchHandler: {
         type: Function,
@@ -168,7 +167,7 @@
 
   .filter-form__item {
 
-    &:first-child{
+    &:first-child {
       max-width: 350px;
       min-width: 350px;
     }

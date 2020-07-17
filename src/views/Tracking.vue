@@ -6,7 +6,7 @@
           :list="trackingList"
         />
       </div>
-      <Btn clazz="tracking-add-category"/>
+      <Btn clazz="tracking-add-category" @click="handleCreateGroupBtn"/>
     </div>
 
     <router-view/>
@@ -16,6 +16,8 @@
 <script>
   import TrackingNav from "@/components/TrackingNav";
   import Btn from "@/shared-components/Btn";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import CreateGroup from "@/components/tracking/CreateGroup";
 
   export default {
     name: "Tracking",
@@ -39,6 +41,9 @@
       }
     },
     methods: {
+      handleCreateGroupBtn(){
+        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: CreateGroup});
+      },
       prevHandler(){
         console.log('prev clicked')
       },

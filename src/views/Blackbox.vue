@@ -17,7 +17,6 @@
                           :prev-handler="$paginationPrevHandler"
                           :next-handler="$paginationNextHandler"/>
     </div>
-
   </Fragment>
 </template>
 
