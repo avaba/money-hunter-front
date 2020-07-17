@@ -34,7 +34,6 @@
   import {mapMutations, mapState} from "vuex";
   import {BlackboxService} from "@/services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
-  import {FIND_SEARCH_ID_BY_NAME_ACTION} from "@/store/modules/blackbox/constants";
 
   export default {
     name: "SaveProject",
@@ -59,7 +58,6 @@
           const result = await blackboxService.saveSearch(this.name, _nested);
 
           if (typeof result === 'boolean' && result) {
-            await this.$store.dispatch(`blackbox/${FIND_SEARCH_ID_BY_NAME_ACTION}`, this.name);
             this[HIDE_MODAL_MUTATION]();
           } else {
             this.nameError = result;
