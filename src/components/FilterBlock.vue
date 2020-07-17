@@ -5,6 +5,7 @@
         <div class="filter-form__item">
           <!--          <MultiSelect/>-->
           <!--          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>-->
+          <TreeSelect label="Выберие категории"/>
         </div>
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange"/>
@@ -62,10 +63,11 @@
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
   import {GET_NEW_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
+  import TreeSelect from "@/shared-components/TreeSelect";
 
   export default {
     name: "FilterBlock",
-    components: {Btn, InputField, RowWithIcon},
+    components: {TreeSelect, Btn, InputField, RowWithIcon},
     props: {
       searchHandler: {
         type: Function,

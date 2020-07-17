@@ -1,19 +1,19 @@
 <template>
   <div class="select-field">
     <label for="" class="select-field__label">{{label}}</label>
-    <VendorTreeSelect v-model="value" :multiple="true" :options="options" class="select-field__select" :always-open="true">
+    <VendorTreeSelect v-model="value" :multiple="true" :options="options" class="select-field__select">
 
-            <template v-slot:option-label="{ node, labelClassName }">
-              <label :class="{
-                'categories__item': node.isRootNode,
-                [labelClassName]: true,
-                'categories__sub-categories-item': node.isLeaf}
-              ">
-                <a href="#" :class="{'categories__link': node.isBranch, 'categories__link_open': node.isExpanded}">
-                  {{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}
-                </a>
-              </label>
-            </template>
+<!--            <template v-slot:option-label="{ node, labelClassName }">-->
+<!--              <label :class="{-->
+<!--                'categories__item': node.isRootNode,-->
+<!--                [labelClassName]: true,-->
+<!--                'categories__sub-categories-item': node.isLeaf}-->
+<!--              ">-->
+<!--                <a href="#" :class="{'categories__link': node.isBranch, 'categories__link_open': node.isExpanded}">-->
+<!--                  {{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}-->
+<!--                </a>-->
+<!--              </label>-->
+<!--            </template>-->
 
     </VendorTreeSelect>
   </div>
@@ -77,6 +77,26 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
+  .select-field {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    flex-wrap: wrap;
+  }
+
+  .select-field__label {
+    letter-spacing: .2px;
+    color: $titleColor;
+    font-weight: bold;
+    display: block;
+  }
+
+  .select-field__select {
+    flex: 1 0 100%;
+    display: block;
+    margin-top: 5px;
+  }
 
   .categories__link {
     padding: 8px 14px;
