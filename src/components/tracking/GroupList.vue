@@ -2,7 +2,7 @@
   <div class="tracking-body">
     <div class="tracking-info">
       <div class="tracking-add-product">
-        <Btn clazz="button_add" label="Добавить товары"/>
+        <Btn clazz="button_add" label="Добавить товары" @click="addGoodsHandler"/>
       </div>
       <div class="tracking-actions">
         <RowWithIcon/>
@@ -22,6 +22,9 @@
   import {orderHandler} from "@/extenders/mixins/order_handler";
   import ProductPrice from "@/components/tracking-table/ProductPrice";
   import {tableMixins} from "@/extenders/mixins/table_mixins";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
+  import AddGoodsPosition from "@/components/tracking/AddGoodsPosition";
 
   export default {
     name: "Groups",
@@ -116,6 +119,9 @@
       }
     },
     methods: {
+      addGoodsHandler() {
+        this[SHOW_MODAL_MUTATION]({component: AddGoodsPosition});
+      },
       directionChecker(direction, val) {
         return direction === 'asc' ? val : ~val;
       },
@@ -127,7 +133,8 @@
       },
       sort_orders_sum(direction) {
         return (a, b) => this.directionChecker(direction, a.orders_sum.component_data.price - b.orders_sum.component_data.price);
-      }
+      },
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION]),
     },
     watch: {
       orderType: function (n) {

@@ -2,6 +2,7 @@
   <Fragment>
     <div class="overlay"></div>
     <div class="modal modal_small">
+      <div class="close-modal" v-if="closable" @click="hideModal"></div>
       <slot name="logo">
         <div class="modal-company">
           <img src="../assets/img/logo_modal.svg" alt="">
@@ -16,6 +17,8 @@
 
 <script>
   import {Fragment} from 'vue-fragment';
+  import {mapMutations} from "vuex";
+  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
 
   export default {
     name: "Modal",
@@ -24,7 +27,14 @@
       title: {
         type: String,
         required: true
+      },
+      closable: {
+        type: Boolean,
+        default: false
       }
+    },
+    methods: {
+      ...mapMutations('modal', [HIDE_MODAL_MUTATION])
     }
   }
 </script>
@@ -65,6 +75,7 @@
   }
 
   .close-modal {
+    cursor: pointer;
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -212,7 +223,7 @@
   .modal-form-steps__line {
     position: absolute;
     z-index: -1;
-    width: 50%;
+    width: 55%;
     height: 1px;
     border-bottom: 1px solid $drayDevider;
     top: 1.28rem;
