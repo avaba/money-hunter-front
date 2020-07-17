@@ -3,7 +3,8 @@
     <form action="" class="filter-form">
       <div class="filter-form__fields">
         <div class="filter-form__item">
-          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>
+          <TreeSelect label="Выберите категории"/>
+          <!--          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>-->
         </div>
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange"/>
@@ -50,7 +51,6 @@
 </template>
 
 <script>
-  import SelectField from "../shared-components/SelectField";
   import InputField from "../shared-components/InputField";
   import RowWithIcon from "../shared-components/RowWithIcon";
 
@@ -62,10 +62,11 @@
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
   import {GET_NEW_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
+  import TreeSelect from "@/shared-components/TreeSelect";
 
   export default {
     name: "FilterBlock",
-    components: {Btn, SelectField, InputField, RowWithIcon},
+    components: {TreeSelect, Btn, InputField, RowWithIcon},
     props: {
       searchHandler: {
         type: Function,
@@ -166,6 +167,11 @@
   }
 
   .filter-form__item {
+
+    &:first-child{
+      max-width: 350px;
+      min-width: 350px;
+    }
 
     &:not(:last-child) {
       margin-right: 1.42rem;
