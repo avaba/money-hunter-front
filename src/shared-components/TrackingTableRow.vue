@@ -11,7 +11,9 @@
     </tr>
     <tr class="tracking-table-dropdown tracking-table__row_open" v-if="rowData.nested && rowOpened">
       <td class="tracking-table-dropdown__item" :colspan="mappedList.length">
-        <component v-bind:is="rowData.nested"/>
+        <div :class="rowData.nested.clazz || ''">
+          <component v-bind:is="getNested(rowData.nested)" v-bind="rowData.nested"/>
+        </div>
       </td>
     </tr>
   </Fragment>
@@ -48,6 +50,12 @@
       }
     },
     methods: {
+      getNested(nested) {
+        if (nested.content) {
+          return nested.content;
+        }
+        return nested;
+      },
       open() {
         if (this.rowData.nested) {
           this.rowOpened = !this.rowOpened;
@@ -126,6 +134,19 @@
 
     div {
       display: flex;
+
+      &.tracking-table-dropdown__item-chart {
+        justify-content: center;
+      }
+
+      /deep/ & div {
+        background-color: white;
+      }
+
+      /deep/ & .chartjs-render-monitor {
+        width: 650px !important;
+        height: 240px !important;
+      }
     }
   }
 

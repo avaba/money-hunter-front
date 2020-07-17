@@ -86,4 +86,12 @@ export class BlackboxService {
       return null;
     }
   }
+
+  async getChartData(articul: string) {
+    try {
+      return (await this.service.refreshWrapper(this.repo.getChartData.bind(this.repo, articul))).data.product;
+    } catch (e) {
+      return null;
+    }
+  }
 }

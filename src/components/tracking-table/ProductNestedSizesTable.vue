@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Fragment>
     <table class="tracking-table-dropdown__table">
       <tr class="tracking-table-dropdown__header">
         <th class="tracking-table-dropdown__header-item">Размер</th>
@@ -73,15 +73,16 @@
         <td class="tracking-table-dropdown__cell">0</td>
       </tr>
     </table>
-  </div>
+  </Fragment>
 </template>
 
 <script>
   import ProductRating from "@/components/tracking-table/ProductRating";
+  import {Fragment} from 'vue-fragment';
 
   export default {
     name: "ProductNestedSizesTable",
-    components: {ProductRating}
+    components: {ProductRating, Fragment}
   }
 </script>
 

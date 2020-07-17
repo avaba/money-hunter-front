@@ -32,6 +32,7 @@
   import TrackingPagination from "@/shared-components/TrackingPagination";
   import {paginationMixin} from "@/extenders/mixins/pagination_mixin";
   import {debounce} from 'lodash'
+  import ProductBlackboxNested from "@/components/tracking-table/ProductBlackboxNested";
 
   const DEFAULT_ORDER_TYPE = 'articul';
 
@@ -61,7 +62,10 @@
     },
     computed: {
       tablePositions() {
-        return this.list.map(item => this.$mapItemListToTableItem(item));
+        return this.list.map(item => ({
+          ...this.$mapItemListToTableItem(item),
+          nested: {content: ProductBlackboxNested, articul: item.articul, clazz: 'tracking-table-dropdown__item-chart'}
+        }));
       },
       searchID() {
         return this.$store.state.blackbox.searchID;
@@ -121,7 +125,7 @@
       }
 
     },
-    mounted() {
+    async mounted() {
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
     },
     watch: {
