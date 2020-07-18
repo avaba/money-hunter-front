@@ -1,19 +1,23 @@
 <template>
   <div class="select-field">
     <label for="" class="select-field__label">{{label}}</label>
-    <VendorTreeSelect v-model="value" :multiple="true" :options="options" class="select-field__select">
-
-<!--            <template v-slot:option-label="{ node, labelClassName }">-->
-<!--              <label :class="{-->
-<!--                'categories__item': node.isRootNode,-->
-<!--                [labelClassName]: true,-->
-<!--                'categories__sub-categories-item': node.isLeaf}-->
-<!--              ">-->
-<!--                <a href="#" :class="{'categories__link': node.isBranch, 'categories__link_open': node.isExpanded}">-->
-<!--                  {{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}-->
-<!--                </a>-->
-<!--              </label>-->
-<!--            </template>-->
+    <VendorTreeSelect ref="treeselect"
+                      v-on="$listeners"
+                      v-bind="$attrs"
+                      :value="value"
+                      class="select-field__select">
+      <div slot="value-label" slot-scope="{ node }">{{ getValue(node) }}</div>
+      <!--            <template v-slot:option-label="{ node, labelClassName }">-->
+      <!--              <label :class="{-->
+      <!--                'categories__item': node.isRootNode,-->
+      <!--                [labelClassName]: true,-->
+      <!--                'categories__sub-categories-item': node.isLeaf}-->
+      <!--              ">-->
+      <!--                <a href="#" :class="{'categories__link': node.isBranch, 'categories__link_open': node.isExpanded}">-->
+      <!--                  {{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}-->
+      <!--                </a>-->
+      <!--              </label>-->
+      <!--            </template>-->
 
     </VendorTreeSelect>
   </div>
@@ -31,45 +35,41 @@
         type: String,
         required: true,
       },
-    },
-    data() {
-      return {
-        // define the default value
-        value: null,
-        // define options
-        options: [
-          {
-            id: 'a',
-            label: 'Спортивная одежда',
-            children: [
-              {
-                id: 'aa',
-                label: 'Кеды',
-              },
-              {
-                id: 'ab',
-                label: 'Шорты',
-              },
-              {
-                id: 'ac',
-                label: 'футболки',
-              },
-              {
-                id: 'ad',
-                label: 'носки',
-              },
-            ],
-          },
-          {
-            id: 'b',
-            label: 'Кепки',
-          },
-          {
-            id: 'c',
-            label: 'Костюмы',
-          }
-        ],
+      value: {
+        required: true,
+      },
+      dontUseLocalSearch: {
+        type: Boolean,
+        default: false,
       }
+    },
+    methods: {
+      getValue(node) {
+        const label = node.label;
+        if (label.endsWith(' (unknown)')) {
+          return label.substr(0, label.lastIndexOf(' (unknown)'));
+        }
+
+        return label;
+      },
+      getMenu() {
+        return this.$refs.treeselect.getMenu();
+      },
+      handleLocalSearch() {
+        const origFunc = this.$refs.treeselect.handleLocalSearch;
+
+        this.$refs.treeselect.handleLocalSearch = () => {
+          if (this.dontUseLocalSearch) {
+            this.$emit('search-change', this.$refs.treeselect.trigger.searhQuery);
+          } else {
+            origFunc.call(this.$refs.treeselect);
+          }
+        }
+
+      }
+    },
+    mounted() {
+      this.handleLocalSearch();
     }
   }
 </script>

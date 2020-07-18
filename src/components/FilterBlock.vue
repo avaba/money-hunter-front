@@ -5,7 +5,38 @@
         <div class="filter-form__item">
           <!--          <MultiSelect/>-->
           <!--          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>-->
-          <TreeSelect label="Выберие категории"/>
+          <TreeSelect label="Выберие категории" :options="[
+          {
+            id: 'a',
+            label: 'Спортивная одежда',
+            children: [
+              {
+                id: 'aa',
+                label: 'Кеды',
+              },
+              {
+                id: 'ab',
+                label: 'Шорты',
+              },
+              {
+                id: 'ac',
+                label: 'футболки',
+              },
+              {
+                id: 'ad',
+                label: 'носки',
+              },
+            ],
+          },
+          {
+            id: 'b',
+            label: 'Кепки',
+          },
+          {
+            id: 'c',
+            label: 'Костюмы',
+          }
+        ]"/>
         </div>
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange"/>
