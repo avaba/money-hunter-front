@@ -5,7 +5,7 @@
         <div class="filter-form__item">
           <!--          <MultiSelect/>-->
           <!--          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>-->
-          <TreeSelect label="Выберие категории" :options="[
+          <TreeSelect label="Выберие категории" :value="['a']" :options="[
           {
             id: 'a',
             label: 'Спортивная одежда',

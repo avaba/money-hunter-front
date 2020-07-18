@@ -75,7 +75,7 @@
         this.paginationData.page = 1;
         this.orderType = DEFAULT_ORDER_TYPE;
 
-        await this.debounceLoadGoods();
+        this.debounceLoadGoods();
       },
       perPageHandler(value) {
         this.paginationData.page = 1;

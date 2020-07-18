@@ -18,7 +18,7 @@
       <form action="" class="modal-form">
         <template v-if="!firstDone">
           <div class="modal-form__save-project">
-            <InputField label="Придумайте название для вашей группы"/>
+            <InputField label="Придумайте название для вашей группы" v-model="groupName"/>
           </div>
 
           <div class="modal-form__submit-item">
@@ -63,6 +63,7 @@
     data() {
       return {
         firstDone: false,
+        groupName: ''
       }
     }
   }

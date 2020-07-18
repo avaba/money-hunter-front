@@ -14,14 +14,14 @@ export const mapItemListToTableItem = {
       }
 
       const keys = that.$tableHeaderKeys;
-
       for (const key of keys) {
         result[key] = that[`map_${key}`]
           ? that[`map_${key}`](item)
           : {
             content: item[key],
-            clazz: that.$getTableHeaderClazzWidth(key),
+            clazz: [item[key].clazz || '', that.$getTableHeaderClazzWidth(key)].join(' '),
           }
+
       }
 
       return result;

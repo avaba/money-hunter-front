@@ -1,5 +1,5 @@
 <template>
-  <div class="tracking-table__product-price">{{price}} ₽</div>
+  <div class="tracking-table__product-price">{{price===null ? '' : `${price} ₽`}}</div>
 </template>
 
 <script>
@@ -8,7 +8,7 @@
     props: {
       price: {
         type: Number,
-        required: true,
+        default: null,
       }
     }
   }

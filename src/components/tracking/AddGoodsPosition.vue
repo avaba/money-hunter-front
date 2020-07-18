@@ -3,10 +3,10 @@
     <template v-slot:logo><span/></template>
     <template v-slot:default>
 
-      <div>types:
+      <div>
         <div v-for="(item, idx) in addTypes"
              :key="idx"
-             @click="selectedType=item"
+             @click="_=>{selectedType=item; firstDone=false}"
              style="display: block; cursor:pointer;">
           <strong v-if="selectedType===item">
             <span v-html="translatedType(item)"/>
@@ -30,30 +30,35 @@
 
       <form action="" class="modal-form">
         <template v-if="!firstDone">
+          <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
 
-          <template v-if="selectedType==='byGoods'">
-            <div class="modal-form__save-project">
-              <InputField label="Введите артикул товара"/>
+            <template v-if="selectedType==='byGoods'">
+
+              <div class="modal-form__save-project">
+                <InputField label="Введите артикул товара" :error="$getValidationError(errors)"/>
+              </div>
+            </template>
+
+            <TreeSelect v-else
+                        :error="$getValidationError(errors)"
+                        v-model="selectedBrands"
+                        ref="brandsSelector"
+                        label="Выберите бренд"
+                        :multiple="true"
+                        :load-options="loadBrands"
+                        :options="brandOptions"
+                        :normalizer="brandsNormalizer"
+                        :dont-use-local-search="true"
+                        @open="handleMenuOpen"
+                        @close="handleMenuClose"
+                        @search-change="handleSearchChange"
+            />
+
+
+            <div class="modal-form__submit-item">
+              <Btn label="Далее" type="button" @click="()=>{if(valid) {firstDone=true}else validate()}"/>
             </div>
-          </template>
-
-          <TreeSelect v-else
-                      v-model="selectedBrands"
-                      ref="brandsSelector"
-                      label="Выберите бренд"
-                      :multiple="true"
-                      :load-options="loadBrands"
-                      :options="brandOptions"
-                      :normalizer="brandsNormalizer"
-                      :dont-use-local-search="true"
-                      @open="handleMenuOpen"
-                      @close="handleMenuClose"
-                      @search-change="handleSearchChange"
-          />
-
-          <div class="modal-form__submit-item">
-            <Btn label="Далее" type="button" @click="firstDone=true"/>
-          </div>
+          </ValidationProvider>
         </template>
         <template v-if="firstDone">
           <div class="modal-form-category">
@@ -61,25 +66,17 @@
               Выберите группу из списка
             </label>
             <div class="modal-form__category-list">
-              <div class="radio-item"><input type="radio"><label for="">Брюки</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Комбинезоны</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Верхняя одежда</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Джинсы</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Домашняя одежда</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Майки</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Нижнее белье</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Носки и гетры</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Одежда больших размеров</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Пиджаки и костюмы</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Плавки и шорты для плавания</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Нижнее белье</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Носки и гетры</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Одежда больших размеров</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Пиджаки и костюмы</label></div>
-              <div class="radio-item"><input type="radio"><label for="">Плавки и шорты для плавания</label></div>
+              <div class="radio-item" v-for="(item, idx) in groups" :key="idx">
+                <input type="radio" :value="item.name" v-model="selectedGroup"><label for="">{{item.name}}</label>
+              </div>
               <div class="radio-item">
-                <input type="radio">
-                <input type="text" class="input-field__input" placeholder="Название новой группы">
+                <input type="radio" :checked="isNewGroup">
+                <input type="text"
+                       class="input-field__input"
+                       @input="$event=>selectedGroup=$event.target.value"
+                       @click="isNewGroup=true"
+                       :value="isNewGroup ? selectedGroup : ''"
+                       placeholder="Название новой группы">
               </div>
             </div>
           </div>
@@ -89,7 +86,7 @@
               <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
             </div>
             <div class="modal-form__double-submit-item">
-              <Btn label="Сохранить"/>
+              <Btn label="Сохранить" @click="handleSaveBtn"/>
             </div>
           </div>
         </template>
@@ -105,13 +102,17 @@
   import InputField from "@/shared-components/InputField";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {TrackingService} from "@/services/tracking_service";
+  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
+  import {mapState} from "vuex";
+  import {ValidationProvider} from 'vee-validate';
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
 
   export default {
     name: "AddGoodsPosition",
-    components: {TreeSelect, InputField, Modal, Btn},
+    components: {TreeSelect, InputField, Modal, Btn, ValidationProvider},
     data() {
       return {
         firstDone: false,
@@ -125,7 +126,10 @@
         brandsPortionSize: 30,
         brandsSearchQuery: '',
 
+        isNewGroup: false,
+
         selectedBrands: [],
+        selectedGroup: ''
       }
     },
     computed: {
@@ -133,7 +137,8 @@
         return this.selectedType === ADD_BY_GOODS
           ? 'Добавить товар'
           : 'Добавить бренд';
-      }
+      },
+      ...mapState('tracking', ['groups'])
     },
     methods: {
       translatedType(type) {
@@ -189,7 +194,7 @@
           }
 
           if (results.length === this.brandsPortionPage) {
-            this.brandsPortionPage = parseInt(i / this.brandsPortionSize);
+            this.brandsPortionPage = parseInt(String(i / this.brandsPortionSize));
           }
         }
 
@@ -200,8 +205,25 @@
         this.$nextTick(() => {
           this.brandOptions = this.handleBrandsSearch();
         });
+      },
+
+      async handleSaveBtn() {
+        const service = new TrackingService();
+        const result = await service.createUpdateGroup(
+          this.selectedGroup,
+          this.selectedType === ADD_BY_GOODS ? [] : this.selectedBrands,
+          this.selectedType === ADD_BY_BRAND
+        );
+
+        if (result) {
+          await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
+          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          await this.$router.push({name: 'tracking.group', params: {name: this.selectedGroup}});
+        } else {
+          alert('Произошла ошибка');
+        }
       }
-    }
+    },
   }
 </script>
 

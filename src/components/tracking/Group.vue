@@ -3,26 +3,19 @@
     <div class="tracking-body">
       <div class="tracking-info">
         <div class="tracking-add-product">
-          <Btn clazz="button_add" label="Добавить товары"/>
+          <AddGoodsBtn/>
         </div>
         <div class="tracking-actions">
           <RowWithIcon :list="trackingActionList"/>
         </div>
       </div>
 
-      <TrackingTable :headers="tableHeaders" :items="tableData" :order="orderType" :order-handler="$orderHandler"/>
+      <TrackingTable :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
     </div>
-    <TrackingPagination :total-count="1000"
-                        :prev-handler="prevHandler"
-                        :next-handler="nextHandler"
-                        :page="1"
-                        :per-page="25"
-                        :per-page-handler="()=>{}"/>
   </Fragment>
 </template>
 
 <script>
-  import Btn from "@/shared-components/Btn";
   import RowWithIcon from "@/shared-components/RowWithIcon";
   import TrackingTable from "@/shared-components/TrackingTable";
 
@@ -37,57 +30,47 @@
 
   import ProductNestedSizesTable from "@/components/tracking-table/ProductNestedSizesTable";
   import {tableMixins} from "@/extenders/mixins/table_mixins";
-  import TrackingPagination from "@/shared-components/TrackingPagination";
 
   import {Fragment} from 'vue-fragment'
   import {orderHandler} from "@/extenders/mixins/order_handler";
+  import {TrackingService} from "@/services/tracking_service";
+  import AddGoodsBtn from "@/shared-components/AddGoodsBtn";
+  import {debounce} from "lodash";
 
   export default {
     name: "Group",
-    components: {Btn, RowWithIcon, TrackingTable, TrackingPagination, Fragment},
+    components: {AddGoodsBtn, RowWithIcon, TrackingTable, Fragment},
     mixins: [tableMixins, orderHandler],
     data() {
       return {
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'price', label: 'Цена', clazz: 'width9 tracking-table__header-item_align-center'},
-          {name: 'rating', label: 'Рейтинг', clazz: 'width9 tracking-table__header-item_align-center'},
-          {name: 'available_count', label: 'Доступно к заказу', clazz: 'width9'},
-          {name: 'ordered_today_count', label: 'Заказы Сегодня', clazz: 'width9'},
-          {name: 'ordered_yesterday_count', label: 'Заказы Вчера', clazz: 'width9'},
-          {name: 'ordered_week_count', label: 'Заказы Неделя', clazz: 'width9'},
-          {name: 'ordered_month_count', label: 'Заказы Месяц', clazz: 'width9'},
+          {name: 'currentPrice', label: 'Цена', clazz: 'width9 tracking-table__header-item_align-center', sortable: false},
+          {name: 'rating', label: 'Рейтинг', clazz: 'width9 tracking-table__header-item_align-center', sortable: false},
+          {name: 'currentQty', label: 'Доступно к заказу', clazz: 'width9', sortable: false},
+          {name: 'todayOrders', label: 'Заказы Сегодня', clazz: 'width9', sortable: false},
+          {name: 'yesterdayOrders', label: 'Заказы Вчера', clazz: 'width9', sortable: false},
+          {name: 'weekOrders', label: 'Заказы Неделя', clazz: 'width9', sortable: false},
+          {name: 'monthOrders', label: 'Заказы Месяц', clazz: 'width9', sortable: false},
           {name: 'actions', label: 'Действия', sortable: false, clazz: 'width5'},
         ],
-        tableData: [
-          {
-            goods: {content: ProductContent, component_data: {goodsName: 'Шляпа', articul: '10000200'}, clazz: 'width30'},
-            price: {
-              content: ProductPrice,
-              component_data: {price: 100500},
-              clazz: 'width9 tracking-table__align-center'
-            },
-            rating: {content: ProductRating, clazz: 'width9 tracking-table__align-center'},
-            available_count: {content: 1, clazz: 'width9'},
-            ordered_today_count: {content: 1, clazz: 'width9'},
-            ordered_yesterday_count: {content: 0, clazz: 'width9'},
-            ordered_week_count: {content: 0, clazz: 'width9'},
-            ordered_month_count: {content: 3, clazz: 'width9'},
-            actions: {content: ProductAction, clazz: 'width5 tracking-table__align-center'},
-            nested: ProductNestedSizesTable
-          }
-        ],
+        list: [],
         trackingActionList: [
           {label: "Добавить оповещения для групп", img: AlertImg},
           {label: "Автоподсорт", img: AutosortImg},
           {label: "Скачать", img: DownloadImg},
         ],
-        orderType: 'price'
+        orderType: 'currentPrice',
+
+        debounceLoadGoods: debounce(this.loadGoods, 200)
       }
     },
     computed: {
       tablePositions() {
-        return this.tableData.map(item => this.$mapItemListToTableItem(item));
+        return this.list.map(item => ({
+          ...this.$mapItemListToTableItem({...item, ...item.ordersInfo}),
+          nested: {content: ProductNestedSizesTable, articul: item.articul,},
+        }));
       }
     },
     methods: {
@@ -96,6 +79,47 @@
       },
       nextHandler() {
         console.log('next');
+      },
+      map_goods(item) {
+        return {
+          content: ProductContent,
+          clazz: 'width30',
+          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link}
+        };
+      },
+      map_currentPrice(item) {
+        return {
+          content: ProductPrice,
+          clazz: 'width9 tracking-table__align-center',
+          component_data: {price: item.currentPrice}
+        };
+      },
+      map_rating(item) {
+        return {
+          content: ProductRating,
+          component_data: {rating: item.currentRating},
+          clazz: 'width9 tracking-table__align-center'
+        }
+      },
+      map_actions() {
+        return {content: ProductAction, clazz: 'width5 tracking-table__align-center'}
+      },
+      async loadGoods() {
+        const service = new TrackingService();
+        const results = await service.getGroupGoods(this.$route.params.name, this.orderType);
+
+        this.list = [];
+        this.$nextTick(() => {
+          this.list = results;
+        })
+      }
+    },
+    async mounted() {
+      this.loadGoods();
+    },
+    watch: {
+      orderType: function () {
+        this.debounceLoadGoods();
       }
     }
   }

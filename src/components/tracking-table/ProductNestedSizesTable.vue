@@ -73,16 +73,27 @@
         <td class="tracking-table-dropdown__cell">0</td>
       </tr>
     </table>
+
+    <div>
+      <ProductBlackboxNested :articul="articul"/>
+    </div>
   </Fragment>
 </template>
 
 <script>
   import ProductRating from "@/components/tracking-table/ProductRating";
   import {Fragment} from 'vue-fragment';
+  import ProductBlackboxNested from "@/components/tracking-table/ProductBlackboxNested";
 
   export default {
     name: "ProductNestedSizesTable",
-    components: {ProductRating, Fragment}
+    components: {ProductBlackboxNested, ProductRating, Fragment},
+    props: {
+      articul: {
+        type: String,
+        required: true
+      },
+    }
   }
 </script>
 

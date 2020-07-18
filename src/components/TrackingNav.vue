@@ -42,9 +42,13 @@
       },
       navigateTo(item) {
         if (item.system) {
-          this.$router.push({name: 'tracking.group_list'});
+          if (this.$route.name !== 'tracking.group_list') {
+            this.$router.push({name: 'tracking.group_list'});
+          }
         } else {
-          this.$router.push({name: 'tracking.group', params: {name: item.label}});
+          if (!(this.$route.name === 'tracking.group' && this.$route.params.name === item.label)) {
+            this.$router.push({name: 'tracking.group', params: {name: item.label}});
+          }
         }
       }
     }

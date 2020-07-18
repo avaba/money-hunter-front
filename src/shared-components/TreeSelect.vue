@@ -1,6 +1,7 @@
 <template>
   <div class="select-field">
     <label for="" class="select-field__label">{{label}}</label>
+    <span class="select-field__error" v-if="!!error">{{error}}</span>
     <VendorTreeSelect ref="treeselect"
                       v-on="$listeners"
                       v-bind="$attrs"
@@ -41,6 +42,10 @@
       dontUseLocalSearch: {
         type: Boolean,
         default: false,
+      },
+      error: {
+        type: String,
+        default: null
       }
     },
     methods: {
@@ -76,6 +81,11 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
+
+  .select-field__error {
+    color: $red;
+    letter-spacing: .2px;
+  }
 
   .select-field {
     position: relative;

@@ -4,6 +4,7 @@ import user from './modules/user';
 import auth from './modules/auth';
 import modal from './modules/modal';
 import blackbox from './modules/blackbox';
+import tracking from './modules/tracking';
 
 Vue.use(Vuex);
 
@@ -21,7 +22,8 @@ export const store = new Vuex.Store<VuexRootState>({
     user,
     auth,
     modal,
-    blackbox
+    blackbox,
+    tracking
   }
 });
 

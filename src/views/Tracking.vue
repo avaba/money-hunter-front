@@ -3,13 +3,13 @@
     <div class="tracking-navigation">
       <div class="tracking-navigation-wrapper">
         <TrackingNav
-          :list="trackingList"
+          :list="trackingNavList"
         />
       </div>
       <Btn clazz="tracking-add-category" @click="handleCreateGroupBtn"/>
     </div>
 
-    <router-view/>
+    <router-view :key="$route.fullPath"/>
   </div>
 </template>
 
@@ -18,39 +18,29 @@
   import Btn from "@/shared-components/Btn";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import CreateGroup from "@/components/tracking/CreateGroup";
+  import {GROUP_NAMES_GETTER, LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
+  import {mapGetters} from "vuex";
 
   export default {
     name: "Tracking",
     components: {TrackingNav, Btn},
-    data() {
-      return {
-        trackingList: [
+    computed: {
+      ...mapGetters('tracking', [GROUP_NAMES_GETTER]),
+      trackingNavList() {
+        return [
           {label: "Список групп", system: true},
-          {label: "Спортивные костюмы"},
-          {label: "Кросовки", actions: true, active: true},
-          {label: "Носки"},
-          {label: "кепки"},
-          {label: "очки"},
-          {label: "Сумочки"},
-          {label: "трусы"},
-          {label: "ремни"},
-          {label: "пиджаки"},
-          {label: "джинсы"},
-          {label: "рубашки"},
-        ],
+          ...this[GROUP_NAMES_GETTER].map(name => ({label: name}))
+        ]
       }
     },
     methods: {
-      handleCreateGroupBtn(){
+      handleCreateGroupBtn() {
         this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: CreateGroup});
       },
-      prevHandler(){
-        console.log('prev clicked')
-      },
-      nextHandler(){
-        console.log('next clicked')
-      }
-    }
+    },
+    mounted() {
+      this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
+    },
   }
 </script>
 

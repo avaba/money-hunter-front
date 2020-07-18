@@ -144,7 +144,7 @@
       }
 
       /* для charts js - либа генерит div*/
-      /deep/ & div {
+      /deep/ & .chartjs-render-monitor {
         background-color: white;
       }
 
