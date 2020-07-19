@@ -32,6 +32,9 @@
   import {paginationMixin} from "@/extenders/mixins/pagination_mixin";
   import {debounce} from 'lodash'
   import ProductBlackboxNested from "@/components/tracking-table/ProductBlackboxNested";
+  import Btn from "@/shared-components/Btn";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import AddToGroup from "@/components/blackbox/AddToGroup";
 
   const DEFAULT_ORDER_TYPE = 'articul';
 
@@ -125,8 +128,16 @@
       map_currentRating(item) {
         return {content: ProductRating, component_data: {rating: item.currentRating}, clazz: 'width9'};
       },
-      map_add() {
-        return {content: 'add', clazz: 'width9'}
+      map_add(item) {
+        return {
+          content: Btn, component_data: {
+            label: 'add',
+            'click-handler': this.addGoodsPositionHandler.bind(this, item)
+          }, clazz: 'width9'
+        }
+      },
+      addGoodsPositionHandler(item) {
+        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: AddToGroup, data: {articul: item.articul}})
       }
     },
     async mounted() {

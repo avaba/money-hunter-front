@@ -6,7 +6,7 @@
         <Header :header="getTitle()"/>
         <router-view/>
       </main>
-      <component v-bind:is="component" v-if="isShow"/>
+      <component v-bind:is="component" v-if="isShow" v-bind="nested"/>
     </template>
 
     <!--    login/register and other similar windows-->
@@ -20,6 +20,7 @@
   import {GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION} from "@/store/modules/user/constants";
   import {mapActions, mapState} from "vuex";
   import {TokenService} from "@/services/token_service";
+  import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
 
   export default {
     components: {Sidebar, Header},
@@ -28,13 +29,14 @@
     },
     computed: {
       ...mapState('auth', ['isLoggedIn']),
-      ...mapState('modal', ['isShow', 'component']),
+      ...mapState('modal', ['isShow', 'component', 'nested']),
     },
     created() {
       const tokenService = new TokenService();
       if (tokenService.isLoggedIn()) {
         this[GET_PROFILE_ACTION]();
         this[GET_SUBSCRIPTION_ACTION]();
+        this[LOAD_GROUPS_ACTION]();
       }
     },
     methods: {
@@ -46,13 +48,15 @@
           .meta
           .title;
       },
-      ...mapActions('user', [GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION])
+      ...mapActions('user', [GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION]),
+      ...mapActions('tracking', [LOAD_GROUPS_ACTION]),
     },
     watch: {
       isLoggedIn: function (newState) {
         if (newState) {
           this[GET_PROFILE_ACTION]();
           this[GET_SUBSCRIPTION_ACTION]();
+          this[LOAD_GROUPS_ACTION]();
         }
       }
     }

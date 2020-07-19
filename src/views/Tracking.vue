@@ -18,7 +18,7 @@
   import Btn from "@/shared-components/Btn";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import CreateGroup from "@/components/tracking/CreateGroup";
-  import {GROUP_NAMES_GETTER, LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
+  import {GROUP_NAMES_GETTER} from "@/store/modules/tracking/constants";
   import {mapGetters} from "vuex";
 
   export default {
@@ -37,9 +37,6 @@
       handleCreateGroupBtn() {
         this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: CreateGroup});
       },
-    },
-    mounted() {
-      this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
     },
   }
 </script>

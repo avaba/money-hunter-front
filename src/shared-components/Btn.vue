@@ -1,5 +1,5 @@
 <template>
-  <button :class="`${defaultClass} ${_clazz}`" :type="type" @click="$emit('click', $event.target.value)">{{label}}
+  <button :class="`${defaultClass} ${_clazz}`" :type="type" @click="onClick">{{label}}
     <slot/>
   </button>
 </template>
@@ -23,6 +23,10 @@
       withoutDefaultClass: {
         type: Boolean,
         default: false
+      },
+      clickHandler: {
+        type: Function,
+        default: null,
       }
     },
     computed: {
@@ -35,6 +39,17 @@
         }
 
         return Object.keys(this.clazz).filter(key => this.clazz[key]).join(' ');
+      }
+    },
+    methods: {
+      onClick($event) {
+        if (this.clickHandler) {
+          $event.preventDefault();
+          $event.stopPropagation();
+          this.clickHandler($event);
+        } else {
+          this.$emit('click', $event)
+        }
       }
     }
   }

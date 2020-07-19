@@ -61,34 +61,18 @@
           </ValidationProvider>
         </template>
         <template v-if="firstDone">
-          <div class="modal-form-category">
-            <label for="" class="input-field__label">
-              Выберите группу из списка
-            </label>
-            <div class="modal-form__category-list">
-              <div class="radio-item" v-for="(item, idx) in groups" :key="idx">
-                <input type="radio" :value="item.name" v-model="selectedGroup"><label for="">{{item.name}}</label>
-              </div>
-              <div class="radio-item">
-                <input type="radio" :checked="isNewGroup">
-                <input type="text"
-                       class="input-field__input"
-                       @input="$event=>selectedGroup=$event.target.value"
-                       @click="isNewGroup=true"
-                       :value="isNewGroup ? selectedGroup : ''"
-                       placeholder="Название новой группы">
-              </div>
-            </div>
-          </div>
+          <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
+            <SelectGroupModal v-model="selectedGroup" :error="$getValidationError(errors)"/>
 
-          <div class="modal-form__double-submit modal-form__double-submit_save-project">
-            <div class="modal-form__double-submit-item">
-              <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
+            <div class="modal-form__double-submit modal-form__double-submit_save-project">
+              <div class="modal-form__double-submit-item">
+                <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
+              </div>
+              <div class="modal-form__double-submit-item">
+                <Btn label="Сохранить" @click="()=> valid ? handleSaveBtn() : validate()"/>
+              </div>
             </div>
-            <div class="modal-form__double-submit-item">
-              <Btn label="Сохранить" @click="handleSaveBtn"/>
-            </div>
-          </div>
+          </ValidationProvider>
         </template>
       </form>
 
@@ -104,15 +88,15 @@
   import {TrackingService} from "@/services/tracking_service";
   import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  import {mapState} from "vuex";
   import {ValidationProvider} from 'vee-validate';
+  import SelectGroupModal from "@/shared-components/SelectGroupModal";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
 
   export default {
     name: "AddGoodsPosition",
-    components: {TreeSelect, InputField, Modal, Btn, ValidationProvider},
+    components: {SelectGroupModal, TreeSelect, InputField, Modal, Btn, ValidationProvider},
     data() {
       return {
         firstDone: false,
@@ -126,8 +110,6 @@
         brandsPortionSize: 30,
         brandsSearchQuery: '',
 
-        isNewGroup: false,
-
         selectedBrands: [],
         selectedGroup: ''
       }
@@ -138,7 +120,6 @@
           ? 'Добавить товар'
           : 'Добавить бренд';
       },
-      ...mapState('tracking', ['groups'])
     },
     methods: {
       translatedType(type) {
