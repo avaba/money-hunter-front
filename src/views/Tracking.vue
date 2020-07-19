@@ -29,7 +29,7 @@
       trackingNavList() {
         return [
           {label: "Список групп", system: true},
-          ...this[GROUP_NAMES_GETTER].map(name => ({label: name}))
+          ...this[GROUP_NAMES_GETTER].map(name => ({label: name, actions: true}))
         ]
       }
     },

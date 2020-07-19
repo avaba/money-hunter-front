@@ -7,13 +7,15 @@
         :class="{'tracking-navlist__item_active':  isActive(item) , 'tracking-navlist__item_actions': item.actions}">
       <span>{{item.label}}</span>
       <template v-if="item.actions">
-        <button class="tracking-navlist-trigger"></button>
-        <div class="tracking-navlist-actions">
-          <div class="tracking-navlist-actions__item tracking-navlist-actions__item_change">
+        <button class="tracking-navlist-trigger" @click.stop="$event=>showActions($event, idx)"/>
+        <div class="tracking-navlist-actions" ref="actionsBlock">
+          <div class="tracking-navlist-actions__item tracking-navlist-actions__item_change"
+               @click.stop="handleChangeAction(idx)">
             <span>изменить</span>
             <img src="../assets/img/ikons/change2.svg" alt="">
           </div>
-          <div class="tracking-navlist-actions__item tracking-navlist-actions__item_delete">
+          <div class="tracking-navlist-actions__item tracking-navlist-actions__item_delete"
+               @click.stop="handleRemoveAction(idx)">
             <span>удалить</span>
             <img src="../assets/img/ikons/delete.svg" alt="">
           </div>
@@ -50,6 +52,33 @@
             this.$router.push({name: 'tracking.group', params: {name: item.label}});
           }
         }
+      },
+      /**
+       *
+       * @param {MouseEvent} $event
+       * @param {number} idx
+       */
+      showActions($event, idx) {
+        const ref = this.$refs.actionsBlock[idx - 1];
+        this.$refs.actionsBlock.forEach((e, i) => {
+          this.$refs.actionsBlock[i].style.left = '-300px'
+        });
+
+        ref.style.top = ($event.clientY + 20) + 'px';
+        ref.style.left = ($event.clientX - 10) + 'px';
+      },
+      handleChangeAction(idx) {
+        const ref = this.getRef(idx);
+
+        ref.style.left = '-300px';
+      },
+      handleRemoveAction(idx) {
+        const ref = this.getRef(idx);
+
+        ref.style.left = '-300px';
+      },
+      getRef(idx) {
+        return this.$refs.actionsBlock[idx - 1];
       }
     }
   }
@@ -74,7 +103,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: relative;
+    /*position: relative;*/
 
     &.tracking-navlist__item_active {
       background: white;
@@ -96,8 +125,9 @@
   .tracking-navlist-trigger {
     width: 3px;
     height: 12px;
-    background: url("../assets/img/ikons/navlist-action.svg") no-repeat;
-    margin-left: .85rem;
+    background: url("../assets/img/ikons/navlist-action.svg") no-repeat right;
+    padding-left: .85rem;
+    cursor: pointer;
   }
 
   .tracking-navlist-actions {
