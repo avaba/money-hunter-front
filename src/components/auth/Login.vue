@@ -53,7 +53,7 @@
     },
     methods: {
       async handleLoginBtn() {
-        const authService = new AuthService();
+        const authService = AuthService.getInstance();
 
         const result = await authService.authorize(this.login, this.password);
         if (typeof result === 'boolean' && result) {

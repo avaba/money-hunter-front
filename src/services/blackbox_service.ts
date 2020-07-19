@@ -3,7 +3,7 @@ import {AuthService} from "@/services/auth_service";
 
 export class BlackboxService {
   private repo = new BlackboxRepository();
-  private service = new AuthService();
+  private service = AuthService.getInstance();
 
   private normalizeFilterData(data: GetSearchIDDataInterface): GetSearchIDDataInterface {
     const _data = {} as GetSearchIDDataInterface;

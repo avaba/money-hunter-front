@@ -9,6 +9,22 @@ import {LOGOUT_ACTION} from "@/store/modules/user/constants";
 export class AuthService {
   private authRepo = new AuthRepository();
 
+  private refreshPromise: Promise<boolean> | null = null;
+
+  private static instance: AuthService;
+
+  /* eslint @typescript-eslint/no-empty-function: ["error", { "allow": ["constructors"] }]*/
+  private constructor() {
+  }
+
+  static getInstance(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService();
+    }
+
+    return AuthService.instance;
+  }
+
   private errorsMap = {
     401: 'Неверный Email или пароль',
     400: 'Email занят',
@@ -54,19 +70,27 @@ export class AuthService {
     }
   }
 
+  // данная реализация обертки позволяет ждать обновления токена,
+  // а не дергать каждый раз refresh. Актуально для кейсов,
+  // когда дергается сразу несколько сетевых запросов и access-токен по какой-то причине не рабочий
   async refreshToken(): Promise<boolean> {
-    try {
-      const tokenService = new TokenService();
-      if (tokenService.hasToken(TokenType.REFRESH_TOKEN)) {
-        const response = await this.authRepo.refreshToken(tokenService.getToken(TokenType.REFRESH_TOKEN)) as AxiosResponse;
-        tokenService.persistToken(TokenType.ACCESS_TOKEN, response.data['access']);
-
-        return true;
+    return new Promise(refreshTokenResolver => {
+      try {
+        const tokenService = new TokenService();
+        if (tokenService.hasToken(TokenType.REFRESH_TOKEN)) {
+          Promise.resolve(true)
+            .then(() => this.authRepo.refreshToken(tokenService.getToken(TokenType.REFRESH_TOKEN)))
+            .then((response: AxiosResponse) => {
+              tokenService.persistToken(TokenType.ACCESS_TOKEN, response.data['access']);
+              refreshTokenResolver(true);
+            });
+        } else {
+          refreshTokenResolver(false);
+        }
+      } catch (e) {
+        refreshTokenResolver(false);
       }
-      return false;
-    } catch (e) {
-      return false;
-    }
+    });
   }
 
   async logout(): Promise<void> {
@@ -83,8 +107,17 @@ export class AuthService {
       const _e = e as AxiosError;
       if (_e.response && _e.response.status === 401) {
         try {
-          await this.refreshToken();
-          return await cb();
+          if (!(this.refreshPromise instanceof Promise)) {
+            this.refreshPromise = this.refreshToken();
+          }
+
+          return await this.refreshPromise.then(result => {
+            if (result) {
+              // токен успешно обновился
+              return cb();
+            }
+            throw e;
+          });
         } catch (e) {
 
           const tokenService = new TokenService();

@@ -3,7 +3,7 @@ import {TrackingRepository} from "@/repositories/tracking_repository";
 import {VuexTrackingStateGroupItemInterface} from "@/store/modules/tracking";
 
 export class TrackingService {
-  private authService = new AuthService();
+  private authService = AuthService.getInstance();
   private repo = new TrackingRepository();
 
   async getBrands(): Promise<[{ brand: string }] | []> {

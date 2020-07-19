@@ -64,7 +64,7 @@
     },
     methods: {
       async register() {
-        const service = new AuthService();
+        const service = AuthService.getInstance();
         const status = await service.register(this.login, this.password);
 
         if (typeof status === 'boolean' && status) {

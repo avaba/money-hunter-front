@@ -2,7 +2,7 @@ import {UserRepository} from "@/repositories/user_repository";
 import {AuthService} from "@/services/auth_service";
 
 export class UserService {
-  private authService = new AuthService();
+  private authService = AuthService.getInstance();
   private repo = new UserRepository();
 
   async getProfile() {

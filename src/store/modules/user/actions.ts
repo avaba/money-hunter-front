@@ -18,7 +18,7 @@ export default {
     await context.commit(SET_USER_MUTATION, response);
   },
   async [LOGOUT_ACTION](context: ActionContext<VuexUserStateInterface, any>) {
-    const authService = new AuthService();
+    const authService = AuthService.getInstance();
     await authService.logout();
 
     context.commit(CLEAR_USER_MUTATION);
