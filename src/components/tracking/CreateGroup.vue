@@ -15,36 +15,35 @@
         </div>
       </div>
 
-      <form action="" class="modal-form">
+      <form class="modal-form">
         <template v-if="!firstDone">
-          <div class="modal-form__save-project">
-            <InputField label="Придумайте название для вашей группы" v-model="groupName"/>
-          </div>
+          <ValidationProvider :rules="{required: true}" v-slot="{valid, validate, errors}">
+            <div class="modal-form__save-project">
+              <InputField label="Придумайте название для вашей группы"
+                          v-model="groupName"
+                          :error="$getValidationError(errors)"/>
+            </div>
 
-          <div class="modal-form__submit-item">
-            <Btn label="Далее" type="button" @click="firstDone=true"/>
-          </div>
+            <div class="modal-form__submit-item">
+              <Btn label="Далее" type="button" @click="valid ? firstDone=true : validate()"/>
+            </div>
+          </ValidationProvider>
         </template>
         <template v-if="firstDone">
-          <div class="modal-form__save-project">
-            <InputField label="Введите URL товара или артикул"/>
-          </div>
-
-          <div class="modal-form-search">
-            <div class="modal-form-search__not">
-<!--              <img src="../../assets/img/" alt="">-->
-              <span>Такога товара мы не нашли напишите по другому...</span>
+          <ValidationProvider v-slot:="{errors, valid, validate}"
+                              :rules="{required: true, is_type: 'object'}"
+                              :custom-messages="{is_type: 'Не найдено'}">
+            <FindProductModal v-model="foundedProduct"
+                              :validation-error="$getValidationError(errors)"/>
+            <div class="modal-form__double-submit modal-form__double-submit_save-project">
+              <div class="modal-form__double-submit-item">
+                <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
+              </div>
+              <div class="modal-form__double-submit-item">
+                <Btn label="Сохранить" @click="valid ? createGroupBtnHandler() : validate()"/>
+              </div>
             </div>
-          </div>
-
-          <div class="modal-form__double-submit modal-form__double-submit_save-project">
-            <div class="modal-form__double-submit-item">
-              <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
-            </div>
-            <div class="modal-form__double-submit-item">
-              <Btn label="Сохранить"/>
-            </div>
-          </div>
+          </ValidationProvider>
         </template>
       </form>
 
@@ -56,14 +55,38 @@
   import Btn from "../../shared-components/Btn";
   import InputField from "../../shared-components/InputField";
   import Modal from "@/components/Modal";
+  import FindProductModal from "@/shared-components/FindProductModal";
+  import {ValidationProvider} from 'vee-validate';
+  import {TrackingService} from "@/services/tracking_service";
+  import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
+  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
 
   export default {
     name: "CreateGroup",
-    components: {InputField, Btn, Modal},
+    components: {FindProductModal, InputField, Btn, Modal, ValidationProvider},
     data() {
       return {
         firstDone: false,
-        groupName: ''
+        groupName: '',
+        foundedProduct: null,
+      }
+    },
+    methods: {
+      async createGroupBtnHandler() {
+        const service = new TrackingService();
+        const result = await service.createUpdateGroup(
+          this.groupName,
+          [this.foundedProduct.articul],
+          false
+        );
+
+        if (result) {
+          await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
+          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          await this.$router.push({name: 'tracking.group', params: {name: this.groupName}});
+        } else {
+          alert('Произошла ошибка');
+        }
       }
     }
   }

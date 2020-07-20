@@ -80,4 +80,14 @@ export class TrackingService {
       return _e.response?.data.detail;
     }
   }
+
+  async getProductInfoByArticul(articul: string): Promise<string | Record<string, any>> {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.getProductInfoByArticul.bind(this.repo, articul))).data;
+    } catch (e) {
+      const _e = e as AxiosError;
+
+      return _e.response?.data.detail || e.message;
+    }
+  }
 }

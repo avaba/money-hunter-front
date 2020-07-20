@@ -75,19 +75,16 @@ export class AuthService {
   // когда дергается сразу несколько сетевых запросов и access-токен по какой-то причине не рабочий
   private async refreshToken(): Promise<boolean> {
     return new Promise(refreshTokenResolver => {
-      try {
-        const tokenService = new TokenService();
-        if (tokenService.hasToken(TokenType.REFRESH_TOKEN)) {
-          Promise.resolve(true)
-            .then(() => this.authRepo.refreshToken(tokenService.getToken(TokenType.REFRESH_TOKEN)))
-            .then((response: AxiosResponse) => {
-              tokenService.persistToken(TokenType.ACCESS_TOKEN, response.data['access']);
-              refreshTokenResolver(true);
-            });
-        } else {
-          refreshTokenResolver(false);
-        }
-      } catch (e) {
+      const tokenService = new TokenService();
+      if (tokenService.hasToken(TokenType.REFRESH_TOKEN)) {
+        Promise.resolve(true)
+          .then(() => this.authRepo.refreshToken(tokenService.getToken(TokenType.REFRESH_TOKEN)))
+          .then((response: AxiosResponse) => {
+            tokenService.persistToken(TokenType.ACCESS_TOKEN, response.data['access']);
+            refreshTokenResolver(true);
+          })
+          .catch(() => refreshTokenResolver(false));
+      } else {
         refreshTokenResolver(false);
       }
     });
@@ -106,28 +103,25 @@ export class AuthService {
     } catch (e) {
       const _e = e as AxiosError;
       if (_e.response && _e.response.status === 401) {
-        try {
-          if (!(this.refreshPromise instanceof Promise)) {
-            this.refreshPromise = this.refreshToken();
-          }
-
-          return await this.refreshPromise.then(result => {
-            if (result) {
-              // токен успешно обновился
-              return cb();
-            }
-            throw e;
-          });
-        } catch (e) {
-
-          const tokenService = new TokenService();
-          tokenService.clear();
-
-          await store.commit(`auth/${LOGOUT_ACTION}`);
-          await router.push(({name: 'auth.login'}));
-
-          throw e;
+        if (!(this.refreshPromise instanceof Promise)) {
+          this.refreshPromise = this.refreshToken();
         }
+
+        return await this.refreshPromise.then(async result => {
+
+          if (result) {
+            // токен успешно обновился
+            return cb();
+          } else {
+            const tokenService = new TokenService();
+            tokenService.clear();
+
+            await store.commit(`auth/${LOGOUT_ACTION}`);
+            await router.push(({name: 'auth.login'}));
+
+            throw e
+          }
+        });
       }
 
       throw e;

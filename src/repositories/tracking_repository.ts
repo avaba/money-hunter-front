@@ -9,6 +9,7 @@ export class TrackingRepository {
   private createUpdateGroup = 'wb/tracking/user/groups/';
   private groupDataUrl = 'wb/tracking/user/groups/{groupName}/';
   private getRatingAndSizesUrl = 'wb/tracking/{groupName}/{articul}/';
+  private getProductInfoByArticulUrl = 'wb/tracking/product/info/{articul}/';
 
   getBrands() {
     return this.client.sendGet(this.getBrandsUrl);
@@ -40,5 +41,9 @@ export class TrackingRepository {
   getRatingAndSizes(groupName: string, articul: string) {
     const url = queryStringBuilder(this.getRatingAndSizesUrl, {groupName, articul});
     return this.client.sendGet(url);
+  }
+
+  getProductInfoByArticul(articul: string) {
+    return this.client.sendGet(queryStringBuilder(this.getProductInfoByArticulUrl, {articul}));
   }
 }

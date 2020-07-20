@@ -30,35 +30,44 @@
 
       <form action="" class="modal-form">
         <template v-if="!firstDone">
-          <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
-
-            <template v-if="selectedType==='byGoods'">
-
-              <div class="modal-form__save-project">
-                <InputField label="Введите артикул товара" :error="$getValidationError(errors)"/>
-              </div>
-            </template>
-
-            <TreeSelect v-else
-                        :error="$getValidationError(errors)"
-                        v-model="selectedBrands"
-                        ref="brandsSelector"
-                        label="Выберите бренд"
-                        :multiple="true"
-                        :load-options="loadBrands"
-                        :options="brandOptions"
-                        :normalizer="brandsNormalizer"
-                        :dont-use-local-search="true"
-                        @open="handleMenuOpen"
-                        @close="handleMenuClose"
-                        @search-change="handleSearchChange"
-            />
-
+          <ValidationProvider v-slot="{errors, valid, validate}"
+                              v-if="selectedType==='byGoods'"
+                              :rules="{required: true}"
+                              :key="selectedType">
+            <FindProductModal v-model="foundedProduct"
+                              :validation-error="$getValidationError(errors) || typeof foundedProduct==='string' ? 'Не найдено':null"/>
 
             <div class="modal-form__submit-item">
-              <Btn label="Далее" type="button" @click="()=>{if(valid) {firstDone=true}else validate()}"/>
+              <Btn label="Далее"
+                   type="button"
+                   @click="()=>{if(valid&& typeof foundedProduct==='object') {firstDone=true}else validate()}"/>
             </div>
           </ValidationProvider>
+
+          <ValidationProvider v-else v-slot="{errors, valid, validate}" :rules="{required: true}" :key="selectedType">
+            <TreeSelect
+              :error="$getValidationError(errors)"
+              v-model="selectedBrands"
+              ref="brandsSelector"
+              label="Выберите бренд"
+              :multiple="true"
+              :load-options="loadBrands"
+              :options="brandOptions"
+              :normalizer="brandsNormalizer"
+              :dont-use-local-search="true"
+              @open="handleMenuOpen"
+              @close="handleMenuClose"
+              @search-change="handleSearchChange"
+            />
+
+            <div class="modal-form__submit-item">
+              <Btn label="Далее"
+                   type="button"
+                   @click="()=>{if(valid) {firstDone=true}else validate()}"/>
+            </div>
+          </ValidationProvider>
+
+
         </template>
         <template v-if="firstDone">
           <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
@@ -83,26 +92,28 @@
 <script>
   import Modal from "@/components/Modal";
   import Btn from "@/shared-components/Btn";
-  import InputField from "@/shared-components/InputField";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {TrackingService} from "@/services/tracking_service";
   import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {ValidationProvider} from 'vee-validate';
   import SelectGroupModal from "@/shared-components/SelectGroupModal";
+  import FindProductModal from "@/shared-components/FindProductModal";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
 
   export default {
     name: "AddGoodsPosition",
-    components: {SelectGroupModal, TreeSelect, InputField, Modal, Btn, ValidationProvider},
+    components: {FindProductModal, SelectGroupModal, TreeSelect, Modal, Btn, ValidationProvider},
     data() {
       return {
         firstDone: false,
         addTypes: [ADD_BY_GOODS, ADD_BY_BRAND],
         selectedType: ADD_BY_GOODS,
+
         loadedBrands: null,
+        foundedProduct: null,
 
         brandOptions: null,
 
@@ -110,8 +121,10 @@
         brandsPortionSize: 30,
         brandsSearchQuery: '',
 
+        selectedArticul: '',
         selectedBrands: [],
-        selectedGroup: ''
+        selectedGroup: '',
+
       }
     },
     computed: {
@@ -192,7 +205,7 @@
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
           this.selectedGroup,
-          this.selectedType === ADD_BY_GOODS ? [] : this.selectedBrands,
+          this.selectedType === ADD_BY_GOODS ? [this.selectedArticul] : this.selectedBrands,
           this.selectedType === ADD_BY_BRAND
         );
 
