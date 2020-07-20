@@ -1,6 +1,7 @@
 import {AuthService} from "@/services/auth_service";
 import {TrackingRepository} from "@/repositories/tracking_repository";
 import {VuexTrackingStateGroupItemInterface} from "@/store/modules/tracking";
+import {AxiosError} from "axios";
 
 export class TrackingService {
   private authService = AuthService.getInstance();
@@ -42,9 +43,41 @@ export class TrackingService {
 
   async getGroupGoods(groupName: string, orderType: string) {
     try {
-      return (await this.authService.refreshWrapper(this.repo.getGroupGoods.bind(this.repo, groupName, orderType))).data.products;
+      return (await this.authService.refreshWrapper(this.repo.getGroupGoods.bind(this.repo, groupName, orderType))).data.detail;
     } catch (e) {
       return [];
+    }
+  }
+
+  async updateGroupName(groupName: string, newName: string): Promise<boolean | string> {
+    try {
+      const response = await this.authService.refreshWrapper(this.repo.updateGroupName.bind(this.repo, groupName, newName));
+      return response.status === 200;
+    } catch (e) {
+      const _e = e as AxiosError;
+
+      return _e.response?.data.detail;
+    }
+  }
+
+  async deleteGroup(groupName: string) {
+    try {
+      const response = await this.authService.refreshWrapper(this.repo.deleteGroup.bind(this.repo, groupName));
+      return response.status === 200;
+    } catch (e) {
+      const _e = e as AxiosError;
+
+      return _e.response?.data.detail;
+    }
+  }
+
+  async getRatingAndSizes(groupName: string, articul: string) {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.getRatingAndSizes.bind(this.repo, groupName, articul))).data;
+    } catch (e) {
+      const _e = e as AxiosError;
+
+      return _e.response?.data.detail;
     }
   }
 }

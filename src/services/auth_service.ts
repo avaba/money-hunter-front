@@ -73,7 +73,7 @@ export class AuthService {
   // данная реализация обертки позволяет ждать обновления токена,
   // а не дергать каждый раз refresh. Актуально для кейсов,
   // когда дергается сразу несколько сетевых запросов и access-токен по какой-то причине не рабочий
-  async refreshToken(): Promise<boolean> {
+  private async refreshToken(): Promise<boolean> {
     return new Promise(refreshTokenResolver => {
       try {
         const tokenService = new TokenService();

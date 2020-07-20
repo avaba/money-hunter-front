@@ -26,6 +26,10 @@
 </template>
 
 <script>
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import ChangeGroupName from "@/components/tracking/ChangeGroupName";
+  import DeleteGroup from "@/components/tracking/DeleteGroup";
+
   export default {
     name: "TrackingNav",
     props: {
@@ -68,11 +72,19 @@
         ref.style.left = ($event.clientX - 10) + 'px';
       },
       handleChangeAction(idx) {
+        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
+          component: ChangeGroupName,
+          data: {title: this.list[idx].label}
+        });
         const ref = this.getRef(idx);
 
         ref.style.left = '-300px';
       },
       handleRemoveAction(idx) {
+        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
+          component: DeleteGroup,
+          data: {title: this.list[idx].label}
+        });
         const ref = this.getRef(idx);
 
         ref.style.left = '-300px';

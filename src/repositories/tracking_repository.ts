@@ -7,7 +7,8 @@ export class TrackingRepository {
   private getBrandsUrl = 'wb/tracking/brands/';
   private getUserGroupsUrl = 'wb/tracking/user/groups/';
   private createUpdateGroup = 'wb/tracking/user/groups/';
-  private getGroupGoodsUrl = 'wb/tracking/user/groups/{groupName}';
+  private groupDataUrl = 'wb/tracking/user/groups/{groupName}/';
+  private getRatingAndSizesUrl = 'wb/tracking/{groupName}/{articul}/';
 
   getBrands() {
     return this.client.sendGet(this.getBrandsUrl);
@@ -22,7 +23,22 @@ export class TrackingRepository {
   }
 
   getGroupGoods(groupName: string, orderType: string) {
-    const url = queryStringBuilder(this.getGroupGoodsUrl, {groupName, orderType});
+    const url = queryStringBuilder(this.groupDataUrl, {groupName, orderType});
+    return this.client.sendGet(url);
+  }
+
+  updateGroupName(groupName: string, newName: string) {
+    const url = queryStringBuilder(this.groupDataUrl, {groupName});
+    return this.client.sendPut(url, {newName});
+  }
+
+  deleteGroup(groupName: string) {
+    const url = queryStringBuilder(this.groupDataUrl, {groupName});
+    return this.client.sendDelete(url);
+  }
+
+  getRatingAndSizes(groupName: string, articul: string) {
+    const url = queryStringBuilder(this.getRatingAndSizesUrl, {groupName, articul});
     return this.client.sendGet(url);
   }
 }

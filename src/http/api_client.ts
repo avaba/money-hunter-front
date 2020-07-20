@@ -44,6 +44,18 @@ export class ApiClient {
     return this.getClient().get(_url);
   }
 
+  sendPut(url: string, body: Record<string, any>, apiVersion = ApiClient.API_VERSION_V1) {
+    const _url = this.generateUrl(url, apiVersion);
+
+    return this.getClient().put(_url, body);
+  }
+
+  sendDelete(url: string, apiVersion = ApiClient.API_VERSION_V1) {
+    const _url = this.generateUrl(url, apiVersion);
+
+    return this.getClient().delete(_url);
+  }
+
   refreshToken(url: string, token: string) {
     const client = this.getBasicClient();
     const _url = this.generateUrl(url, ApiClient.API_VERSION_V1);

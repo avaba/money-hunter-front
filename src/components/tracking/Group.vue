@@ -45,7 +45,12 @@
       return {
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'currentPrice', label: 'Цена', clazz: 'width9 tracking-table__header-item_align-center', sortable: false},
+          {
+            name: 'currentPrice',
+            label: 'Цена',
+            clazz: 'width9 tracking-table__header-item_align-center',
+            sortable: false
+          },
           {name: 'rating', label: 'Рейтинг', clazz: 'width9 tracking-table__header-item_align-center', sortable: false},
           {name: 'currentQty', label: 'Доступно к заказу', clazz: 'width9', sortable: false},
           {name: 'todayOrders', label: 'Заказы Сегодня', clazz: 'width9', sortable: false},
@@ -69,7 +74,12 @@
       tablePositions() {
         return this.list.map(item => ({
           ...this.$mapItemListToTableItem({...item, ...item.ordersInfo}),
-          nested: {content: ProductNestedSizesTable, articul: item.articul,},
+          nested: {
+            content: ProductNestedSizesTable,
+            articul: item.articul,
+            groupName: this.$route.params.name,
+            priceWithDiscount: item.currentPrice
+          },
         }));
       }
     },
