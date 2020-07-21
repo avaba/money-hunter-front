@@ -2,7 +2,7 @@
   <header class="header block_container">
     <h1 class="page-title" v-text="header"/>
     <div class="header-right">
-      <div class="education">
+      <div class="education" @click="showTraining">
         <img src="../assets/img/ikons/education.svg" alt="">
         <span class="education__text">Обучение</span>
       </div>
@@ -20,6 +20,8 @@
 
 <script>
   import {mapActions} from "vuex";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import TrainingModal from "@/components/TrainingModal";
 
   export default {
     name: "Header",
@@ -35,7 +37,10 @@
       }
     },
     methods: {
-      ...mapActions('user', ['logout'])
+      ...mapActions('user', ['logout']),
+      showTraining() {
+        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: TrainingModal})
+      }
     }
   }
 </script>
@@ -61,6 +66,7 @@
     display: flex;
     align-items: center;
     margin-right: 2.28rem;
+    cursor: pointer;
   }
 
   .education__text {

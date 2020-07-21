@@ -7,6 +7,8 @@ import Tracking from '../views/Tracking.vue';
 
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
+import RecoverRequest from '../components/auth/RecoverRequest.vue';
+import RecoverConfirm from '../components/auth/RecoverConfirm.vue';
 
 import GroupList from '../components/tracking/GroupList.vue';
 import Group from '../components/tracking/Group.vue';
@@ -61,6 +63,18 @@ const routes: Array<RouteConfig> = [
     children: [
       {path: 'login', name: 'auth.login', component: Login, meta: {title: 'Вход'}},
       {path: 'register', name: 'auth.register', component: Register, meta: {title: 'Регистрация'}},
+      {
+        path: 'recover_request',
+        name: 'auth.recover_request',
+        component: RecoverRequest,
+        meta: {title: 'Восстановление пароля'}
+      },
+      {
+        path: 'recover_confirm',
+        name: 'auth.recover_confirm',
+        component: RecoverConfirm,
+        meta: {title: 'Восстановление пароля'}
+      },
     ],
   },
 ];

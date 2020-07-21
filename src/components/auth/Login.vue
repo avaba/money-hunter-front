@@ -26,7 +26,7 @@
         </div>
         <div class="modal-form__links">
           <router-link :to="{name: 'auth.register'}">Регистрация</router-link>
-          <a href="#">Забыли Пароль?</a>
+          <router-link :to="{name: 'auth.recover_request'}">Забыли Пароль?</router-link>
         </div>
       </form>
     </ValidationObserver>

@@ -38,6 +38,11 @@
         required: true
       },
     },
+    data() {
+      return {
+        openedActionBlock: null,
+      }
+    },
     methods: {
       isActive(item) {
         if (item.system) {
@@ -63,35 +68,39 @@
        * @param {number} idx
        */
       showActions($event, idx) {
-        const ref = this.$refs.actionsBlock[idx - 1];
-        this.$refs.actionsBlock.forEach((e, i) => {
-          this.$refs.actionsBlock[i].style.left = '-300px'
-        });
+        this.openedActionBlock = this.$refs.actionsBlock[idx - 1];
+        this.$refs.actionsBlock.forEach(this.hideActionBlock);
 
-        ref.style.top = ($event.clientY + 20) + 'px';
-        ref.style.left = ($event.clientX - 10) + 'px';
+        this.openedActionBlock.style.top = ($event.clientY + 20) + 'px';
+        this.openedActionBlock.style.left = ($event.clientX - 10) + 'px';
+      },
+      hideActionBlock(actionBlock = this.openedActionBlock) {
+        if (actionBlock) {
+          actionBlock.style.left = '-300px';
+        }
       },
       handleChangeAction(idx) {
         this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
           component: ChangeGroupName,
           data: {title: this.list[idx].label}
         });
-        const ref = this.getRef(idx);
 
-        ref.style.left = '-300px';
+        this.hideActionBlock();
       },
       handleRemoveAction(idx) {
         this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
           component: DeleteGroup,
           data: {title: this.list[idx].label}
         });
-        const ref = this.getRef(idx);
 
-        ref.style.left = '-300px';
+        this.hideActionBlock();
       },
-      getRef(idx) {
-        return this.$refs.actionsBlock[idx - 1];
-      }
+    },
+    mounted() {
+      document.addEventListener('click', () => this.hideActionBlock());
+    },
+    beforeDestroy() {
+      document.removeEventListener('click', this.hideActionBlock);
     }
   }
 </script>

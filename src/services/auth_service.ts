@@ -63,7 +63,7 @@ export class AuthService {
       const _e = e as AxiosError;
 
       if (_e.response && _e.response.status === 400) {
-        return this.errorsMap[400];
+        return this.errorsMap[400] || _e.response.data.detail;
       }
 
       return false;

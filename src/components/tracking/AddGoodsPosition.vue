@@ -121,7 +121,6 @@
         brandsPortionSize: 30,
         brandsSearchQuery: '',
 
-        selectedArticul: '',
         selectedBrands: [],
         selectedGroup: '',
 
@@ -196,6 +195,7 @@
       },
       handleSearchChange(searchQuery) {
         this.brandsSearchQuery = searchQuery;
+        this.brandOptions = [];
         this.$nextTick(() => {
           this.brandOptions = this.handleBrandsSearch();
         });
@@ -205,14 +205,21 @@
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
           this.selectedGroup,
-          this.selectedType === ADD_BY_GOODS ? [this.selectedArticul] : this.selectedBrands,
+          this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
           this.selectedType === ADD_BY_BRAND
         );
 
         if (result) {
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
-          await this.$router.push({name: 'tracking.group', params: {name: this.selectedGroup}});
+          if (this.$route.fullPath !== this.$router.resolve({
+            name: 'tracking.group',
+            params: {name: this.selectedGroup.toUpperCase()}
+          }).route.fullPath) {
+            await this.$router.push({name: 'tracking.group', params: {name: this.selectedGroup.toUpperCase()}});
+          } else {
+            this.$eventBus.$emit('tracking.group.loadGoods');
+          }
         } else {
           alert('Произошла ошибка');
         }

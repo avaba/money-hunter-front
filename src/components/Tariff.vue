@@ -52,6 +52,10 @@
     border-radius: 20px;
     padding: 1.78rem 2.14rem 2.14rem;
 
+    &:not(:first-child) {
+      margin-left: 2rem;
+    }
+
     &.tarif__item_fourth {
       flex-basis: calc((100% - (2.21rem * 3)) / 4);
     }

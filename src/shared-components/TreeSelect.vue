@@ -3,9 +3,9 @@
     <label for="" class="select-field__label">{{label}}</label>
     <span class="select-field__error" v-if="!!error">{{error}}</span>
     <VendorTreeSelect ref="treeselect"
-                      v-on="$listeners"
                       v-bind="$attrs"
                       :value="value"
+                      v-on="listeners"
                       class="select-field__select">
       <div slot="value-label" slot-scope="{ node }">{{ getValue(node) }}</div>
       <!--            <template v-slot:option-label="{ node, labelClassName }">-->
@@ -48,6 +48,16 @@
         default: null
       }
     },
+    computed: {
+      listeners() {
+        const data = {...this.$listeners};
+        if (this.dontUseLocalSearch) {
+          delete data['search-change'];
+        }
+
+        return data;
+      }
+    },
     methods: {
       getValue(node) {
         const label = node.label;
@@ -65,7 +75,7 @@
 
         this.$refs.treeselect.handleLocalSearch = () => {
           if (this.dontUseLocalSearch) {
-            this.$emit('search-change', this.$refs.treeselect.trigger.searhQuery);
+            this.$emit('search-change', this.$refs.treeselect.trigger.searchQuery);
           } else {
             origFunc.call(this.$refs.treeselect);
           }

@@ -9,7 +9,6 @@
           <RowWithIcon :list="trackingActionList"/>
         </div>
       </div>
-
       <TrackingTable :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
     </div>
   </Fragment>
@@ -36,6 +35,8 @@
   import {TrackingService} from "@/services/tracking_service";
   import AddGoodsBtn from "@/shared-components/AddGoodsBtn";
   import {debounce} from "lodash";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import DeleteProductFromTracking from "@/components/tracking/DeleteProductFromTracking";
 
   export default {
     name: "Group",
@@ -81,15 +82,12 @@
             priceWithDiscount: item.currentPrice
           },
         }));
+      },
+      modalResponse() {
+        return this.$store.state.modal.componentResponse;
       }
     },
     methods: {
-      prevHandler() {
-        console.log('prev');
-      },
-      nextHandler() {
-        console.log('next');
-      },
       map_goods(item) {
         return {
           content: ProductContent,
@@ -111,26 +109,55 @@
           clazz: 'width9 tracking-table__align-center'
         }
       },
-      map_actions() {
-        return {content: ProductAction, clazz: 'width5 tracking-table__align-center'}
+      map_actions(item) {
+        return {
+          content: ProductAction,
+          component_data: {isRecycle: true, clickHandler: this.deleteProductFromTracking, articul: item.articul},
+          clazz: 'width5 tracking-table__align-center'
+        }
       },
       async loadGoods() {
         const service = new TrackingService();
         const results = await service.getGroupGoods(this.$route.params.name, this.orderType);
 
-        this.list = [];
-        this.$nextTick(() => {
-          this.list = results;
-        })
+        if (results === null) {
+          this.$router.push({name: 'tracking.group_list'})
+        } else {
+          this.list = [];
+          this.$nextTick(() => {
+            this.list = results;
+          })
+        }
+      },
+      /**
+       *
+       * @param {MouseEvent} $event
+       * @param {string} articul
+       * @returns {Promise<void>}
+       */
+      async deleteProductFromTracking($event, articul) {
+        $event.stopPropagation();
+
+        const groupName = this.$route.params.name;
+        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
+          component: DeleteProductFromTracking,
+          data: {articul, groupName, callback: () => this.loadGoods()},
+        });
       }
     },
     async mounted() {
       this.loadGoods();
+      this.$eventBus.$on('tracking.group.loadGoods', () => {
+        this.loadGoods();
+      })
+    },
+    beforeDestroy() {
+      this.$eventBus.$off('tracking.group.loadGoods');
     },
     watch: {
       orderType: function () {
         this.debounceLoadGoods();
-      }
+      },
     }
   }
 </script>

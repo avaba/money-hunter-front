@@ -45,7 +45,7 @@ export class TrackingService {
     try {
       return (await this.authService.refreshWrapper(this.repo.getGroupGoods.bind(this.repo, groupName, orderType))).data.detail;
     } catch (e) {
-      return [];
+      return null;
     }
   }
 
@@ -84,6 +84,17 @@ export class TrackingService {
   async getProductInfoByArticul(articul: string): Promise<string | Record<string, any>> {
     try {
       return (await this.authService.refreshWrapper(this.repo.getProductInfoByArticul.bind(this.repo, articul))).data;
+    } catch (e) {
+      const _e = e as AxiosError;
+
+      return _e.response?.data.detail || e.message;
+    }
+  }
+
+  async deleteProductFromTracking(groupName: string, articul: string) {
+    try {
+      const response = await this.authService.refreshWrapper(this.repo.deleteProductFromTracking.bind(this.repo, groupName, articul));
+      return response.status === 200;
     } catch (e) {
       const _e = e as AxiosError;
 

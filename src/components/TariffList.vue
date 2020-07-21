@@ -50,36 +50,36 @@
               {text: "Запрос истории товаров", error: true}
             ]
           },
-          {
-            name: "CUSTOM",
-            price: 4999,
-            clazz: "tarif__item_fourth",
-            list: [
-              {text: "Максимум 5 товаров на отслеживании", success: true},
-              {text: "Добавление оповещений", custom: true},
-              {text: "Полный функционал бота Telegram", success: true},
-              {text: "Аналитика по товарам", custom: true},
-              {text: "Скачивание отчётов", success: true},
-              {text: "Автоподсорт", custom: true},
-              {text: "Анализ категорий", error: true},
-              {text: "Запрос истории товаров", error: true}
-            ]
-          },
-          {
-            name: "PRO",
-            price: 7999,
-            clazz: "tarif__item_fourth",
-            list: [
-              {text: "Максимум 5 товаров на отслеживании", success: true},
-              {text: "Добавление оповещений", success: true},
-              {text: "Полный функционал бота Telegram", success: true},
-              {text: "Аналитика по товарам", success: true},
-              {text: "Скачивание отчётов", success: true},
-              {text: "Автоподсорт", success: true},
-              {text: "Анализ категорий", success: true},
-              {text: "Запрос истории товаров", success: true}
-            ]
-          },
+          // {
+          //   name: "CUSTOM",
+          //   price: 4999,
+          //   clazz: "tarif__item_fourth",
+          //   list: [
+          //     {text: "Максимум 5 товаров на отслеживании", success: true},
+          //     {text: "Добавление оповещений", custom: true},
+          //     {text: "Полный функционал бота Telegram", success: true},
+          //     {text: "Аналитика по товарам", custom: true},
+          //     {text: "Скачивание отчётов", success: true},
+          //     {text: "Автоподсорт", custom: true},
+          //     {text: "Анализ категорий", error: true},
+          //     {text: "Запрос истории товаров", error: true}
+          //   ]
+          // },
+          // {
+          //   name: "PRO",
+          //   price: 7999,
+          //   clazz: "tarif__item_fourth",
+          //   list: [
+          //     {text: "Максимум 5 товаров на отслеживании", success: true},
+          //     {text: "Добавление оповещений", success: true},
+          //     {text: "Полный функционал бота Telegram", success: true},
+          //     {text: "Аналитика по товарам", success: true},
+          //     {text: "Скачивание отчётов", success: true},
+          //     {text: "Автоподсорт", success: true},
+          //     {text: "Анализ категорий", success: true},
+          //     {text: "Запрос истории товаров", success: true}
+          //   ]
+          // },
         ]
       }
     }
@@ -90,6 +90,6 @@
   .tarifes {
     margin-top: 2.5rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 </style>

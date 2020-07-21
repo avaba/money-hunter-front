@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="filter-form__actions">
-        <div class="filter-form__searchs">
+        <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
           <RowWithIcon :list="[{img: searchIcon, label: 'У вас осталось поисков:'}]"/>
           <div class="filter-form__searchs-count">{{blackboxSearches}}</div>
         </div>
@@ -93,7 +93,7 @@
   import {mapMutations} from "vuex";
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
-  import {GET_NEW_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
+  import {CHECK_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
 
   export default {
@@ -121,13 +121,17 @@
       blackboxSearches() {
         return this.$store.state.user.subscription?.blackBoxSearches;
       },
+      userSubscription() {
+        return this.$store.state.user.subscription?.subscriptionType;
+      }
     },
     methods: {
       async searchBtnHandler() {
-        if (!this.$store.state.blackbox.searchID) {
-          await this.$store.dispatch(`blackbox/${GET_NEW_SEARCH_ID_ACTION}`, this.$data);
-        }
+        await this.checkSearchID();
         this.searchHandler();
+      },
+      async checkSearchID() {
+        await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, this.$data);
       },
       resetFilters() {
         this.priceRange = [];
