@@ -59,6 +59,14 @@ const routes: Array<RouteConfig> = [
     path: "/auth",
     name: 'auth',
     component: Auth,
+    beforeEnter(to, from, next) {
+      const tokenService = new TokenService();
+      if (tokenService.isLoggedIn()) {
+        next({name: 'profile'});
+      } else {
+        next();
+      }
+    },
     children: [
       {path: 'login', name: 'auth.login', component: Login, meta: {title: 'Вход'}},
       {path: 'register', name: 'auth.register', component: Register, meta: {title: 'Регистрация'}},
