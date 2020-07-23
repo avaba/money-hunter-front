@@ -83,7 +83,7 @@
         }
       },
       $nextHandler() {
-        if (this.page < (this.totalCount % this.perPage)) {
+        if (this.page < parseInt(String(this.totalCount / this.perPage))) {
           this.nextHandler();
         }
       }

@@ -1,0 +1,1 @@
+export const lazyLoad = (viewPath: string) => () => import(`@/${viewPath}.vue`);

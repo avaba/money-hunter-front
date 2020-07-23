@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter, {RouteConfig} from "vue-router";
 import Auth from '../views/Auth.vue';
-import Blackbox from '../views/Blackbox.vue';
 import Profile from '../views/Profile.vue';
 import Tracking from '../views/Tracking.vue';
 
@@ -11,9 +10,9 @@ import RecoverRequest from '../components/auth/RecoverRequest.vue';
 import RecoverConfirm from '../components/auth/RecoverConfirm.vue';
 
 import GroupList from '../components/tracking/GroupList.vue';
-import Group from '../components/tracking/Group.vue';
 
 import {TokenService} from "@/services/token_service";
+import {lazyLoad} from "@/helpers";
 
 Vue.use(VueRouter);
 
@@ -30,7 +29,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/blackbox',
     name: 'blackbox',
-    component: Blackbox,
+    component: lazyLoad('views/Blackbox'),
     meta: {
       title: 'Black Box'
     },
@@ -53,7 +52,7 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {path: 'groups', name: 'tracking.group_list', component: GroupList},
-      {path: 'group/:name', name: 'tracking.group', component: Group}
+      {path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group')}
     ]
   },
   {

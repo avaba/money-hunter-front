@@ -73,8 +73,8 @@
         default: false
       },
       mask: {
-        type: Object,
-        default: undefined
+        type: [Object, String],
+        default: '',
       }
     },
     data() {

@@ -1,21 +1,28 @@
-import {Subject} from "rxjs";
-import {debounceTime} from "rxjs/operators";
+import {debounce} from 'lodash';
 
 export const paginationMixin = {
   data() {
+    const that = this as any;
     return {
       paginationData: {
         page: 1,
         perPage: 25,
         totalCount: 0,
-        paginationStream: (new Subject()).pipe(debounceTime((200))),
-        paginationSubscription: null,
+        paginationDebounced: debounce(that.$paginate, 400),
         prevCb: null,
         nextCb: null
       },
     }
   },
   methods: {
+    $paginate({type}: { type: 'prev' | 'next' }) {
+      const that = this as any;
+      if (type === 'prev') {
+        that.paginationData.prevCb();
+      } else {
+        that.paginationData.nextCb();
+      }
+    },
     $initPaginationHandlers(prevCb: () => void, nextCb: () => void) {
       const that = this as any;
       that.paginationData.prevCb = prevCb;
@@ -23,28 +30,11 @@ export const paginationMixin = {
     },
     $paginationPrevHandler() {
       const that = this as any;
-      that.paginationData.paginationStream.next({type: 'prev'});
+      that.paginationData.paginationDebounced({type: 'prev'});
     },
     $paginationNextHandler() {
       const that = this as any;
-      that.paginationData.paginationStream.next({type: 'next'});
+      that.paginationData.paginationDebounced({type: 'next'});
     },
-  },
-  mounted() {
-    const that = this as any;
-    that.paginationData.paginationSubscription = that
-      .paginationData
-      .paginationStream
-      .subscribe(({type}: { type: 'prev' | 'next' }) => {
-        if (type === 'prev') {
-          that.paginationData.prevCb();
-        } else {
-          that.paginationData.nextCb();
-        }
-      })
-  },
-  beforeDestroy() {
-    const that = this as any;
-    that.paginationData.paginationSubscription.unsubscribe();
   }
 };

@@ -16,7 +16,8 @@
           <ValidationProvider :rules="{required: true, phonenumber: true}" v-slot="{errors}">
             <InputField label="Телефонный номер"
                         v-model="phoneNumber"
-                        :mask="{mask: '8 (999) 999-99-99'}"
+                        placeholder="8 (___) ___-__-__"
+                        :mask="'8 (###) ###-##-##'"
                         :error="$getValidationError(errors)"/>
           </ValidationProvider>
         </div>
