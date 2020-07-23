@@ -2,6 +2,7 @@ import {AuthService} from "@/services/auth_service";
 import {TrackingRepository} from "@/repositories/tracking_repository";
 import {VuexTrackingStateGroupItemInterface} from "@/store/modules/tracking";
 import {AxiosError} from "axios";
+import moment from "moment";
 
 export class TrackingService {
   private authService = AuthService.getInstance();
@@ -10,11 +11,14 @@ export class TrackingService {
   async getBrands(): Promise<[{ brand: string }] | []> {
     try {
       const cached = localStorage.getItem('brands');
-      if (cached) {
+      const cached_moment = moment.utc(localStorage.getItem('brands_ts'));
+      const now = moment.utc();
+      if (cached && cached_moment.isValid() && now.diff(cached_moment, 'hours') < 20) {
         return JSON.parse(cached);
       } else {
         const data = (await this.authService.refreshWrapper(this.repo.getBrands.bind(this.repo))).data.brands;
         localStorage.setItem('brands', JSON.stringify(data));
+        localStorage.setItem('brands_ts', moment.utc().toISOString());
 
         return data;
       }
