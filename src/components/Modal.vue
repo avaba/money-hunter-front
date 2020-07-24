@@ -3,12 +3,7 @@
     <div class="overlay"></div>
     <div class="modal modal_small">
       <div class="close-modal" v-if="closable" @click="hideModal"></div>
-      <slot name="logo">
-        <div class="modal-company">
-          <img src="../assets/img/logo_modal.svg" alt="">
-          <span>MoneyHunter</span>
-        </div>
-      </slot>
+      <slot name="logo"><span/></slot>
       <div class="modal-title">{{title}}</div>
       <slot/>
     </div>

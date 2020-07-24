@@ -1,6 +1,5 @@
 <template>
   <Modal title="Добавить товар" closable>
-    <template v-slot:logo><span/></template>
     <template v-slot:default>
 
       <div>

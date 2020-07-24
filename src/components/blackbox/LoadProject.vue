@@ -1,6 +1,5 @@
 <template>
   <Modal title="Загрузить проект">
-    <template v-slot:logo><span/></template>
     <template v-slot:default>
       <form action="" class="modal-form">
         <div class="modal-form__download-project">

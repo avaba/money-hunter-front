@@ -1,6 +1,5 @@
 <template>
   <Modal :title='`Группа "${title}"`' closable>
-    <template v-slot:logo><span/></template>
     <template v-slot:default>
 
       <form action="" class="modal-form">

@@ -1,6 +1,5 @@
 <template>
   <Modal title="Сохранить проект">
-    <template v-slot:logo><span/></template>
     <template v-slot:default>
       <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
         <form action="" class="modal-form">

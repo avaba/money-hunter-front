@@ -1,6 +1,5 @@
 <template>
   <Modal title="Выберите группу" closable>
-    <template v-slot:logo><span/></template>
     <template v-slot:default>
       <form action="" class="modal-form">
         <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">

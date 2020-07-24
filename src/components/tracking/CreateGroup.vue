@@ -1,6 +1,5 @@
 <template>
   <Modal title="Создать группу" closable>
-    <template v-slot:logo><span/></template>
     <template v-slot:default>
       <div class="modal-form-steps">
         <div class="modal-form-steps__line"/>

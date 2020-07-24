@@ -1,6 +1,12 @@
 <template>
   <Fragment>
     <Modal :title="title">
+      <template v-slot:logo>
+        <div class="modal-company">
+          <img src="../assets/img/logo_modal.svg" alt="">
+          <span>MoneyHunter</span>
+        </div>
+      </template>
       <router-view/>
     </Modal>
   </Fragment>
