@@ -1,0 +1,66 @@
+<template>
+  <Modal :title='`Группа "${groupName}"`' closable>
+    <template v-slot:default>
+
+      <form action="" class="modal-form">
+
+        <ValidationProvider :rules="{required: true}" v-slot="{errors, valid, validate}">
+          <div class="modal-form__save-project">
+            <InputField label="Введите количество дней"
+                        v-model.number="daysCount"
+                        :error="$getValidationError(errors)"/>
+          </div>
+
+
+          <div class="modal-form__double-submit modal-form__double-submit_save-project">
+            <div class="modal-form__double-submit-item">
+              <Btn label="Отмена" clazz="button_gray" @click="cancelHandler"/>
+            </div>
+            <div class="modal-form__double-submit-item">
+              <Btn label="Отправить" @click="valid?send():validate()"/>
+            </div>
+          </div>
+        </ValidationProvider>
+      </form>
+
+    </template>
+  </Modal>
+</template>
+
+<script>
+  import Modal from "../Modal";
+  import InputField from "../../shared-components/InputField";
+  import {ValidationProvider} from 'vee-validate';
+  import {TrackingService} from "../../services/tracking_service";
+  import Btn from "../../shared-components/Btn";
+  import {HIDE_MODAL_MUTATION} from "../../store/modules/modal/constants";
+
+  export default {
+    name: "AutoSort",
+    components: {Btn, InputField, Modal, ValidationProvider},
+    props: {
+      groupName: {
+        type: String,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        daysCount: null,
+      }
+    },
+    methods: {
+      cancelHandler() {
+        this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+      },
+      send() {
+        const service = new TrackingService();
+        service.getGroupSortFile(this.$route.params.name, this.daysCount);
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

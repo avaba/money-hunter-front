@@ -11,6 +11,7 @@ export class TrackingRepository {
   private productDataUrl = 'wb/tracking/{groupName}/{articul}/';
   private getProductInfoByArticulUrl = 'wb/tracking/product/info/{articul}/';
   private getGroupInfoFileUrl = 'wb/tracking/user/groups/{groupName}/download/';
+  private getGroupSortFileUrl = 'wb/tracking/user/groups/{groupName}/{days}/autosort/';
 
   getBrands() {
     return this.client.sendGet(this.getBrandsUrl);
@@ -58,5 +59,13 @@ export class TrackingRepository {
       queryStringBuilder(this.getGroupInfoFileUrl, {groupName}),
       {responseType: 'blob'}
     );
+  }
+
+  getGroupSortFile(groupName: string, days: number) {
+    console.log(queryStringBuilder(this.getGroupSortFileUrl, {groupName, days}));
+    return this.client.sendGet(
+      queryStringBuilder(this.getGroupSortFileUrl, {groupName, days}),
+      {responseType: 'blob'}
+    )
   }
 }

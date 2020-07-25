@@ -37,6 +37,7 @@
   import {debounce} from "lodash";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import DeleteProductFromTracking from "@/components/tracking/DeleteProductFromTracking";
+  import AutoSort from "./AutoSort";
 
   export default {
     name: "Group",
@@ -63,7 +64,14 @@
         list: [],
         trackingActionList: [
           {label: "Добавить оповещения для групп", img: AlertImg},
-          {label: "Автоподсорт", img: AutosortImg},
+          {
+            label: "Автоподсорт", img: AutosortImg, onClick: () => {
+              this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
+                component: AutoSort,
+                data: {groupName: this.$route.params.name}
+              })
+            }
+          },
           {
             label: "Скачать", img: DownloadImg, onClick: () => {
               const service = new TrackingService();

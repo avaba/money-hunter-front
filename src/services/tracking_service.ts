@@ -118,4 +118,16 @@ export class TrackingService {
       console.log('Cannot download file', e);
     }
   }
+
+  async getGroupSortFile(groupName: string, days: number): Promise<void> {
+    try {
+      const response = await this.authService.refreshWrapper(this.repo.getGroupSortFile.bind(this.repo, groupName, days));
+      const headers = response.headers;
+      const blob = new Blob([response.data], {type: headers['content-type']});
+
+      FileSaver.saveAs(blob, `${groupName}-sort.xls`);
+    } catch (e) {
+      console.log('Cannot download file', e);
+    }
+  }
 }
