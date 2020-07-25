@@ -26,9 +26,6 @@
     name: "ProductContent",
     components: {AsyncImg},
     props: {
-      goodsName: {
-        type: String
-      },
       brand: {
         type: String
       },
@@ -43,6 +40,7 @@
     data() {
       return {
         imagePath: null,
+        goodsName: null,
       }
     },
     created() {
@@ -51,7 +49,11 @@
     methods: {
       async loadPath() {
         const service = new BlackboxService();
-        this.imagePath = await service.getImagePath(this.articul);
+        const data = await service.getProductImagePathAndName(this.articul);
+        if (typeof data === 'object') {
+          this.imagePath = data.imageLink;
+          this.goodsName = data.name;
+        }
       }
     },
     watch: {

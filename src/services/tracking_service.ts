@@ -3,6 +3,7 @@ import {TrackingRepository} from "@/repositories/tracking_repository";
 import {VuexTrackingStateGroupItemInterface} from "@/store/modules/tracking";
 import {AxiosError} from "axios";
 import moment from "moment";
+import FileSaver from "file-saver";
 
 export class TrackingService {
   private authService = AuthService.getInstance();
@@ -103,6 +104,18 @@ export class TrackingService {
       const _e = e as AxiosError;
 
       return _e.response?.data.detail || e.message;
+    }
+  }
+
+  async getGroupInfoFile(groupName: string): Promise<void> {
+    try {
+      const response = await this.authService.refreshWrapper(this.repo.getGroupInfoFile.bind(this.repo, groupName));
+      const headers = response.headers;
+      const blob = new Blob([response.data], {type: headers['content-type']});
+
+      FileSaver.saveAs(blob, `${groupName}-info.xls`);
+    } catch (e) {
+      console.log('Cannot download file', e);
     }
   }
 }

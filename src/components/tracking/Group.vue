@@ -15,8 +15,8 @@
 </template>
 
 <script>
-  import RowWithIcon from "@/shared-components/RowWithIcon";
-  import TrackingTable from "@/shared-components/TrackingTable";
+  import RowWithIcon from "@/shared-components/RowWithIcon.vue";
+  import TrackingTable from "@/shared-components/TrackingTable.vue";
 
   import AlertImg from "@/assets/img/ikons/alert.svg";
   import AutosortImg from "@/assets/img/ikons/autosort.svg";
@@ -64,7 +64,12 @@
         trackingActionList: [
           {label: "Добавить оповещения для групп", img: AlertImg},
           {label: "Автоподсорт", img: AutosortImg},
-          {label: "Скачать", img: DownloadImg},
+          {
+            label: "Скачать", img: DownloadImg, onClick: () => {
+              const service = new TrackingService();
+              service.getGroupInfoFile(this.$route.params.name);
+            }
+          },
         ],
         orderType: 'currentPrice',
 

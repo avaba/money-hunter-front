@@ -79,9 +79,9 @@ export class BlackboxService {
     }
   }
 
-  async getImagePath(articul: string) {
+  async getProductImagePathAndName(articul: string) {
     try {
-      return (await this.service.refreshWrapper(this.repo.getImagePath.bind(this.repo, articul))).data.imageLink;
+      return (await this.service.refreshWrapper(this.repo.getProductImagePathAndName.bind(this.repo, articul))).data;
     } catch {
       return null;
     }

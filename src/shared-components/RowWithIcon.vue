@@ -1,6 +1,10 @@
 <template>
   <Fragment>
-    <div class="item-row" v-for="(item, idx) in list" :key="idx">
+    <div class="item-row"
+         :class="{clickable: item.onClick}"
+         v-for="(item, idx) in list"
+         :key="idx"
+         @click="clickHandler(item)">
       <img :src="item.img" alt="">
       <span class="item-row__text">{{item.label}}</span>
     </div>
@@ -19,10 +23,21 @@
         default: () => [],
       }
     },
+    methods: {
+      clickHandler(item) {
+        if (item.onClick) {
+          item.onClick();
+        }
+      }
+    }
   }
 </script>
 
 <style scoped lang="scss">
+  .clickable {
+    cursor: pointer;
+  }
+
   .item-row {
     margin-right: 2.14rem;
     display: flex;

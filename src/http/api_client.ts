@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 import {TokenService, TokenType} from "@/services/token_service";
 
 export class ApiClient {
@@ -38,7 +38,7 @@ export class ApiClient {
     return this.getClient().post(_url, body);
   }
 
-  sendGet(url: string, apiVersion = ApiClient.API_VERSION_V1) {
+  sendGet(url: string, config?: AxiosRequestConfig, apiVersion = ApiClient.API_VERSION_V1) {
     const _url = this.generateUrl(url, apiVersion);
 
     return this.getClient().get(_url);
