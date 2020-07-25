@@ -51,11 +51,15 @@
     },
     methods: {
       cancelHandler() {
-        this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+        this.closeModal();
       },
-      send() {
+      async send() {
         const service = new TrackingService();
-        service.getGroupSortFile(this.$route.params.name, this.daysCount);
+        await service.getGroupSortFile(this.$route.params.name, this.daysCount);
+        this.closeModal();
+      },
+      closeModal() {
+        this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
       }
     }
   }

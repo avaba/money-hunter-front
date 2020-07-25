@@ -62,7 +62,6 @@ export class TrackingRepository {
   }
 
   getGroupSortFile(groupName: string, days: number) {
-    console.log(queryStringBuilder(this.getGroupSortFileUrl, {groupName, days}));
     return this.client.sendGet(
       queryStringBuilder(this.getGroupSortFileUrl, {groupName, days}),
       {responseType: 'blob'}

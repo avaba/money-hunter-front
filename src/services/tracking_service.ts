@@ -113,7 +113,7 @@ export class TrackingService {
       const headers = response.headers;
       const blob = new Blob([response.data], {type: headers['content-type']});
 
-      FileSaver.saveAs(blob, `${groupName}-info.xls`);
+      FileSaver.saveAs(blob, `Moneyhunter_stat.csv`);
     } catch (e) {
       console.log('Cannot download file', e);
     }
@@ -125,7 +125,7 @@ export class TrackingService {
       const headers = response.headers;
       const blob = new Blob([response.data], {type: headers['content-type']});
 
-      FileSaver.saveAs(blob, `${groupName}-sort.xls`);
+      FileSaver.saveAs(blob, `Moneyhunter_autosort.csv`);
     } catch (e) {
       console.log('Cannot download file', e);
     }
