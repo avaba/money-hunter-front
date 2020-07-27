@@ -2,8 +2,8 @@
   <Modal title="Добавить товар" closable>
     <template v-slot:default>
 
-      <div>
-        <div v-for="(item, idx) in addTypes"
+      <div class="modal-tabs">
+        <div class="modal-tabs__item" v-for="(item, idx) in addTypes"
              :key="idx"
              @click="_=>{selectedType=item; firstDone=false}"
              style="display: block; cursor:pointer;">

@@ -53,12 +53,11 @@
     max-height: calc(100% - (5.57rem * 2));
     border-radius: 30px;
     background: white;
-    padding: 4rem 7.14rem 4.35rem;
+    padding: 4rem 0 4.35rem;
     position: fixed;
     top: 5.57rem;
     left: 50%;
     transform: translateX(-50%);
-    overflow-y: auto;
 
     &.modal_small {
       max-width: 39.28rem;
@@ -103,7 +102,7 @@
   }
 
   .modal-form {
-    margin-top: 1.71rem;
+    margin: 1.71rem 7.14rem 0;
     border-top: 1px solid $drayDevider;
     padding-top: 1.42rem;
   }
@@ -213,12 +212,13 @@
     display: flex;
     justify-content: space-between;
     position: relative;
+    padding: 0 7.14rem;
   }
 
   .modal-form-steps__line {
     position: absolute;
     z-index: -1;
-    width: 55%;
+    width: 47%;
     height: 1px;
     border-bottom: 1px solid $drayDevider;
     top: 1.28rem;
@@ -309,4 +309,24 @@
     max-height: 28.28rem;
     overflow-y: auto;
   }
+
+.modal-tabs {
+  width: 100%;
+  border-bottom: 1px solid $drayDevider;
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+}
+
+.modal-tabs__item {
+  padding: 0 20px 15px;
+  margin: 0 35px;
+
+  span {
+    color: #C5C7D2;
+    letter-spacing: .3px;
+    font-size: 1.14rem;
+    font-weight: 500;
+  }
+}
 </style>

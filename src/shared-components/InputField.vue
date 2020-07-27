@@ -152,7 +152,7 @@
     background: none;
     letter-spacing: .2px;
     color: black;
-    width: 6.42rem;
+    width: 50%;
     height: 2.85rem;
     padding: 0 5px;
   }
