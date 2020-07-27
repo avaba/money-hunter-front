@@ -205,8 +205,8 @@
   .filter-form__item {
 
     &:first-child {
-      max-width: 350px;
-      min-width: 350px;
+      max-width: 240px;
+      min-width: 240px;
     }
 
     &:not(:last-child) {
