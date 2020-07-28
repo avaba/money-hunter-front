@@ -3,7 +3,7 @@
     <template v-slot:default>
 
       <div class="modal-tabs">
-        <div class="modal-tabs__item" v-for="(item, idx) in addTypes"
+        <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
              :key="idx"
              @click="_=>{selectedType=item; firstDone=false}"
              style="display: block; cursor:pointer;">

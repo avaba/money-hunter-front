@@ -97,6 +97,26 @@ export class AuthService {
     store.commit(`auth/${LOGOUT_MUTATION}`);
   }
 
+  async sendPasswordResetLink(email: string): Promise<boolean> {
+    try {
+      const response = await this.authRepo.sendPasswordResetLink(email);
+
+      return response.status === 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async setPassword(newPassword: string, uidb64: string, token: string) {
+    try {
+      const response = await this.authRepo.setPassword(newPassword, uidb64, token);
+
+      return response.status === 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async refreshWrapper(cb: () => Promise<AxiosResponse>) {
     try {
       return await cb();

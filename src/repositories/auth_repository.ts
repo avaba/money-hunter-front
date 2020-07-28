@@ -1,25 +1,34 @@
 import {ApiClient} from "@/http/api_client";
 
 export class AuthRepository {
+  private client = new ApiClient();
+
   private tokenObtainUrl = 'user/token/obtain/';
   private tokenRefreshUrl = 'user/token/refresh/';
   private registerUrl = 'user/register/';
+  private sendPasswordResetLinkUrl = 'user/password/message/';
+  private setPasswordUrl = 'user/password/set/';
 
   refreshToken(token: string): Promise<any> {
-    const client = new ApiClient();
-
-    return client.refreshToken(this.tokenRefreshUrl, token);
+    return this.client.refreshToken(this.tokenRefreshUrl, token);
   }
 
   obtainToken(email: string, password: string) {
-    const client = new ApiClient();
-
-    return client.sendPost(this.tokenObtainUrl, {email, password});
+    return this.client.sendPost(this.tokenObtainUrl, {email, password});
   }
 
   async register(email: string, password: string) {
-    const client = new ApiClient();
+    return await this.client.sendPost(this.registerUrl, {email, password});
+  }
 
-    return await client.sendPost(this.registerUrl, {email, password});
+  sendPasswordResetLink(email: string) {
+    return this.client.sendPost(this.sendPasswordResetLinkUrl, {email});
+  }
+
+  setPassword(newPassword: string, uidb64: string, token: string) {
+    return this.client.sendPost(
+      this.setPasswordUrl,
+      {newPassword, uidb64, token}
+    );
   }
 }

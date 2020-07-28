@@ -310,23 +310,23 @@
     overflow-y: auto;
   }
 
-.modal-tabs {
-  width: 100%;
-  border-bottom: 1px solid $drayDevider;
-  display: flex;
-  justify-content: center;
-  margin-top: 35px;
-}
-
-.modal-tabs__item {
-  padding: 0 20px 15px;
-  margin: 0 35px;
-
-  span {
-    color: #C5C7D2;
-    letter-spacing: .3px;
-    font-size: 1.14rem;
-    font-weight: 500;
+  .modal-tabs {
+    width: 100%;
+    border-bottom: 1px solid $drayDevider;
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
   }
-}
+
+  .modal-tabs__item {
+    padding: 0 20px 15px;
+    margin: 0 35px;
+
+    span {
+      color: #C5C7D2;
+      letter-spacing: .3px;
+      font-size: 1.14rem;
+      font-weight: 500;
+    }
+  }
 </style>

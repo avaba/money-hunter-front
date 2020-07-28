@@ -13,7 +13,7 @@
       <div class="modal-form__submit-item">
         <Btn label="Восстановление пароля" type="submit"/>
       </div>
-      <div class="modal-form__links">
+      <div class="modal-form__links modal-form__links_align-center">
         <router-link :to="{name: 'auth.login'}">Авторизоваться</router-link>
       </div>
     </form>
@@ -24,18 +24,25 @@
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import InputField from "../../shared-components/InputField";
   import Btn from "../../shared-components/Btn";
+  import {AuthService} from "@/services/auth_service";
 
   export default {
     name: "RecoverRequest",
     components: {Btn, InputField, ValidationProvider, ValidationObserver},
-    data(){
+    data() {
       return {
         email: ''
       }
     },
     methods: {
-      handleRecoverRequest() {
-        this.$router.push({name: 'auth.recover_confirm'})
+      async handleRecoverRequest() {
+        const service = AuthService.getInstance();
+        if (await service.sendPasswordResetLink(this.email)) {
+          alert('Сообщение отправлено');
+          await this.$router.push({name: 'auth.login'});
+        } else {
+          alert('Не найден такой email');
+        }
       }
     }
   }

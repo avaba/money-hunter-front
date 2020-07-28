@@ -56,6 +56,11 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
+    path: "/reset/:uidb64/:token",
+    name: 'auth.reset_password_redirection',
+    redirect: to => ({name: 'auth.recover_confirm', params: to.params})
+  },
+  {
     path: "/auth",
     name: 'auth',
     component: Auth,
@@ -68,7 +73,7 @@ const routes: Array<RouteConfig> = [
       }
     },
     children: [
-      {path: 'login', name: 'auth.login', component: Login, meta: {title: 'Вход'}},
+      {path: 'login', name: 'auth.login', component: Login, meta: {title: 'Войти'}},
       {path: 'register', name: 'auth.register', component: Register, meta: {title: 'Регистрация'}},
       {
         path: 'recover_request',
@@ -77,7 +82,7 @@ const routes: Array<RouteConfig> = [
         meta: {title: 'Восстановление пароля'}
       },
       {
-        path: 'recover_confirm',
+        path: 'recover_confirm/:uidb64/:token',
         name: 'auth.recover_confirm',
         component: RecoverConfirm,
         meta: {title: 'Восстановление пароля'}

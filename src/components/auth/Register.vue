@@ -34,7 +34,7 @@
           <div class="modal-form__submit-item">
             <Btn label="Зарегистрироваться" type="submit"/>
           </div>
-          <div class="modal-form__links">
+          <div class="modal-form__links modal-form__links_align-center">
             <router-link :to="{name: 'auth.login'}">Уже есть учетная запись? Войти</router-link>
           </div>
         </template>
