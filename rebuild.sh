@@ -2,6 +2,8 @@
 
 echo 'Pulling new code'
 git pull --ff-only
+echo 'yarn install'
+docker-compose exec app yarn install
 echo 'Building to dist_rebuild'
 docker-compose exec app node_modules/.bin/vue-cli-service build --dest dist_rebuild
 echo 'Coping files from dist_rebuild to dist'
