@@ -51,6 +51,7 @@
         );
 
         if (result) {
+          alert('Товар добавлен');
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {

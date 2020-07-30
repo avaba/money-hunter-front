@@ -34,7 +34,7 @@ export default {
     delete data.userName;
 
 
-    await userService.postProfile(data);
+    return await userService.postProfile(data);
   },
   async [GET_SUBSCRIPTION_ACTION](context: ActionContext<VuexUserStateInterface, any>) {
     const userService = new UserService();

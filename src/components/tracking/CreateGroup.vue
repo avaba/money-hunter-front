@@ -92,6 +92,7 @@
           );
 
           if (result) {
+            alert('Группа создана');
             await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
             await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
             await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});

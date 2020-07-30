@@ -220,6 +220,7 @@
         );
 
         if (result) {
+          alert('Товары добавлены');
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           if (this.$route.fullPath !== this.$router.resolve({

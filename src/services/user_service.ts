@@ -16,9 +16,10 @@ export class UserService {
 
   async postProfile(user: any) {
     try {
-      return (await this.authService.refreshWrapper(this.repo.postProfile.bind(this.repo, user))).data;
+      const response = await this.authService.refreshWrapper(this.repo.postProfile.bind(this.repo, user));
+      return response.status === 201;
     } catch (e) {
-      console.log(e);
+      return false;
     }
   }
 

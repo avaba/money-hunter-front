@@ -64,13 +64,16 @@
           this.setUserData('phoneNumber', value);
         }
       },
-      subscriptionType(){
+      subscriptionType() {
         return this.$store.state.user.subscription?.subscriptionType;
       }
     },
     methods: {
-      postUser() {
-        this.$store.dispatch(`user/${POST_USER_ACTION}`);
+      async postUser() {
+        const result = await this.$store.dispatch(`user/${POST_USER_ACTION}`);
+        if (result) {
+          alert('Информация сохранена');
+        }
       },
       setUserData(type, value) {
         const payload = {...this.user};
