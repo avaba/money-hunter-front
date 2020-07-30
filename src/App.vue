@@ -48,7 +48,7 @@
         // Находим ближайший роут, у которого есть title в meta
         return ([...this.$route.matched]
           .reverse()
-          .find(route => route.meta && route.meta.title) || {meta: {title: 'MoneyHunter'}})
+          .find(route => route.meta && route.meta.title) || {meta: {title: 'Moneyhunter'}})
           .meta
           .title;
       },

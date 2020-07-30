@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <img src="../assets/img/logo.svg" alt="">
-      <div class="sidebar-header__company-name">MoneyHunter</div>
+      <div class="sidebar-header__company-name">Moneyhunter</div>
     </div>
     <div class="sidebar-navigation">
       <nav>
