@@ -94,4 +94,12 @@ export class BlackboxService {
       return null;
     }
   }
+
+  async getCategories() {
+    try {
+      return (await this.service.refreshWrapper(this.repo.getCategories.bind(this.repo))).data;
+    } catch (e) {
+      return [];
+    }
+  }
 }

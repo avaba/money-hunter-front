@@ -14,7 +14,7 @@
             <Btn label="Отмена" clazz="button_gray" @click="hideModal"/>
           </div>
           <div class="modal-form__double-submit-item">
-            <Btn label="Сохранить" @click="saveHandler"/>
+            <Btn label="Загрузить" @click="saveHandler"/>
           </div>
         </div>
       </form>
@@ -28,7 +28,7 @@
   import {HIDE_MODAL_MUTATION} from "../../store/modules/modal/constants";
   import Btn from "../../shared-components/Btn";
   import {BlackboxService} from "@/services/blackbox_service";
-  import {FIND_SEARCH_ID_BY_NAME_ACTION} from "@/store/modules/blackbox/constants";
+  import {FIND_SEARCH_ID_BY_NAME_ACTION} from "../../store/modules/blackbox/constants";
 
 
   export default {

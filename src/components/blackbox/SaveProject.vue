@@ -52,8 +52,6 @@
           const blackboxService = new BlackboxService();
           const _nested = {...this.nested};
 
-          _nested.categories = [1];
-
           const result = await blackboxService.saveSearch(this.name, _nested);
 
           if (typeof result === 'boolean' && result) {

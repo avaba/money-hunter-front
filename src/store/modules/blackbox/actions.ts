@@ -32,7 +32,7 @@ export default {
   },
   async [FIND_SEARCH_ID_BY_NAME_ACTION](context: ActionContext<VuexBlackBoxStateInterface, any>, name: string) {
     const service = new BlackboxService();
-    const response = await service.findSearchIDByName(name);
+    const response = await service.findSearchIDByName(encodeURIComponent(name));
 
     if (response) {
       context.dispatch(`user/${GET_SUBSCRIPTION_ACTION}`, undefined, {root: true});

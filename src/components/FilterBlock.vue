@@ -3,40 +3,13 @@
     <form action="" class="filter-form">
       <div class="filter-form__fields">
         <div class="filter-form__item">
-          <!--          <MultiSelect/>-->
-          <!--          <SelectField label="Выберите категории" :options="[{value: 1, option: 'Спортивные костюмы'}]"/>-->
-          <TreeSelect label="Выберие категории" :value="['a']" :options="[
-          {
-            id: 'a',
-            label: 'Спортивная одежда',
-            children: [
-              {
-                id: 'aa',
-                label: 'Кеды',
-              },
-              {
-                id: 'ab',
-                label: 'Шорты',
-              },
-              {
-                id: 'ac',
-                label: 'футболки',
-              },
-              {
-                id: 'ad',
-                label: 'носки',
-              },
-            ],
-          },
-          {
-            id: 'b',
-            label: 'Кепки',
-          },
-          {
-            id: 'c',
-            label: 'Костюмы',
-          }
-        ]"/>
+          <TreeSelect label="Выберие категории"
+                      v-model="categories"
+                      :options="availableOptions"
+                      :normalizer="node=>({...node, label: node.name})"
+                      :limit="3"
+                      :limitText="count=>`и еще ${count}`"
+                      :multiple="true"/>
         </div>
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange"/>
@@ -95,6 +68,7 @@
   import LoadProject from "@/components/blackbox/LoadProject";
   import {CHECK_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
+  import {BlackboxService} from "../services/blackbox_service";
 
   export default {
     name: "FilterBlock",
@@ -108,13 +82,14 @@
     data() {
       return {
         searchIcon: SearchImage,
+        availableOptions: [],
 
         priceRange: [],
         ordersRange: [],
         ratingRange: [],
         feedbackRange: [],
         revenueRange: [],
-        categories: [1],
+        categories: [],
       }
     },
     computed: {
@@ -155,7 +130,14 @@
       saveProject() {
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
       },
+      async loadCategories() {
+        const service = new BlackboxService();
+        this.availableOptions = await service.getCategories();
+      },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
+    },
+    created() {
+      this.loadCategories();
     }
   }
 </script>
