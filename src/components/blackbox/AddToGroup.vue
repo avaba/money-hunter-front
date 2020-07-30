@@ -1,12 +1,12 @@
 <template>
-  <Modal title="Выберите группу" closable>
+  <Modal title="Выберите группу" closable @next="addBtnHandler">
     <template v-slot:default>
       <form action="" class="modal-form">
-        <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
+        <ValidationProvider v-slot="{errors}" :rules="{required: true}" ref="validation">
           <SelectGroupModal v-model="selectedGroup" :error="$getValidationError(errors)"/>
 
           <div class="modal-form__submit-item">
-            <Btn label="Добавить" type="button" @click="()=>valid ? addBtnHandler() : validate()"/>
+            <Btn label="Добавить" type="button" @click="addBtnHandler"/>
           </div>
         </ValidationProvider>
       </form>
@@ -39,6 +39,10 @@
     },
     methods: {
       async addBtnHandler() {
+        if (!this.$validationProviderIsValid(this.$refs.validation)) {
+          return;
+        }
+
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
           this.selectedGroup,

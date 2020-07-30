@@ -1,7 +1,7 @@
 <template>
-  <Modal title="Загрузить проект">
+  <Modal title="Загрузить проект" @next="saveHandler">
     <template v-slot:default>
-      <form action="" class="modal-form">
+      <form action="" class="modal-form" @submit.prevent>
         <div class="modal-form__download-project">
           <div class="modal-form__download-project-item" v-for="(item, idx) in positions" :key="idx">
             <Btn :label="item.name"

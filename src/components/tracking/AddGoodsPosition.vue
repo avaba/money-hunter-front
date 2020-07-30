@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Добавить товар" closable>
+  <Modal title="Добавить товар" closable @next="onNext">
     <template v-slot:default>
 
       <div class="modal-tabs">
@@ -27,49 +27,46 @@
         </div>
       </div>
 
-      <form action="" class="modal-form">
+      <form action="" class="modal-form" @submit.prevent>
         <template v-if="!firstDone">
-          <ValidationProvider v-slot="{errors, valid, validate}"
-                              v-if="selectedType==='byGoods'"
-                              :rules="{required: true}"
-                              :key="selectedType">
-            <FindProductModal v-model="foundedProduct"
-                              :validation-error="$getValidationError(errors) || typeof foundedProduct==='string' ? 'Не найдено':null"/>
+          <ValidationObserver ref="firstStepObserver">
+            <ValidationProvider
+              v-if="selectedType==='byGoods'"
+              :rules="{required: true, is_type: 'object'}"
+              :custom-messages="{is_type: 'Не найдено'}"
+              v-slot="{errors}"
+              key="byGoodsType">
+              <FindProductModal v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
+            </ValidationProvider>
+
+            <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
+              <TreeSelect
+                :error="$getValidationError(errors)"
+                v-model="selectedBrands"
+                ref="brandsSelector"
+                label="Выберите бренд"
+                :multiple="true"
+                :load-options="loadBrands"
+                :options="brandOptions"
+                :normalizer="brandsNormalizer"
+                :dont-use-local-search="true"
+                @open="handleMenuOpen"
+                @close="handleMenuClose"
+                @search-change="handleSearchChange"
+              />
+
+            </ValidationProvider>
 
             <div class="modal-form__submit-item">
               <Btn label="Далее"
                    type="button"
-                   @click="()=>{if(valid&& typeof foundedProduct==='object') {firstDone=true}else validate()}"/>
+                   @click="firstStepDoneHandler"/>
             </div>
-          </ValidationProvider>
-
-          <ValidationProvider v-else v-slot="{errors, valid, validate}" :rules="{required: true}" :key="selectedType">
-            <TreeSelect
-              :error="$getValidationError(errors)"
-              v-model="selectedBrands"
-              ref="brandsSelector"
-              label="Выберите бренд"
-              :multiple="true"
-              :load-options="loadBrands"
-              :options="brandOptions"
-              :normalizer="brandsNormalizer"
-              :dont-use-local-search="true"
-              @open="handleMenuOpen"
-              @close="handleMenuClose"
-              @search-change="handleSearchChange"
-            />
-
-            <div class="modal-form__submit-item">
-              <Btn label="Далее"
-                   type="button"
-                   @click="()=>{if(valid) {firstDone=true}else validate()}"/>
-            </div>
-          </ValidationProvider>
-
-
+          </ValidationObserver>
         </template>
+
         <template v-if="firstDone">
-          <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
+          <ValidationProvider v-slot="{errors}" :rules="{required: true}" ref="secondStepProvider">
             <SelectGroupModal v-model="selectedGroup" :error="$getValidationError(errors)"/>
 
             <div class="modal-form__double-submit modal-form__double-submit_save-project">
@@ -77,7 +74,7 @@
                 <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
               </div>
               <div class="modal-form__double-submit-item">
-                <Btn label="Сохранить" @click="()=> valid ? handleSaveBtn() : validate()"/>
+                <Btn label="Сохранить" @click="handleSaveBtn"/>
               </div>
             </div>
           </ValidationProvider>
@@ -95,7 +92,7 @@
   import {TrackingService} from "@/services/tracking_service";
   import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  import {ValidationProvider} from 'vee-validate';
+  import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import SelectGroupModal from "@/shared-components/SelectGroupModal";
   import FindProductModal from "@/shared-components/FindProductModal";
 
@@ -104,7 +101,7 @@
 
   export default {
     name: "AddGoodsPosition",
-    components: {FindProductModal, SelectGroupModal, TreeSelect, Modal, Btn, ValidationProvider},
+    components: {FindProductModal, SelectGroupModal, TreeSelect, Modal, Btn, ValidationProvider, ValidationObserver},
     data() {
       return {
         firstDone: false,
@@ -135,6 +132,16 @@
     methods: {
       translatedType(type) {
         return type === ADD_BY_GOODS ? 'По одному' : 'Бренд';
+      },
+      onNext() {
+        if (this.firstDone) {
+          this.handleSaveBtn();
+        } else {
+          this.firstStepDoneHandler();
+        }
+      },
+      async firstStepDoneHandler() {
+        this.firstDone = await this.$refs.firstStepObserver.validate();
       },
       async loadBrands() {
         const service = new TrackingService();
@@ -201,6 +208,10 @@
       },
 
       async handleSaveBtn() {
+        if (!this.$validationProviderIsValid(this.$refs.secondStepProvider)) {
+          return;
+        }
+
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
           this.selectedGroup,

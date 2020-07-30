@@ -1,16 +1,16 @@
 <template>
-  <Modal :title='`Группа "${title}"`' closable>
+  <Modal :title='`Группа "${title}"`' closable @next="updateHandler">
     <template v-slot:default>
 
       <form action="" class="modal-form">
-        <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
+        <ValidationProvider v-slot="{errors}" :rules="{required: true}" ref="validation">
           <div class="modal-form__save-project">
             <InputField label="Введите новое имя группы" v-model="newName" :error="$getValidationError(errors)"/>
           </div>
 
 
           <div class="modal-form__submit-item">
-            <Btn label="Далее" type="button" @click="()=>{valid ? updateHandler() : validate()}"/>
+            <Btn label="Далее" type="button" @click="updateHandler"/>
           </div>
         </ValidationProvider>
       </form>
@@ -43,6 +43,10 @@
     components: {Btn, InputField, Modal, ValidationProvider},
     methods: {
       async updateHandler() {
+        if (!this.$validationProviderIsValid(this.$refs.validation)) {
+          return;
+        }
+
         const res = await this.$store.dispatch(`tracking/${UPDATE_GROUP_NAME_ACTION}`, {
           groupName: this.title,
           newName: this.newName

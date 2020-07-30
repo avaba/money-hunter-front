@@ -14,6 +14,7 @@
   import {Fragment} from 'vue-fragment';
   import {mapMutations} from "vuex";
   import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {Stream} from "@/helpers/stream.fn";
 
   export default {
     name: "Modal",
@@ -28,8 +29,41 @@
         default: false
       }
     },
+    data() {
+      return {
+        escStream: new Stream(),
+        nextStream: new Stream(),
+      }
+    },
     methods: {
-      ...mapMutations('modal', [HIDE_MODAL_MUTATION])
+      ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
+      /**
+       *
+       * @param {KeyboardEvent} event
+       */
+      handleKeyboardEvent(event) {
+        // "keyCode" депрецирован, но IE не поддерживает "key"
+
+        if (event.key === 'Escape' || event.keyCode === 27) {
+          this.escStream.next();
+        }
+        if (event.key === 'Enter' || event.keyCode === 13) {
+          this.nextStream.next();
+        }
+      },
+      onNext() {
+        this.$emit('next');
+      }
+    },
+    mounted() {
+      document.addEventListener('keydown', this.handleKeyboardEvent);
+      this.escStream.subscribe(this.hideModal);
+      this.nextStream.subscribe(this.onNext);
+    },
+    beforeDestroy() {
+      document.removeEventListener('keydown', this.handleKeyboardEvent);
+      this.escStream.unsubscribe(this.hideModal);
+      this.nextStream.unsubscribe(this.onNext);
     }
   }
 </script>

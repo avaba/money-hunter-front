@@ -1,5 +1,5 @@
 <template>
-  <Modal :title='`Группа "${title}"`' closable>
+  <Modal :title='`Группа "${title}"`' closable @next="deleteHandler">
     <template v-slot:default>
 
       <form action="" class="modal-form">
@@ -46,6 +46,9 @@
         const res = await this.$store.dispatch(`tracking/${DELETE_GROUP}`, this.title);
 
         if (res) {
+          if (this.$isCurrentRouteEquals({name: 'tracking.group', params: {name: this.$route.params.name}})) {
+            await this.$router.push({name: 'tracking.group_list'});
+          }
           this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
           alert(res);

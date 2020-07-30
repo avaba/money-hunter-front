@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Создать группу" closable>
+  <Modal title="Создать группу" closable @next="onNext">
     <template v-slot:default>
       <div class="modal-form-steps">
         <div class="modal-form-steps__line"/>
@@ -16,7 +16,7 @@
 
       <form class="modal-form">
         <template v-if="!firstDone">
-          <ValidationProvider :rules="{required: true}" v-slot="{valid, validate, errors}">
+          <ValidationProvider :rules="{required: true}" v-slot="{errors}" ref="firstStepProvider">
             <div class="modal-form__save-project">
               <InputField label="Придумайте название для вашей группы"
                           v-model="groupName"
@@ -24,14 +24,15 @@
             </div>
 
             <div class="modal-form__submit-item">
-              <Btn label="Далее" type="button" @click="valid ? firstDone=true : validate()"/>
+              <Btn label="Далее" type="button" @click="firstStepDoneHandler"/>
             </div>
           </ValidationProvider>
         </template>
         <template v-if="firstDone">
-          <ValidationProvider v-slot:="{errors, valid, validate}"
+          <ValidationProvider v-slot:="{errors}"
                               :rules="{required: true, is_type: 'object'}"
-                              :custom-messages="{is_type: 'Не найдено'}">
+                              :custom-messages="{is_type: 'Не найдено'}"
+                              ref="secondStepObserver">
             <FindProductModal v-model="foundedProduct"
                               :validation-error="$getValidationError(errors)"/>
             <div class="modal-form__double-submit modal-form__double-submit_save-project">
@@ -39,7 +40,7 @@
                 <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
               </div>
               <div class="modal-form__double-submit-item">
-                <Btn label="Сохранить" @click="valid ? createGroupBtnHandler() : validate()"/>
+                <Btn label="Сохранить" @click="createGroupBtnHandler"/>
               </div>
             </div>
           </ValidationProvider>
@@ -71,20 +72,32 @@
       }
     },
     methods: {
-      async createGroupBtnHandler() {
-        const service = new TrackingService();
-        const result = await service.createUpdateGroup(
-          this.groupName,
-          [this.foundedProduct.articul],
-          false
-        );
-
-        if (result) {
-          await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
-          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
-          await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});
+      onNext() {
+        if (this.firstDone) {
+          this.createGroupBtnHandler();
         } else {
-          alert('Произошла ошибка');
+          this.firstStepDoneHandler();
+        }
+      },
+      async firstStepDoneHandler() {
+        this.firstDone = await this.$validationProviderIsValid(this.$refs.firstStepProvider);
+      },
+      async createGroupBtnHandler() {
+        if (await this.$refs.secondStepObserver.validate) {
+          const service = new TrackingService();
+          const result = await service.createUpdateGroup(
+            this.groupName,
+            [this.foundedProduct.articul],
+            false
+          );
+
+          if (result) {
+            await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
+            await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+            await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});
+          } else {
+            alert('Произошла ошибка');
+          }
         }
       }
     }

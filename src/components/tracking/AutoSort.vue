@@ -1,10 +1,10 @@
 <template>
-  <Modal :title='`Группа "${groupName}"`' closable>
+  <Modal :title='`Группа "${groupName}"`' closable @next="send">
     <template v-slot:default>
 
-      <form action="" class="modal-form">
+      <form action="" class="modal-form" @submit.prevent>
 
-        <ValidationProvider :rules="{required: true}" v-slot="{errors, valid, validate}">
+        <ValidationProvider :rules="{required: true}" v-slot="{errors}" ref="validation">
           <div class="modal-form__save-project">
             <InputField label="Введите количество дней"
                         v-model.number="daysCount"
@@ -17,7 +17,7 @@
               <Btn label="Отмена" clazz="button_gray" @click="cancelHandler"/>
             </div>
             <div class="modal-form__double-submit-item">
-              <Btn label="Отправить" @click="valid?send():validate()"/>
+              <Btn label="Отправить" @click="send"/>
             </div>
           </div>
         </ValidationProvider>
@@ -54,6 +54,10 @@
         this.closeModal();
       },
       async send() {
+        if (!this.$validationProviderIsValid(this.$refs.validation)) {
+          return;
+        }
+
         const service = new TrackingService();
         await service.getGroupSortFile(this.$route.params.name, this.daysCount);
         this.closeModal();

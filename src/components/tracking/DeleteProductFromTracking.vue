@@ -1,8 +1,8 @@
 <template>
-  <Modal title='Удаление отслеживаемого тоара' closable>
+  <Modal title='Удаление отслеживаемого тоара' closable @next="deleteHandler">
     <template v-slot:default>
 
-      <form action="" class="modal-form">
+      <form action="" class="modal-form" @submit.prevent>
         <div class="modal-form-search">
           <div class="modal-form-search__not"><span>Уверены, что хотите перестать отслеживать?</span>
           </div>

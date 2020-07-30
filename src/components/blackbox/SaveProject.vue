@@ -1,14 +1,14 @@
 <template>
-  <Modal title="Сохранить проект">
+  <Modal title="Сохранить проект" @next="saveHandler">
     <template v-slot:default>
-      <ValidationProvider v-slot="{errors, valid, validate}" :rules="{required: true}">
-        <form action="" class="modal-form">
+      <ValidationProvider v-slot="{errors}" :rules="{required: true}" ref="validation">
+        <form action="" class="modal-form" @submit.prevent>
           <div class="modal-form__save-project">
             <InputField
               label="Используйте ясное и уникальное имя, чтобы вы могли легко идентифицировать проект."
               placeholder="Название проекта"
               v-model="name"
-              :error="nameError"
+              :error="nameError || $getValidationError(errors)"
             />
           </div>
           <div class="modal-form__double-submit modal-form__double-submit_save-project">
@@ -16,7 +16,7 @@
               <Btn label="Отмена" clazz="button_gray" @click="hideModal"/>
             </div>
             <div class="modal-form__double-submit-item">
-              <Btn label="Сохранить" @click="saveHandler(valid, validate)"/>
+              <Btn label="Сохранить" @click="saveHandler"/>
             </div>
           </div>
         </form>
@@ -47,8 +47,8 @@
       ...mapState('modal', ['nested'])
     },
     methods: {
-      async saveHandler(valid, validateCb) {
-        if (valid) {
+      async saveHandler() {
+        if (await this.$validationProviderIsValid(this.$refs.validation)) {
           const blackboxService = new BlackboxService();
           const _nested = {...this.nested};
 
@@ -59,12 +59,6 @@
           } else {
             this.nameError = result;
           }
-        } else {
-          validateCb().then(({valid, failedRules}) => {
-            if (!valid) {
-              this.nameError = this.$getValidationError(Object.values(failedRules));
-            }
-          });
         }
       },
       ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
