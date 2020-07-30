@@ -10,8 +10,10 @@
         <button class="tarif-list__button" v-if="item.custom"></button>
       </div>
     </div>
-    <div class="tarif-price">{{price}} ₽</div>
-    <Btn label="Купить"/>
+    <template v-if="isBuyable">
+      <div class="tarif-price">{{price}} ₽</div>
+      <Btn label="Купить"/>
+    </template>
   </div>
 </template>
 
@@ -37,6 +39,10 @@
       list: {
         type: Array,
         required: true
+      },
+      isBuyable: {
+        type: Boolean,
+        default: true
       }
     }
   }

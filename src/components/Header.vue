@@ -10,7 +10,7 @@
         <img src="../assets/img/ikons/notification.svg" alt="">
         <div class="notifications__circle"><span></span></div>
       </div>
-      <div class="user-name">
+      <div class="user-name" @click="$router.push({name: 'profile'}).catch(()=>{})">
         <span class="user-name__text">{{email}}</span>
         <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
       </div>
@@ -102,6 +102,7 @@
     display: flex;
     align-items: center;
     border-left: 1px solid $drayDevider;
+    cursor: pointer;
 
     img {
       cursor: pointer;

@@ -7,6 +7,7 @@
       :clazz="item.clazz"
       :name="item.name"
       :list="item.list"
+      :is-buyable="item.name!=='Free'"
     />
   </div>
 </template>
