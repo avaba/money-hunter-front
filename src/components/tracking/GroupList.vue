@@ -9,7 +9,6 @@
       </div>
     </div>
 
-
     <TrackingTable v-if="tablePositions"
                    :headers="tableHeaders"
                    :items="tablePositions"
@@ -49,12 +48,6 @@
             clazz: 'width23 tracking-table__header-item_align-center'
           },
           {name: 'revenue', label: 'Сумма заказов/руб.', clazz: 'width23 tracking-table__header-item_align-center'},
-          {
-            name: 'actions',
-            label: 'Действия',
-            clazz: 'width5 tracking-table__header-item_align-center',
-            sortable: false
-          },
         ],
 
         orderType: 'count',
@@ -70,14 +63,20 @@
       ...mapState('tracking', ['groups']),
     },
     methods: {
+      map_name(item) {
+        return {
+          content: item.name,
+          clazz: 'width23',
+          onClick: ({content}) => this.$router.push({name: 'tracking.group', params: {name: content}})
+        }
+      },
       map_count: item => ({content: item.details.count, clazz: 'tracking-table__align-center width23'}),
       map_orders: item => ({content: item.details.orders, clazz: 'tracking-table__align-center width23'}),
       map_revenue: item => ({
         content: ProductPrice,
         component_data: {price: item.details.revenue},
         clazz: 'tracking-table__align-center width23'
-      }),
-      map_actions: () => ({content: ProductAction, clazz: 'tracking-table__align-center width5'}),
+      })
     },
   }
 </script>

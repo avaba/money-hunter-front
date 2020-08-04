@@ -34,7 +34,7 @@ const routes: Array<RouteConfig> = [
     name: 'blackbox',
     component: lazyLoad('views/Blackbox'),
     meta: {
-      title: 'Black Box'
+      title: 'Поиск товаров'
     },
   },
   {

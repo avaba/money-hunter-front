@@ -6,7 +6,7 @@
         <img src="../assets/img/ikons/education.svg" alt="">
         <span class="education__text">Обучение</span>
       </div>
-      <div class="notifications">
+      <div class="notifications" v-if="false">
         <img src="../assets/img/ikons/notification.svg" alt="">
         <div class="notifications__circle"><span></span></div>
       </div>

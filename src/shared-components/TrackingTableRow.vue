@@ -3,7 +3,9 @@
     <tr class="tracking-table__row" :class="{'tracking-table__row_open': rowOpened}" @click="open">
       <td class="tracking-table__cell"
           :class="{[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
+          :style="{cursor: item.onClick ? 'pointer' : 'inherit'}"
           v-for="(item, idx) in mappedList"
+          @click.exact="item.onClick ? item.onClick(item) : ()=>{}"
           :key="idx">
         <component v-bind:is="item.content" v-if="typeof item.content==='object'" v-bind="item.component_data"/>
         <template v-else>{{item.content}}</template>

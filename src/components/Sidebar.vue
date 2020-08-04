@@ -27,7 +27,7 @@
       return {
         links: [
           {name: 'Отслеживание', systemName: 'tracking'},
-          {name: 'BlackBox', systemName: 'blackbox'},
+          {name: 'Поиск товаров', systemName: 'blackbox'},
           {name: 'Профиль', systemName: 'profile'},
         ]
       }
