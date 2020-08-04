@@ -27,5 +27,10 @@ export default {
     subscription: null
   }),
   mutations: mutations,
-  actions: actions
+  actions: actions,
+  getters: {
+    getEmail(state: VuexUserStateInterface) {
+      return state.data?.email;
+    }
+  }
 }

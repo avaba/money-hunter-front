@@ -1,11 +1,12 @@
 import {BlackboxRepository, GetSearchIDDataInterface, RangeOfIntegersType} from "@/repositories/blackbox_repository";
 import {AuthService} from "@/services/auth_service";
+import {AmplitudeService} from "@/services/amplitude_service";
 
 export class BlackboxService {
   private repo = new BlackboxRepository();
   private service = AuthService.getInstance();
 
-  private normalizeFilterData(data: GetSearchIDDataInterface): GetSearchIDDataInterface {
+  public normalizeFilterData(data: GetSearchIDDataInterface): GetSearchIDDataInterface {
     const _data = {} as GetSearchIDDataInterface;
     _data.feedbackRange = this.normalizeRangeData(data.feedbackRange);
     _data.ordersRange = this.normalizeRangeData(data.ordersRange);
@@ -17,7 +18,7 @@ export class BlackboxService {
     return _data;
   }
 
-  private normalizeRangeData(data: any): RangeOfIntegersType {
+  private normalizeRangeData = (data: any): RangeOfIntegersType => {
     const _data = Array<number>(2);
 
     // если данных нет или ни не соответствуют условию
@@ -25,7 +26,7 @@ export class BlackboxService {
     _data[1] = (!data[1] || data[1] > 900000) ? 900000 : data[1];
 
     return _data as RangeOfIntegersType;
-  }
+  };
 
   async getNewSearchID(data: GetSearchIDDataInterface) {
     try {
@@ -67,6 +68,8 @@ export class BlackboxService {
   async saveSearch(name: string, data: GetSearchIDDataInterface): Promise<string | true> {
     try {
       const _data = this.normalizeFilterData(data);
+      AmplitudeService.blackBoxSearchSave(_data, name);
+
       const response = await this.service.refreshWrapper(this.repo.saveSearch.bind(this.repo, name, _data));
 
       return response.status === 201 || 'Произошла ошибка';

@@ -55,7 +55,7 @@
           const result = await blackboxService.saveSearch(this.name, _nested);
 
           if (typeof result === 'boolean' && result) {
-            alert('Поиск сохранен')
+            alert('Поиск сохранен');
             this[HIDE_MODAL_MUTATION]();
           } else {
             this.nameError = result;

@@ -10,11 +10,14 @@ import {BlackboxService} from "@/services/blackbox_service";
 import {GetSearchIDDataInterface} from "@/repositories/blackbox_repository";
 import {GET_SUBSCRIPTION_ACTION} from "@/store/modules/user/constants";
 import {isEqual} from 'lodash';
+import {AmplitudeService} from "@/services/amplitude_service";
 
 const isFiltersEquals = (a: any, b: any) => isEqual(a, b);
 
 export default {
   async [CHECK_SEARCH_ID_ACTION](context: ActionContext<VuexBlackBoxStateInterface, any>, filters: Record<string, any>) {
+    const service = new BlackboxService();
+    AmplitudeService.blackBoxSearch(service.normalizeFilterData(filters as GetSearchIDDataInterface));
     if (!context.state.searchID || !isFiltersEquals(context.state.filters, filters)) {
       // searchID нету или фильтры изменились, просто получаем новый
       await context.dispatch(GET_NEW_SEARCH_ID_ACTION, filters);

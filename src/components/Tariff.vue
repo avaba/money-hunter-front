@@ -12,13 +12,14 @@
     </div>
     <template v-if="isBuyable">
       <div class="tarif-price">{{price}} ₽</div>
-      <Btn label="Купить"/>
+      <Btn label="Купить" @click="handleBuyBtn"/>
     </template>
   </div>
 </template>
 
 <script>
   import Btn from "../shared-components/Btn";
+  import {AmplitudeService} from "@/services/amplitude_service";
 
   export default {
     name: "Tariff",
@@ -43,6 +44,11 @@
       isBuyable: {
         type: Boolean,
         default: true
+      }
+    },
+    methods: {
+      handleBuyBtn() {
+        AmplitudeService.subscription(this.name);
       }
     }
   }

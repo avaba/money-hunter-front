@@ -35,6 +35,7 @@
   import Btn from "@/shared-components/Btn";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import AddToGroup from "@/components/blackbox/AddToGroup";
+  import {AmplitudeService} from "../services/amplitude_service";
 
   const DEFAULT_ORDER_TYPE = 'articul';
 
@@ -83,6 +84,8 @@
       perPageHandler(value) {
         this.paginationData.page = 1;
         this.paginationData.perPage = value;
+
+        AmplitudeService.blackBoxOnPageData(parseInt(value));
 
         this.loadGoods();
       },
@@ -145,6 +148,7 @@
     },
     watch: {
       orderType: function () {
+        AmplitudeService.blackBoxOrdering(this.orderType);
         this.debounceLoadGoods();
       }
     }

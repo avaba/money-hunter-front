@@ -9,6 +9,7 @@ import {UserService} from "@/services/user_service";
 import router from "@/router";
 import {AuthService} from "@/services/auth_service";
 import {VuexUserStateDataInterface, VuexUserStateInterface} from "@/store/modules/user/index";
+import {AmplitudeService} from "@/services/amplitude_service";
 
 export default {
   async [GET_PROFILE_ACTION](context: ActionContext<any, any>) {
@@ -33,6 +34,7 @@ export default {
     delete data.email;
     delete data.userName;
 
+    AmplitudeService.profileInfo(data);
 
     return await userService.postProfile(data);
   },

@@ -13,6 +13,9 @@ import GroupList from '../components/tracking/GroupList.vue';
 
 import {TokenService} from "@/services/token_service";
 import {lazyLoad} from "@/helpers";
+import {AmplitudeService} from "@/services/amplitude_service";
+import store from "@/store";
+import {GET_PROFILE_ACTION} from "@/store/modules/user/constants";
 
 Vue.use(VueRouter);
 
@@ -97,11 +100,18 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const tokenService = new TokenService();
   if (!to.name?.startsWith('auth.') && !tokenService.isLoggedIn()) {
     next({name: 'auth.login'})
   } else {
+    if (!to.name?.startsWith('auth.')) {
+      if(!store.getters[`user/getEmail`]){
+        await store.dispatch(`user/${GET_PROFILE_ACTION}`);
+        AmplitudeService.pageLoad(String(to.name));
+      }
+    }
+
     next();
   }
 });

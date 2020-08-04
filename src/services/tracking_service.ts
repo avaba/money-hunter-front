@@ -4,6 +4,7 @@ import {VuexTrackingStateGroupItemInterface} from "@/store/modules/tracking";
 import {AxiosError} from "axios";
 import moment from "moment";
 import FileSaver from "file-saver";
+import {AmplitudeService} from "@/services/amplitude_service";
 
 export class TrackingService {
   private authService = AuthService.getInstance();
@@ -39,6 +40,10 @@ export class TrackingService {
 
   async createUpdateGroup(groupName: string, items: [string], addBrands: boolean) {
     try {
+      AmplitudeService.trackingSave(
+        addBrands ? 'Бренд' : 'Артикул',
+        items
+      );
       const response = await this.authService.refreshWrapper(this.repo.addGoodsPosition.bind(this.repo, groupName, items, addBrands));
       return response.status === 201;
     } catch (e) {
