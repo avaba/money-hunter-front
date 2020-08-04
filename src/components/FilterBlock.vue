@@ -144,7 +144,12 @@
       },
       async loadCategories() {
         const service = new BlackboxService();
-        this.availableOptions = [{id: -1, name: 'Все', children: await service.getCategories()}];
+        this.availableOptions = [{
+          id: -1,
+          name: 'Все',
+          isDefaultExpanded: true,
+          children: await service.getCategories()
+        }];
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
