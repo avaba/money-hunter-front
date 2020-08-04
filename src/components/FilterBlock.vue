@@ -3,7 +3,7 @@
     <form action="" class="filter-form">
       <div class="filter-form__fields">
         <div class="filter-form__item">
-          <TreeSelect label="Выберие категории"
+          <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="availableOptions"
                       :normalizer="node=>({...node, label: node.name})"
@@ -89,7 +89,7 @@
         ratingRange: [],
         feedbackRange: [],
         revenueRange: [],
-        categories: [],
+        categories: [-1],
       }
     },
     computed: {
@@ -106,7 +106,19 @@
         this.searchHandler();
       },
       async checkSearchID() {
-        await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, this.$data);
+        const data = {...this.$data};
+        delete data.searchIcon;
+        delete data.availableOptions;
+        delete data.categories;
+
+        const cats = [...this.categories];
+        if (cats.length === 1 && cats[0] === -1) {
+          data.categories = this.availableOptions[0].children.map(child => child.id);
+        } else {
+          data.categories = this.categories;
+        }
+
+        await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       },
       resetFilters() {
         this.priceRange = [];
@@ -114,7 +126,7 @@
         this.ratingRange = [];
         this.feedbackRange = [];
         this.revenueRange = [];
-        this.categories = [];
+        this.categories = [-1];
       },
       loadProject() {
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
@@ -132,7 +144,7 @@
       },
       async loadCategories() {
         const service = new BlackboxService();
-        this.availableOptions = await service.getCategories();
+        this.availableOptions = [{id: -1, name: 'Все', children: await service.getCategories()}];
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
