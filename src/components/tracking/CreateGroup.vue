@@ -60,7 +60,7 @@
   import {ValidationProvider} from 'vee-validate';
   import {TrackingService} from "@/services/tracking_service";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  import {HIDE_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {mapMutations} from "vuex";
 
   export default {

@@ -27,7 +27,6 @@
 
 <script>
   import Modal from "../Modal";
-  import SaveProject from "@/components/blackbox/SaveProject";
   import Warning from "@/components/blackbox/Warning";
   import InputField from "../../shared-components/InputField";
   import Btn from "../../shared-components/Btn";

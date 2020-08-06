@@ -91,7 +91,7 @@
   import Btn from "@/shared-components/Btn";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {TrackingService} from "@/services/tracking_service";
-  import {HIDE_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {mapMutations} from "vuex";
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
