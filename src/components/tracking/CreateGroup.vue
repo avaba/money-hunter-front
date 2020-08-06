@@ -54,12 +54,14 @@
 <script>
   import Btn from "../../shared-components/Btn";
   import InputField from "../../shared-components/InputField";
+  import Warning from "@/components/blackbox/Warning";
   import Modal from "@/components/Modal";
   import FindProductModal from "@/shared-components/FindProductModal";
   import {ValidationProvider} from 'vee-validate';
   import {TrackingService} from "@/services/tracking_service";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {HIDE_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
 
   export default {
     name: "CreateGroup",
@@ -92,15 +94,19 @@
           );
 
           if (result) {
-            alert('Группа создана');
+            this[SHOW_MODAL_MUTATION]({component: Warning});
+            this[SET_MODAL_RESPONSE_MUTATION]('Группа создана')
             await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
-            await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+            // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
             await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});
           } else {
-            alert('Произошла ошибка');
+            this[SHOW_MODAL_MUTATION]({component: Warning});
+            this[SET_MODAL_RESPONSE_MUTATION]('Произошла ошибка')
           }
         }
-      }
+      },
+      ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

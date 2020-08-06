@@ -92,6 +92,7 @@
     top: 5.57rem;
     left: 50%;
     transform: translateX(-50%);
+    // overflow-y: auto;
 
     &.modal_small {
       max-width: 39.28rem;
@@ -340,8 +341,8 @@
 
   .modal-form__category-list {
     margin-top: 1.07rem;
-    max-height: 28.28rem;
     overflow-y: auto;
+    max-height: 100px;
   }
 
   .modal-tabs {

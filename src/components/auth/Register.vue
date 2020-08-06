@@ -20,6 +20,20 @@
                           :error="$getValidationError(errors)"/>
             </ValidationProvider>
           </div>
+          <div class="modal-form__input-item">
+            <ValidationProvider name="Имя">
+              <InputField label="Имя"
+                          clazz="input-field__input_name"
+                          />
+            </ValidationProvider>
+          </div>
+          <div class="modal-form__input-item">
+            <ValidationProvider name="Телефонный номер">
+              <InputField label="Телефонный номер"
+                          clazz="input-field__input_phone"
+                          />
+            </ValidationProvider>
+          </div>
           <div class="modal-form__promocod-item">
             <div class="modal-form__promocod-link"
                  @click="showPromotionField=!showPromotionField"

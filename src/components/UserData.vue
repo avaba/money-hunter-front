@@ -38,6 +38,9 @@
   import Btn from "../shared-components/Btn";
   import {ValidationObserver, ValidationProvider} from 'vee-validate';
   import {POST_USER_ACTION, SET_USER_MUTATION} from "@/store/modules/user/constants";
+  import {SHOW_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
+  import Warning from "@/components/blackbox/Warning";
 
   export default {
     name: "UserData",
@@ -72,7 +75,8 @@
       async postUser() {
         const result = await this.$store.dispatch(`user/${POST_USER_ACTION}`);
         if (result) {
-          alert('Информация сохранена');
+          this[SHOW_MODAL_MUTATION]({component: Warning});
+          this[SET_MODAL_RESPONSE_MUTATION]('Информация сохранена')
         }
       },
       setUserData(type, value) {
@@ -81,7 +85,9 @@
         payload[type] = value;
 
         this.$store.commit(`user/${SET_USER_MUTATION}`, payload);
-      }
+      },
+      ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

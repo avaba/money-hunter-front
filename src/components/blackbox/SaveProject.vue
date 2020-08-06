@@ -27,9 +27,11 @@
 
 <script>
   import Modal from "../Modal";
+  import SaveProject from "@/components/blackbox/SaveProject";
+  import Warning from "@/components/blackbox/Warning";
   import InputField from "../../shared-components/InputField";
   import Btn from "../../shared-components/Btn";
-  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {HIDE_MODAL_MUTATION, SHOW_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION} from "@/store/modules/modal/constants";
   import {mapMutations, mapState} from "vuex";
   import {BlackboxService} from "@/services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
@@ -55,14 +57,16 @@
           const result = await blackboxService.saveSearch(this.name, _nested);
 
           if (typeof result === 'boolean' && result) {
-            alert('Поиск сохранен');
-            this[HIDE_MODAL_MUTATION]();
+            this[SHOW_MODAL_MUTATION]({component: Warning});
+            this[SET_MODAL_RESPONSE_MUTATION]('Проект сохранен')
           } else {
             this.nameError = result;
           }
         }
       },
       ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
+      ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

@@ -97,6 +97,7 @@
     font-size: $defaultFontSize;
     line-height: 1.43;
     background-color: $white;
+    overflow-x: hidden;
   }
 
   .root {
@@ -106,6 +107,10 @@
   main {
     padding-left: 5.71rem;
     padding-bottom: 3.57rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
   }
 
   h1 {
