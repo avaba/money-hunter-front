@@ -86,7 +86,7 @@
   }
 
   .sidebar-navigation {
-    padding-bottom: 1.42rem;
+    // padding-bottom: 1.42rem;
     border-bottom: 1px solid rgba(223, 224, 235, .06);
   }
 
@@ -137,5 +137,6 @@
   .sidebar-navigation-item__text {
     opacity: 0;
     transition: all ease-in .2s;
+    white-space: nowrap;
   }
 </style>

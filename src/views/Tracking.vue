@@ -54,11 +54,13 @@
 
   .tracking-navigation-wrapper {
     overflow: auto hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .tracking-add-category {
-    flex: 0 0 4.14rem;
-    height: 4.14rem;
+    flex: 0 0 2.75rem;
+    height: 2.75rem;
     background: url("../assets/img/ikons/plus2.svg") no-repeat center, $yellow;
     border-radius: 4px 4px 0 0;
   }

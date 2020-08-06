@@ -87,11 +87,13 @@
 
 <script>
   import Modal from "@/components/Modal";
+  import Warning from "@/components/blackbox/Warning";
   import Btn from "@/shared-components/Btn";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {TrackingService} from "@/services/tracking_service";
-  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {HIDE_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
+  import {mapMutations} from "vuex";
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import SelectGroupModal from "@/shared-components/SelectGroupModal";
   import FindProductModal from "@/shared-components/FindProductModal";
@@ -220,9 +222,10 @@
         );
 
         if (result) {
-          alert('Товары добавлены');
+          this[SHOW_MODAL_MUTATION]({component: Warning});
+          this[SET_MODAL_RESPONSE_MUTATION]('Товары добавлены')
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
-          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           if (this.$route.fullPath !== this.$router.resolve({
             name: 'tracking.group',
             params: {name: this.selectedGroup.toUpperCase()}
@@ -232,9 +235,13 @@
             this.$eventBus.$emit('tracking.group.loadGoods');
           }
         } else {
-          alert('Произошла ошибка');
+          this[SHOW_MODAL_MUTATION]({component: Warning});
+          this[SET_MODAL_RESPONSE_MUTATION]('Произошла ошибка')
         }
-      }
+      },
+
+      ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
   }
 </script>

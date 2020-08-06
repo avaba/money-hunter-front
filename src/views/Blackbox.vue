@@ -3,10 +3,14 @@
     <FilterBlock :searchHandler="searchHandler"/>
 
     <div class="blackbox">
-      <TrackingTable :headers="tableHeaders"
+      <TrackingTable v-if="!isLoading"
+                     :headers="tableHeaders"
                      :items="tablePositions"
                      :order="orderType"
                      :order-handler="$orderHandler"/>
+      <div v-else class="loading-table">
+        <img ondragstart="return false" src="../assets/img/loading.gif" alt="">
+      </div>
     </div>
 
     <div class="block_container">
@@ -61,6 +65,8 @@
         orderType: DEFAULT_ORDER_TYPE,
 
         debounceLoadGoods: debounce(this.loadGoods, 200),
+
+        isLoading: false
       }
     },
     computed: {
@@ -102,6 +108,7 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
+          this.isLoading = true
           const service = new BlackboxService();
 
           const result = await service.getGoodsBySearchID(
@@ -115,6 +122,7 @@
           this.list = [];
           this.$nextTick(() => {
             this.list = result.products;
+            this.isLoading = false
           })
         }
       },
@@ -162,6 +170,21 @@
     margin: 1.42rem 2.28rem 0;
     background: white;
     border: 1px solid $drayDevider;
+    flex: 1;
+    position: relative;
   }
 
+  .loading-table {
+    flex: 1;
+    background: #fff;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .loading-table img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 </style>

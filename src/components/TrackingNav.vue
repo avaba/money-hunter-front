@@ -97,7 +97,12 @@
       },
     },
     mounted() {
-      document.addEventListener('click', () => this.hideActionBlock());
+        this.$nextTick(() => {
+          this.$refs.actionsBlock.forEach(this.hideActionBlock);
+        })
+        setTimeout(() => {
+          this.$refs.actionsBlock.forEach(this.hideActionBlock);
+        }, 1000);
     },
     beforeDestroy() {
       document.removeEventListener('click', this.hideActionBlock);
@@ -110,6 +115,7 @@
 
   .tracking-navlist {
     display: flex;
+    flex: 1;
   }
 
   .tracking-navlist__item {
