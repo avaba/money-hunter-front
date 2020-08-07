@@ -54,7 +54,7 @@
       this.chartData = {
         labels,
         datasets: [
-          {data, fill: false, borderColor: "#FFC700", lineTension: 0,}
+          {data, fill: false, borderColor: "#FFC700", lineTension: 0, label: 'Линия заказов'}
         ]
       }
     }

@@ -12,19 +12,19 @@
                       :multiple="true"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Цена" range v-model="priceRange"/>
+          <InputField label="Цена" range v-model="priceRange" :min="0" :max="900000"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Рейтинг" range v-model="ratingRange"/>
+          <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Отзывы" range v-model="feedbackRange"/>
+          <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Заказы в день" range v-model="ordersRange"/>
+          <InputField label="Заказы в день" range v-model="ordersRange" :min="0" :max="900000"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Доход в день" range v-model="revenueRange"/>
+          <InputField label="Доход в день" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
       </div>
       <div class="filter-form__actions">
@@ -104,7 +104,8 @@
       async searchBtnHandler() {
         await this.checkSearchID();
         this.searchHandler();
-      },
+      }
+      ,
       async checkSearchID() {
         const data = {...this.$data};
         delete data.searchIcon;
@@ -119,7 +120,8 @@
         }
 
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
-      },
+      }
+      ,
       resetFilters() {
         this.priceRange = [];
         this.ordersRange = [];
@@ -127,7 +129,8 @@
         this.feedbackRange = [];
         this.revenueRange = [];
         this.categories = [-1];
-      },
+      }
+      ,
       loadProject() {
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
         this.$eventBus.$once('find_search_id_data', ({data}) => {
@@ -138,10 +141,12 @@
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
         })
-      },
+      }
+      ,
       saveProject() {
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
-      },
+      }
+      ,
       async loadCategories() {
         const service = new BlackboxService();
         this.availableOptions = [{
@@ -150,8 +155,10 @@
           isDefaultExpanded: true,
           children: await service.getCategories()
         }];
-      },
-      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
+      }
+      ,
+      ...
+        mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
@@ -169,7 +176,7 @@
     padding-left: 2.28rem;
     padding-right: 1rem;
     height: 2.57rem;
-    background: white;
+    background: #808080 !important;
 
     &:not(:last-child) {
       margin-right: 1.07rem;

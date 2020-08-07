@@ -56,8 +56,7 @@
           const result = await blackboxService.saveSearch(this.name, _nested);
 
           if (typeof result === 'boolean' && result) {
-            this[SHOW_MODAL_MUTATION]({component: Warning});
-            this[SET_MODAL_RESPONSE_MUTATION]('Проект сохранен')
+            this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Проект сохранен'}});
           } else {
             this.nameError = result;
           }

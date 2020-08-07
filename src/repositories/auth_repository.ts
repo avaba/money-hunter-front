@@ -17,8 +17,8 @@ export class AuthRepository {
     return this.client.sendPost(this.tokenObtainUrl, {email, password});
   }
 
-  async register(email: string, password: string) {
-    return await this.client.sendPost(this.registerUrl, {email, password});
+  async register(email: string, password: string, name: string, phoneNumber: string) {
+    return await this.client.sendPost(this.registerUrl, {email, password, name, phoneNumber});
   }
 
   sendPasswordResetLink(email: string) {

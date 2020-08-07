@@ -15,9 +15,10 @@
   export default {
     name: 'Warning',
     components: {Modal, Btn},
-    computed: {
-      title() {
-        return this.$store.state['modal'].componentResponse
+    props: {
+      title: {
+        type: String,
+        required: true,
       }
     },
     methods: {

@@ -19,7 +19,9 @@
         defaultChartOptions: {
           responsive: true,
           maintainAspectRatio: false,
-          legend: {display: false},
+          legend: {
+            onClick: false
+          }
         }
       }
     },

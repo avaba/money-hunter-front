@@ -97,12 +97,7 @@
       },
     },
     mounted() {
-        this.$nextTick(() => {
-          this.$refs.actionsBlock.forEach(this.hideActionBlock);
-        })
-        setTimeout(() => {
-          this.$refs.actionsBlock.forEach(this.hideActionBlock);
-        }, 1000);
+      document.addEventListener('click', () => this.hideActionBlock());
     },
     beforeDestroy() {
       document.removeEventListener('click', this.hideActionBlock);

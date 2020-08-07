@@ -97,6 +97,10 @@
     color: $gray;
     cursor: pointer;
 
+    &:hover {
+      background-color: #15171c !important;
+    }
+
     &.sidebar-navigation-item_active {
       background-color: rgba(159, 162, 180, .08);
       color: $yellow;

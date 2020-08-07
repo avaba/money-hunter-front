@@ -36,10 +36,11 @@
   import {paginationMixin} from "@/extenders/mixins/pagination_mixin";
   import {debounce} from 'lodash'
   import ProductBlackboxNested from "@/components/tracking-table/ProductBlackboxNested";
-  import Btn from "@/shared-components/Btn";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import AddToGroup from "@/components/blackbox/AddToGroup";
   import {AmplitudeService} from "../services/amplitude_service";
+  import PlusImage from '../assets/img/ikons/plus3.svg';
+  import ImgBtn from "../shared-components/ImgBtn";
 
   const DEFAULT_ORDER_TYPE = 'articul';
 
@@ -49,7 +50,16 @@
     mixins: [tableMixins, paginationMixin],
     data() {
       return {
-        list: [],
+        list: [
+          // {
+          //   articul: '12313',
+          //   currentQty: 123,
+          //   avOrdersSpeed: 123,
+          //   avRevenue: 1,
+          //   currentRating: 1,
+          //   currentFeedBackCount: 1
+          // }
+        ],
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
@@ -108,7 +118,7 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
-          this.isLoading = true
+          this.isLoading = true;
           const service = new BlackboxService();
 
           const result = await service.getGoodsBySearchID(
@@ -141,10 +151,10 @@
       },
       map_add(item) {
         return {
-          content: Btn, component_data: {
-            label: 'add',
+          content: ImgBtn, component_data: {
+            src: PlusImage,
             'click-handler': this.addGoodsPositionHandler.bind(this, item)
-          }, clazz: 'width9'
+          }, clazz: 'tracking-table__align-center width9'
         }
       },
       addGoodsPositionHandler(item) {

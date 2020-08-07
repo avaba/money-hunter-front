@@ -75,8 +75,7 @@
       async postUser() {
         const result = await this.$store.dispatch(`user/${POST_USER_ACTION}`);
         if (result) {
-          this[SHOW_MODAL_MUTATION]({component: Warning});
-          this[SET_MODAL_RESPONSE_MUTATION]('Информация сохранена')
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Информация сохранена'}});
         }
       },
       setUserData(type, value) {

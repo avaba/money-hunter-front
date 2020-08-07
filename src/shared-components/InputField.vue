@@ -10,14 +10,14 @@
              placeholder="Min"
              :disabled="disabled"
              v-model.number="value[0]"
-             @input="$emit('input', value)">
+             @blur="$emit('input', minTransformer())">
       <span>-</span>
       <input type="number"
              class="input-field__input_range"
              placeholder="Max"
              :disabled="disabled"
              v-model.number="value[1]"
-             @input="$emit('input', value)">
+             @blur="$emit('input', maxTransformer())">
     </div>
 
     <input v-else
@@ -75,6 +75,14 @@
       mask: {
         type: [Object, String],
         default: '',
+      },
+      min: {
+        type: Number,
+        default: -Infinity
+      },
+      max: {
+        type: Number,
+        default: Infinity,
       }
     },
     data() {
@@ -92,6 +100,21 @@
       },
       isPassword() {
         return this.type === 'password';
+      }
+    },
+    methods: {
+      minTransformer() {
+        const _v = this.value[0];
+        const min = this.min;
+        const max = this.value[1] || this.max;
+        return [_v < min ? min : (_v > max ? max : _v), this.value[1]];
+      },
+      maxTransformer() {
+        const _v = this.value[1];
+        const min = this.value[0] || this.min;
+        const max = this.max;
+
+        return [this.value[0], _v > max ? max : (_v < min ? min : _v)];
       }
     }
   }

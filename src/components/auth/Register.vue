@@ -8,6 +8,7 @@
               <InputField label="E-mail"
                           clazz="input-field__input_mail"
                           v-model="login"
+                          @input="loginError=''"
                           :error="loginError || $getValidationError(errors)"/>
             </ValidationProvider>
           </div>
@@ -21,17 +22,23 @@
             </ValidationProvider>
           </div>
           <div class="modal-form__input-item">
-            <ValidationProvider name="Имя">
+            <ValidationProvider name="Имя" :rules="{required: true}" v-slot="{errors}">
               <InputField label="Имя"
                           clazz="input-field__input_name"
-                          />
+                          :error="$getValidationError(errors)"
+                          v-model="name"
+              />
             </ValidationProvider>
           </div>
           <div class="modal-form__input-item">
-            <ValidationProvider name="Телефонный номер">
+            <ValidationProvider name="Телефонный номер" :rules="{phonenumber: true, required: true}" v-slot="{errors}">
               <InputField label="Телефонный номер"
                           clazz="input-field__input_phone"
-                          />
+                          :error="$getValidationError(errors)"
+                          v-model="phoneNumber"
+                          placeholder="8 (___) ___-__-__"
+                          :mask="'8 (###) ###-##-##'"
+              />
             </ValidationProvider>
           </div>
           <div class="modal-form__promocod-item">
@@ -85,13 +92,15 @@
 
         login: '',
         password: '',
-        code: ''
+        code: '',
+        phoneNumber: '',
+        name: ''
       }
     },
     methods: {
       async register() {
         const service = AuthService.getInstance();
-        const status = await service.register(this.login, this.password);
+        const status = await service.register(this.login, this.password, this.name, this.phoneNumber);
 
         if (typeof status === 'boolean' && status) {
           this.confirmMessage = true;

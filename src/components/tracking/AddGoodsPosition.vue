@@ -40,19 +40,9 @@
             </ValidationProvider>
 
             <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
-              <TreeSelect
-                :error="$getValidationError(errors)"
+              <BrandsSelector
+                :errors="errors"
                 v-model="selectedBrands"
-                ref="brandsSelector"
-                label="Выберите бренд"
-                :multiple="true"
-                :load-options="loadBrands"
-                :options="brandOptions"
-                :normalizer="brandsNormalizer"
-                :dont-use-local-search="true"
-                @open="handleMenuOpen"
-                @close="handleMenuClose"
-                @search-change="handleSearchChange"
               />
 
             </ValidationProvider>
@@ -89,7 +79,6 @@
   import Modal from "@/components/Modal";
   import Warning from "@/components/blackbox/Warning";
   import Btn from "@/shared-components/Btn";
-  import TreeSelect from "@/shared-components/TreeSelect";
   import {TrackingService} from "@/services/tracking_service";
   import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
@@ -97,27 +86,24 @@
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import SelectGroupModal from "@/shared-components/SelectGroupModal";
   import FindProductModal from "@/shared-components/FindProductModal";
+  import BrandsSelector from "@/shared-components/BrandsSelector";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
 
   export default {
     name: "AddGoodsPosition",
-    components: {FindProductModal, SelectGroupModal, TreeSelect, Modal, Btn, ValidationProvider, ValidationObserver},
+    components: {
+      BrandsSelector,
+      FindProductModal, SelectGroupModal, Modal, Btn, ValidationProvider, ValidationObserver
+    },
     data() {
       return {
         firstDone: false,
         addTypes: [ADD_BY_GOODS, ADD_BY_BRAND],
         selectedType: ADD_BY_GOODS,
 
-        loadedBrands: null,
         foundedProduct: null,
-
-        brandOptions: null,
-
-        brandsPortionPage: 1,
-        brandsPortionSize: 30,
-        brandsSearchQuery: '',
 
         selectedBrands: [],
         selectedGroup: '',
@@ -145,70 +131,6 @@
       async firstStepDoneHandler() {
         this.firstDone = await this.$refs.firstStepObserver.validate();
       },
-      async loadBrands() {
-        const service = new TrackingService();
-        this.loadedBrands = await service.getBrands();
-        this.brandOptions = this.loadedBrands.slice(0, this.brandsPortionSize);
-      },
-      brandsNormalizer: node => ({id: node.brand, label: node.brand}),
-      handleMenuOpen() {
-        this.$nextTick(() => {
-          const menu = this.$refs.brandsSelector.getMenu();
-
-          menu.addEventListener('scroll', () => {
-            const hasReachedEnd = menu.scrollHeight - menu.scrollTop <= menu.clientHeight * 1.25;
-
-            if (hasReachedEnd) {
-              this.brandsPortionPage += 1;
-
-              const fromIndex = (this.brandsPortionPage - 1) * this.brandsPortionSize + 1;
-              const toIndex = this.brandsPortionPage * this.brandsPortionSize;
-
-              if (this.brandsSearchQuery) {
-                this.brandOptions.push(...this.handleBrandsSearch(fromIndex))
-              } else {
-                this.brandOptions.push(
-                  ...this
-                    .loadedBrands
-                    .slice(fromIndex, toIndex)
-                );
-              }
-            }
-          });
-        })
-      },
-      handleMenuClose() {
-        this.$nextTick(() => {
-          this.brandOptions = this.loadedBrands.slice(0, this.brandsPortionSize);
-          this.brandsPortionPage = 1;
-        })
-      },
-      handleBrandsSearch(fromIndex = 0) {
-        const results = [];
-        const searchQuery = this.brandsSearchQuery;
-
-        for (let i = fromIndex; i < this.loadedBrands.length && results.length < this.brandsPortionSize; i++) {
-          const loadedName = this.loadedBrands[i].brand.toLowerCase();
-          const _searchQuery = searchQuery.toLowerCase();
-          if (loadedName.indexOf(_searchQuery) > -1 && !this.brandOptions.find(e => e.brand.toLowerCase() === loadedName)) {
-            results.push(this.loadedBrands[i]);
-          }
-
-          if (results.length === this.brandsPortionPage) {
-            this.brandsPortionPage = parseInt(String(i / this.brandsPortionSize));
-          }
-        }
-
-        return results;
-      },
-      handleSearchChange(searchQuery) {
-        this.brandsSearchQuery = searchQuery;
-        this.brandOptions = [];
-        this.$nextTick(() => {
-          this.brandOptions = this.handleBrandsSearch();
-        });
-      },
-
       async handleSaveBtn() {
         if (!this.$validationProviderIsValid(this.$refs.secondStepProvider)) {
           return;
@@ -222,8 +144,7 @@
         );
 
         if (result) {
-          this[SHOW_MODAL_MUTATION]({component: Warning});
-          this[SET_MODAL_RESPONSE_MUTATION]('Товары добавлены')
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товары добавлены'}});
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           if (this.$route.fullPath !== this.$router.resolve({
@@ -235,8 +156,7 @@
             this.$eventBus.$emit('tracking.group.loadGoods');
           }
         } else {
-          this[SHOW_MODAL_MUTATION]({component: Warning});
-          this[SET_MODAL_RESPONSE_MUTATION]('Произошла ошибка')
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
       },
 
