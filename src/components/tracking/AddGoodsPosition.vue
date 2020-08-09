@@ -7,8 +7,8 @@
              :key="idx"
              @click="_=>{selectedType=item; firstDone=false}"
              style="display: block; cursor:pointer;">
-          <strong v-if="selectedType===item">
-            <span v-html="translatedType(item)"/>
+          <strong  v-if="selectedType===item">
+            <span style="color: #23242A;" v-html="translatedType(item)"/>
           </strong>
           <span v-else v-html="translatedType(item)"/>
         </div>

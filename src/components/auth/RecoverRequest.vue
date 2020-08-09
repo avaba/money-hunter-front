@@ -26,6 +26,10 @@
   import Btn from "../../shared-components/Btn";
   import {AuthService} from "@/services/auth_service";
 
+  import Warning from "@/components/blackbox/Warning";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
+
   export default {
     name: "RecoverRequest",
     components: {Btn, InputField, ValidationProvider, ValidationObserver},
@@ -38,12 +42,13 @@
       async handleRecoverRequest() {
         const service = AuthService.getInstance();
         if (await service.sendPasswordResetLink(this.email)) {
-          alert('Сообщение отправлено');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Сообщение отправлено'}});
           await this.$router.push({name: 'auth.login'});
         } else {
-          alert('Не найден такой email');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Не найден такой email'}});
         }
-      }
+      },
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

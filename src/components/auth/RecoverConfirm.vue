@@ -26,6 +26,11 @@
   import Btn from "../../shared-components/Btn";
   import {AuthService} from "@/services/auth_service";
 
+  
+  import Warning from "@/components/blackbox/Warning";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
+
   export default {
     name: "RecoverConfirm",
     data() {
@@ -44,12 +49,13 @@
         );
 
         if (response) {
-          alert('Пароль успешно изменен');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Пароль успешно изменен'}});
           await this.$router.push({name: 'auth.login'});
         } else {
-          alert('Возникла ошибка');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
-      }
+      },
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

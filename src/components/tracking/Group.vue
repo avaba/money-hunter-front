@@ -9,7 +9,10 @@
           <RowWithIcon :list="trackingActionList"/>
         </div>
       </div>
-      <TrackingTable :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
+      <TrackingTable v-if="loaded" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
+      <div v-else class="loading-table">
+        <img ondragstart="return false" src="../../assets/img/loading.gif" alt="">
+      </div>
     </div>
   </Fragment>
 </template>
@@ -81,7 +84,9 @@
         ],
         orderType: 'currentPrice',
 
-        debounceLoadGoods: debounce(this.loadGoods, 200)
+        debounceLoadGoods: debounce(this.loadGoods, 200),
+
+        loaded: false
       }
     },
     computed: {
@@ -141,6 +146,8 @@
             this.list = results;
           })
         }
+        
+        this.loaded = true
       },
       /**
        *
@@ -159,6 +166,7 @@
       }
     },
     async mounted() {
+      this.loaded = false
       this.loadGoods();
       this.$eventBus.$on('tracking.group.loadGoods', () => {
         this.loadGoods();
@@ -181,6 +189,9 @@
   .tracking-body {
     background: white;
     border: 1px solid $drayDevider;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .tracking-info {
@@ -199,5 +210,15 @@
     margin-left: 2.14em;
     display: flex;
     align-items: center;
+  }
+
+  .loading-table {
+    flex: 1;
+    background: #fff;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

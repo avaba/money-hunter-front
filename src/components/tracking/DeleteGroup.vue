@@ -51,7 +51,7 @@
           }
           this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
-          alert(res);
+          // alert(res);
         }
       }
     }
