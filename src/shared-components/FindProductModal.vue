@@ -12,7 +12,7 @@
     </div>
     <template v-if="value!==null && lastProduct">
       <div class="modal-form-search" v-if="typeof value==='string'">
-        <div class="modal-form-search__not"><span>{{value}}</span></div>
+        <!-- <div class="modal-form-search__not"><span>{{value}}</span></div> -->
       </div>
       <div class="modal-form-product" v-if="typeof value==='object'">
         <div v-if="this.products.length > 0 || selectedArticul" class="product-item">

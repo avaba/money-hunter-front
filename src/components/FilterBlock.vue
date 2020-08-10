@@ -172,7 +172,8 @@
   .filter-form__action-button {
     border: 1px solid $drayDevider;
     border-radius: 4px;
-    color: $titleColor;
+    // color: $titleColor;
+    color: #000;
     padding-left: 2.28rem;
     padding-right: 1rem;
     height: 2.57rem;

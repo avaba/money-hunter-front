@@ -4,7 +4,7 @@ import ru from 'vee-validate/dist/locale/ru.json';
 import {phonenumber} from "@/extenders/plugins/vee-validate/phonenumber.rule";
 import {isType} from "@/extenders/plugins/vee-validate/is_type.rule";
 
-extend('email', { ...email, message: 'Email не найден'});
+extend('email', { ...email, message: 'Неверный Email' });
 extend('required', {...required, message: 'Обязательно для заполнения'});
 extend('min', {...min, message: 'Не менее {length} символов'});
 extend('phonenumber', phonenumber);

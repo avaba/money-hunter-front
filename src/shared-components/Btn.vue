@@ -1,5 +1,5 @@
 <template>
-  <button :class="`${defaultClass} ${_clazz}`" :type="type" @click="onClick">{{label}}
+  <button :disabled="isDisabled" :class="`${defaultClass} ${_clazz}`" :type="type" @click="onClick">{{label}}
     <slot/>
   </button>
 </template>
@@ -27,6 +27,10 @@
       clickHandler: {
         type: Function,
         default: null,
+      },
+      isDisabled: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
@@ -83,6 +87,11 @@
 
     &.button_align-left {
       text-align: left;
+    }
+
+    &:disabled {
+      background: #DFE0EB;
+      cursor: pointer;
     }
   }
 
