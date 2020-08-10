@@ -45,6 +45,9 @@
   @import "../assets/scss/variables";
 
   .tracking {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     margin-top: 1.92rem;
   }
 

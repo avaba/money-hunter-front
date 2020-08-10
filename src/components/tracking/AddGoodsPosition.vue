@@ -1,14 +1,13 @@
 <template>
   <Modal title="Добавить товар" closable @next="onNext">
     <template v-slot:default>
-
       <div class="modal-tabs">
         <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
              :key="idx"
              @click="_=>{selectedType=item; firstDone=false}"
              style="display: block; cursor:pointer;">
-          <strong v-if="selectedType===item">
-            <span v-html="translatedType(item)"/>
+          <strong  v-if="selectedType===item">
+            <span style="color: #23242A;" v-html="translatedType(item)"/>
           </strong>
           <span v-else v-html="translatedType(item)"/>
         </div>
@@ -27,7 +26,7 @@
         </div>
       </div>
 
-      <form action="" class="modal-form" @submit.prevent>
+      <form ref="form" action="" class="modal-form" @submit.prevent>
         <template v-if="!firstDone">
           <ValidationObserver ref="firstStepObserver">
             <ValidationProvider
@@ -36,7 +35,7 @@
               :custom-messages="{is_type: 'Не найдено'}"
               v-slot="{errors}"
               key="byGoodsType">
-              <FindProductModal v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
+              <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
 
             <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
@@ -108,6 +107,7 @@
         selectedBrands: [],
         selectedGroup: '',
 
+        products: null
       }
     },
     computed: {
@@ -116,6 +116,11 @@
           ? 'Добавить товар'
           : 'Добавить бренд';
       },
+    },
+    mounted() {
+      this.$refs.form.addEventListener("submit", (event) => {
+          event.preventDefault()
+      });
     },
     methods: {
       translatedType(type) {
@@ -139,7 +144,8 @@
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
           this.selectedGroup,
-          this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
+          // this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
+          this.selectedType === ADD_BY_GOODS ? this.products : this.selectedBrands,
           this.selectedType === ADD_BY_BRAND
         );
 
@@ -158,6 +164,10 @@
         } else {
           this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
+      },
+
+      selectedProducts (products) {
+        this.products = products
       },
 
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),

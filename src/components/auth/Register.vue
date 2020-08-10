@@ -48,10 +48,11 @@
               У меня есть промокод
             </div>
             <template v-if="showPromotionField">
-              <InputField type="text" clazz="input-field__input" placeholder="Введите промокод" v-model="code"/>
-              <button class="modal-form__promocod-done" type="button"/>
+              <InputField :disabled="codeStatus === 'valid'" type="text" clazz="input-field__input" placeholder="Введите промокод" v-model="code"/>
+              <button @click="promocodeCheking" class="modal-form__promocod-done" type="button"/>
             </template>
           </div>
+          <p class="promocode-status" :class="codeStatus" v-if="showPromotionField && codeStatus">{{ codeStatus === 'valid' ? 'Промокод применён' : 'Промокод больше не действителен'}}</p>
           <div class="modal-form__submit-item">
             <Btn label="Зарегистрироваться" type="submit"/>
           </div>
@@ -60,8 +61,7 @@
           </div>
         </template>
         <template v-else>
-          <div class="modal-form__success-reset-password">Мы отправили сообщение на адрес {{login}}.
-            Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.
+          <div class="modal-form__success-reset-password">{{ successText }}
           </div>
           <div class="modal-form__submit-item">
             <Btn label="Хорошо" @click="$router.push({name: 'root'})"/>
@@ -94,18 +94,41 @@
         password: '',
         code: '',
         phoneNumber: '',
-        name: ''
+        name: '',
+        
+        codeStatus: null
+      }
+    },
+    computed: {
+      successText() {
+        let text = `Сервис работает в тестовом режиме, вы были добавлены в лист ожидания. В ближайшее время с вами свяжется наш менеджер`
+        if(this.confirmMessage && this.codeStatus === 'valid') {
+          text = `Мы отправили сообщение на адрес ${this.login}.
+            Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
+        }
+        return text
       }
     },
     methods: {
       async register() {
         const service = AuthService.getInstance();
         const status = await service.register(this.login, this.password, this.name, this.phoneNumber);
-
         if (typeof status === 'boolean' && status) {
           this.confirmMessage = true;
+          if(this.codeStatus === 'valid') {
+            const promocodeStatus = await service.setPromocode(this.code, this.login);
+          }
         } else {
           this.loginError = status;
+        }
+      },
+      async promocodeCheking () {
+        const service = AuthService.getInstance();
+        const promocodeStatus = await service.getPromocode(this.code)
+        if(promocodeStatus && promocodeStatus != 'promocode is not valid') {
+          this.codeStatus = 'valid'
+        } else if(promocodeStatus && promocodeStatus === 'promocode is not valid') {
+          this.codeStatus = 'notValid'
         }
       }
     }
@@ -113,5 +136,14 @@
 </script>
 
 <style scoped>
-
+  .valid {
+    color: green
+  }
+  .notValid {
+    color: red;
+  }
+  .promocode-status {
+    text-align: center;
+    margin-top: 10px;
+  }
 </style>

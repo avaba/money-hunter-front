@@ -95,6 +95,7 @@
   }
 
   .tracking-table-wrapper {
+    flex: 1;
   }
 
   .tracking-table {

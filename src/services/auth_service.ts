@@ -70,6 +70,30 @@ export class AuthService {
     }
   }
 
+  async getPromocode(code: string) {
+    try {
+      const response = await this.authRepo.getPromocode(code)
+      return response
+    } catch (e) {
+      const _e = e as AxiosError;
+      if (_e.response && _e.response.status === 400) {
+        return _e.response.data.detail
+      }
+    }
+  }
+
+  async setPromocode(code: string, email: string) {
+    try {
+      const response = await this.authRepo.setPromocode(code, email)
+      return response
+    } catch (e) {
+      const _e = e as AxiosError;
+      if (_e.response && _e.response.status === 400) {
+        return _e.response.data.detail
+      }
+    }
+  }
+
   // данная реализация обертки позволяет ждать обновления токена,
   // а не дергать каждый раз refresh. Актуально для кейсов,
   // когда дергается сразу несколько сетевых запросов и access-токен по какой-то причине не рабочий

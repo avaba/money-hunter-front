@@ -8,6 +8,7 @@ export class AuthRepository {
   private registerUrl = 'user/register/';
   private sendPasswordResetLinkUrl = 'user/password/message/';
   private setPasswordUrl = 'user/password/set/';
+  private promocodeUrl = 'user/promocode/';
 
   refreshToken(token: string): Promise<any> {
     return this.client.refreshToken(this.tokenRefreshUrl, token);
@@ -30,5 +31,13 @@ export class AuthRepository {
       this.setPasswordUrl,
       {newPassword, uidb64, token}
     );
+  }
+
+  async getPromocode(code: string) {
+    return await this.client.sendGet(this.promocodeUrl + `?promocode=${code}`)
+  }
+
+  async setPromocode(code: string, email: string) {
+    return await this.client.sendPost(this.promocodeUrl, {promocode: code, email: email})
   }
 }

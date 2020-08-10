@@ -176,7 +176,7 @@
     padding-left: 2.28rem;
     padding-right: 1rem;
     height: 2.57rem;
-    background: #808080 !important;
+    // background: #808080 !important;
 
     &:not(:last-child) {
       margin-right: 1.07rem;

@@ -20,8 +20,12 @@
   import Btn from "../../shared-components/Btn";
   import {TrackingService} from "@/services/tracking_service";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  // import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import Modal from "@/components/Modal";
+
+  import Warning from "@/components/blackbox/Warning";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations} from "vuex";
 
   export default {
     name: "AddToGroup",
@@ -51,13 +55,14 @@
         );
 
         if (result) {
-          alert('Товар добавлен');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товар добавлен'}});
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
-          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
-          alert('Достигнут максимум отслеживаемых товаров, обновите подписку');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Достигнут максимум отслеживаемых товаров, обновите подписку'}});
         }
-      }
+      },
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

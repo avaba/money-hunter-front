@@ -25,7 +25,9 @@
   import InputField from "../../shared-components/InputField";
   import Btn from "../../shared-components/Btn";
   import {UPDATE_GROUP_NAME_ACTION} from "../../store/modules/tracking/constants";
-  import {HIDE_MODAL_MUTATION} from "../../store/modules/modal/constants";
+  import Warning from "@/components/blackbox/Warning";
+  import {HIDE_MODAL_MUTATION, SHOW_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION} from "@/store/modules/modal/constants";
+  import {mapMutations, mapState} from "vuex";
 
   export default {
     name: "ChangeGroupName",
@@ -51,14 +53,15 @@
           groupName: this.title,
           newName: this.newName
         });
-
         if (res) {
-          alert('Группа переименована');
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Группа переименована'}});
           this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
-          alert(res);
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: res}});
         }
-      }
+      },
+      ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>
