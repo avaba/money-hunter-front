@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <form action="" class="modal-form" @submit.prevent>
+      <form ref="form" action="" class="modal-form" @submit.prevent>
         <template v-if="!firstDone">
           <ValidationObserver ref="firstStepObserver">
             <ValidationProvider
@@ -115,6 +115,11 @@
           ? 'Добавить товар'
           : 'Добавить бренд';
       },
+    },
+    mounted() {
+      this.$refs.form.addEventListener("submit", (event) => {
+          event.preventDefault()
+      });
     },
     methods: {
       translatedType(type) {
