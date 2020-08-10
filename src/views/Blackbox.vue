@@ -3,13 +3,16 @@
     <FilterBlock :searchHandler="searchHandler"/>
 
     <div class="blackbox">
-      <TrackingTable v-if="!isLoading"
+      <TrackingTable v-if="!isLoading && tablePositions.length > 0"
                      :headers="tableHeaders"
                      :items="tablePositions"
                      :order="orderType"
                      :order-handler="$orderHandler"/>
-      <div v-else class="loading-table">
+      <div v-else-if="isLoading && !tablePositions.length > 0" class="loading-table">
         <img ondragstart="return false" src="../assets/img/loading.gif" alt="">
+      </div>
+      <div v-else-if="isLoading === false && !tablePositions.length > 0" class="table-notFounded">
+        <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
 
@@ -76,7 +79,7 @@
 
         debounceLoadGoods: debounce(this.loadGoods, 200),
 
-        isLoading: false
+        isLoading: null
       }
     },
     computed: {
@@ -192,6 +195,25 @@
   }
 
   .loading-table img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .table-notFounded {
+    flex: 1;
+    background: #fff;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .table-notFounded-text {
+    font-size: 1.71rem;
+    font-weight: bold;
+    letter-spacing: .3px;
+    color: black;
+    text-align: center;
     position: absolute;
     top: 50%;
     left: 50%;

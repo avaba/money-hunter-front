@@ -12,7 +12,7 @@
     </div>
     <template v-if="isBuyable">
       <div class="tarif-price">{{price}} ₽</div>
-      <Btn label="Купить" @click="handleBuyBtn"/>
+      <Btn label="Купить" :isDisabled="true" @click="handleBuyBtn"/>
     </template>
   </div>
 </template>

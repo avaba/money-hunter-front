@@ -48,7 +48,7 @@
               :custom-messages="{is_type: 'Не найдено'}"
               v-slot="{errors}"
               key="byGoodsType">
-              <FindProductModal v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
+              <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
 
             <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
@@ -104,6 +104,8 @@
 
         addTypes: [ADD_BY_GOODS, ADD_BY_BRAND],
         selectedType: ADD_BY_GOODS,
+
+        products: null
       }
     },
     computed: {
@@ -132,7 +134,8 @@
           const service = new TrackingService();
           const result = await service.createUpdateGroup(
             this.groupName,
-            this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
+            // this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
+            this.selectedType === ADD_BY_GOODS ? this.products : this.selectedBrands,
             this.selectedType === ADD_BY_BRAND
           );
 
@@ -146,6 +149,11 @@
           }
         }
       },
+
+      selectedProducts(products) {
+        this.products = products
+      },
+
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }

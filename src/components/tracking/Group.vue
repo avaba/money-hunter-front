@@ -9,7 +9,7 @@
           <RowWithIcon :list="trackingActionList"/>
         </div>
       </div>
-      <TrackingTable v-if="loaded" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
+      <TrackingTable v-if="loaded && tablePositions" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
       <div v-else class="loading-table">
         <img ondragstart="return false" src="../../assets/img/loading.gif" alt="">
       </div>
