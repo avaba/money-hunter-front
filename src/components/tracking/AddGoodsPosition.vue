@@ -27,7 +27,6 @@
       </div>
 
       <form ref="form" action="" class="modal-form" @submit.prevent>
-        {{ foundedProduct }}
         <template v-if="!firstDone">
           <ValidationObserver ref="firstStepObserver">
             <ValidationProvider
@@ -36,7 +35,7 @@
               :custom-messages="{is_type: 'Не найдено'}"
               v-slot="{errors}"
               key="byGoodsType">
-              <FindProductModal v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
+              <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
 
             <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
@@ -108,6 +107,7 @@
         selectedBrands: [],
         selectedGroup: '',
 
+        products: null
       }
     },
     computed: {
@@ -143,8 +143,9 @@
 
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
-          this.selectedGroup + '123',
-          this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
+          this.selectedGroup,
+          // this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
+          this.selectedType === ADD_BY_GOODS ? this.products : this.selectedBrands,
           this.selectedType === ADD_BY_BRAND
         );
 
@@ -163,6 +164,10 @@
         } else {
           this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
+      },
+
+      selectedProducts (products) {
+        this.products = products
       },
 
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),

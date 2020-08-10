@@ -117,7 +117,6 @@
           this.confirmMessage = true;
           if(this.codeStatus === 'valid') {
             const promocodeStatus = await service.setPromocode(this.code, this.login);
-            console.log(promocodeStatus)
           }
         } else {
           this.loginError = status;

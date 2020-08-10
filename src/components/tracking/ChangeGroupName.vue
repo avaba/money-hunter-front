@@ -54,7 +54,6 @@
           newName: this.newName
         });
         if (res) {
-          console.log(this[SHOW_MODAL_MUTATION], Warning)
           this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Группа переименована'}});
           this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {

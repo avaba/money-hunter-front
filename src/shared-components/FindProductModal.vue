@@ -63,6 +63,7 @@
         } else {
           this.lastProduct = false
         }
+        this.$emit('selectedProducts', this.products);
       }
     },
     methods: {

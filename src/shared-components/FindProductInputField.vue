@@ -122,7 +122,6 @@
         return [this.value[0], _v > max ? max : (_v < min ? min : _v)];
       },
       removeProduct (i) {
-        console.log(1, i)
         this.$emit('removeProduct', i)
       }
     }
