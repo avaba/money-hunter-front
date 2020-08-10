@@ -27,6 +27,7 @@
       </div>
 
       <form ref="form" action="" class="modal-form" @submit.prevent>
+        {{ foundedProduct }}
         <template v-if="!firstDone">
           <ValidationObserver ref="firstStepObserver">
             <ValidationProvider
@@ -142,7 +143,7 @@
 
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
-          this.selectedGroup,
+          this.selectedGroup + '123',
           this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
           this.selectedType === ADD_BY_BRAND
         );

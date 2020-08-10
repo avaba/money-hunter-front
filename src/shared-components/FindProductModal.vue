@@ -10,16 +10,15 @@
                   :error="validationError"/>
       </div>
     </div>
-
-    <template v-if="value!==null">
+    <template v-if="value!==null && lastProduct">
       <div class="modal-form-search" v-if="typeof value==='string'">
         <div class="modal-form-search__not"><span>{{value}}</span></div>
       </div>
       <div class="modal-form-product" v-if="typeof value==='object'">
         <div v-if="this.products.length > 0 || selectedArticul" class="product-item">
-          <div class="product-photo"><img :src="value.imageLink" alt=""></div>
+          <div class="product-photo"><img :src="lastProduct.imageLink" alt=""></div>
           <div class="product-info">
-            <div class="product name">{{value.name}} - {{value.brand}}</div>
+            <div class="product name">{{lastProduct.name}} - {{lastProduct.brand}}</div>
             <div class="product-code">{{selectedArticul || products.length > 0 ? products[products.length - 1] : ''}}</div>
           </div>
         </div>
@@ -51,7 +50,19 @@
       return {
         selectedArticul: '',
         debouncedProductSearch: debounce(this.searchProduct, 500),
-        products: []
+        products: [],
+        lastProduct: false
+      }
+    },
+    watch: {
+      products: async function() {
+        if(this.products.length > 0) {
+          const service = new TrackingService();
+          const result = await service.getProductInfoByArticul(this.products[this.products.length - 1])
+          this.lastProduct = {...result}
+        } else {
+          this.lastProduct = false
+        }
       }
     },
     methods: {
@@ -70,9 +81,8 @@
         this.$emit('input', typeof result === 'object' ? {...result, articul: this.selectedArticul} : result);
       },
       removeProduct(i) {
-        console.log(i)
         this.products.splice(this.products.findIndex(item => item === i), 1)
-      }
+      },
     }
   }
 </script>
