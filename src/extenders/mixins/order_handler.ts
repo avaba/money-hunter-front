@@ -8,9 +8,9 @@ export const orderHandler = {
       }
 
       if (that.orderType === name) {
-        that.orderType = `-${name}`;
-      } else {
         that.orderType = name;
+      } else {
+        that.orderType = `-${name}`;
       }
     }
   }
