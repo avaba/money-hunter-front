@@ -73,17 +73,21 @@ export class AmplitudeClient {
     })
   }
 
-  private sendEvent(data: Record<string, any>) {
+  private async sendEvent(data: Record<string, any>) {
     const axios = Axios.create();
 
-    return axios.post(
-      this.endpoint,
-      {
-        events: [{
-          ...{user_id: this.getEmail(), ...data}
-        }],
-        api_key: this.apiKey
-      }
-    )
+    try {
+      return await axios.post(
+        this.endpoint,
+        {
+          events: [{
+            ...{user_id: this.getEmail(), ...data}
+          }],
+          api_key: this.apiKey
+        }
+      )
+    } catch (e) {
+      return Promise.resolve(false);
+    }
   }
 }

@@ -10,6 +10,7 @@ export class AuthService {
   private authRepo = new AuthRepository();
 
   private refreshPromise: Promise<boolean> | null = null;
+  private isRefreshing = false;
 
   private static instance: AuthService;
 
@@ -98,6 +99,7 @@ export class AuthService {
   // а не дергать каждый раз refresh. Актуально для кейсов,
   // когда дергается сразу несколько сетевых запросов и access-токен по какой-то причине не рабочий
   private async refreshToken(): Promise<boolean> {
+    this.isRefreshing = true;
     return new Promise(refreshTokenResolver => {
       const tokenService = new TokenService();
       if (tokenService.hasToken(TokenType.REFRESH_TOKEN)) {
@@ -105,6 +107,7 @@ export class AuthService {
           .then(() => this.authRepo.refreshToken(tokenService.getToken(TokenType.REFRESH_TOKEN)))
           .then((response: AxiosResponse) => {
             tokenService.persistToken(TokenType.ACCESS_TOKEN, response.data['access']);
+            this.isRefreshing = false;
             refreshTokenResolver(true);
           })
           .catch(() => refreshTokenResolver(false));
@@ -147,15 +150,13 @@ export class AuthService {
     } catch (e) {
       const _e = e as AxiosError;
       if (_e.response && _e.response.status === 401) {
-        if (!(this.refreshPromise instanceof Promise)) {
+        if (!(this.refreshPromise instanceof Promise) || !this.isRefreshing) {
           this.refreshPromise = this.refreshToken();
         }
-
         return await this.refreshPromise.then(async result => {
-
           if (result) {
             // токен успешно обновился
-            return cb();
+            return await cb();
           } else {
             const tokenService = new TokenService();
             tokenService.clear();
