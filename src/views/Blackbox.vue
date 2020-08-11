@@ -8,10 +8,10 @@
                      :items="tablePositions"
                      :order="orderType"
                      :order-handler="$orderHandler"/>
-      <div v-else-if="isLoading && !tablePositions.length > 0" class="loading-table">
+      <div v-else-if="isLoading" class="loading-table">
         <img ondragstart="return false" src="../assets/img/loading.gif" alt="">
       </div>
-      <div v-else-if="isLoading === false && !tablePositions.length > 0" class="table-notFounded">
+      <div v-else-if="isLoading === false && tablePositions.length <= 0" class="table-notFounded">
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
