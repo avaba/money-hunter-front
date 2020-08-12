@@ -6,8 +6,7 @@ export const orderHandler = {
       if (!that.orderType) {
         throw new Error('You must provide orderType in your component');
       }
-
-      if (that.orderType === name) {
+      if (that.orderType === `-${name}`) {
         that.orderType = name;
       } else {
         that.orderType = `-${name}`;

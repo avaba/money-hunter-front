@@ -45,7 +45,7 @@
   import PlusImage from '../assets/img/ikons/plus3.svg';
   import ImgBtn from "../shared-components/ImgBtn";
 
-  const DEFAULT_ORDER_TYPE = 'articul';
+  const DEFAULT_ORDER_TYPE = '-articul';
 
   export default {
     name: "Blackbox",
