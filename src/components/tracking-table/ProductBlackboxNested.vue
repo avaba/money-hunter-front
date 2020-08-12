@@ -26,7 +26,16 @@
                   return value.substr(5);
                 }
               }
-            }]
+            }],
+            yAxes: [
+            {
+							position: 'left',
+							id: 'y-axis-1',
+            }, 
+            {
+							position: 'right',
+							id: 'y-axis-2',
+						}]
           }
         }
       }
@@ -49,12 +58,13 @@
       // ];
 
       const labels = productData.map(item => item.date);
-      const data = productData.map(item => item.orders);
-
+      const orders = productData.map(item => item.orders);
+      const qty = productData.map(item => item.qty);
       this.chartData = {
         labels,
         datasets: [
-          {data, fill: false, borderColor: "#FFC700", lineTension: 0, label: 'Заказы'}
+          {yAxisID: 'y-axis-1', data: orders, fill: false, borderColor: "#FFC700", lineTension: 0, label: 'Заказы'},
+          {yAxisID: 'y-axis-2', data: qty, fill: false, borderColor: "#ff3f3f", lineTension: 0, label: 'Остаток на складе'}
         ]
       }
     }
