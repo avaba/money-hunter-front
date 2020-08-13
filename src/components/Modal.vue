@@ -93,6 +93,8 @@
     left: 50%;
     transform: translateX(-50%);
     // overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 
     &.modal_small {
       max-width: 39.28rem;
@@ -140,6 +142,11 @@
     margin: 1.71rem 7.14rem 0;
     border-top: 1px solid $drayDevider;
     padding-top: 1.42rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-height: 100%;
+    overflow: hidden;
   }
 
   .modal-form__input-item {
@@ -233,6 +240,9 @@
 
   .modal-form__download-project {
     /*margin-top: 1.92rem;*/
+    flex: 1;
+    max-height: 100%;
+    overflow-y: auto;
   }
 
   .modal-form__download-project-item {

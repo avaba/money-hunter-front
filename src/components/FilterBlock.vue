@@ -24,7 +24,7 @@
           <InputField label="Заказы в день" range v-model="ordersRange" :min="0" :max="900000"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Доход в день" range v-model="revenueRange" :min="0" :max="900000"/>
+          <InputField label="Сумма заказов в день" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
       </div>
       <div class="filter-form__actions">

@@ -70,7 +70,7 @@
           {name: 'currentPrice', label: 'Цена', clazz: 'width9'},
           {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
           {name: 'avOrdersSpeed', label: 'Заказов в день', clazz: 'width9'},
-          {name: 'avRevenue', label: 'Доход в день', clazz: 'width9'},
+          {name: 'avRevenue', label: 'Сумма заказов в день', clazz: 'width9'},
           {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-center width9'},
           {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width5'},
           {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9'},
