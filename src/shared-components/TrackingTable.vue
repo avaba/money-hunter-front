@@ -55,14 +55,12 @@
       getSortClass(item) {
         if (this.order === `-${item.name}`) return 'tracking-table__sort_up';
         if (this.order === item.name) return 'tracking-table__sort_down';
-
         return null;
       },
       headerClickHandler(item) {
         if (this.order === item.name && item.isOnlyAscSorting) {
           return;
         }
-        console.log(item)
         if (this.isSortable(item)) {
           this.orderHandler(item.name);
         }

@@ -177,7 +177,8 @@
     },
     watch: {
       orderType: function () {
-        this.debounceLoadGoods();
+        // this.debounceLoadGoods();
+        console.log(this.orderType)
       },
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="tracking-table__product-price">{{price===null ? '' : `${price} ₽`}}</div>
+  <div class="tracking-table__product-price">{{currentPrice===null ? '' : `${currentPrice} ₽`}}</div>
 </template>
 
 <script>
@@ -10,6 +10,17 @@
         type: Number,
         default: null,
       }
+    },
+    data: () => ({
+      currentPrice: String
+    }),
+    methods: {
+      formattingNum() {
+        this.currentPrice = this.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+      }
+    },
+    mounted() {
+      this.formattingNum()
     }
   }
 </script>

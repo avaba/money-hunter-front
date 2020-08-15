@@ -115,7 +115,7 @@
         const max = this.max;
 
         return [this.value[0], _v > max ? max : (_v < min ? min : _v)];
-      }
+      },
     }
   }
 </script>

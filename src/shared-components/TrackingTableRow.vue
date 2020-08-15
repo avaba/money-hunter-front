@@ -8,7 +8,8 @@
           @click.exact="item.onClick ? item.onClick(item) : ()=>{}"
           :key="idx">
         <component v-bind:is="item.content" v-if="typeof item.content==='object'" v-bind="item.component_data"/>
-        <template v-else>{{item.content}}</template>
+        <!-- <template v-else>{{item.content}}</template> -->
+        <template v-else>{{ formattingNum(item.content) }}</template>
       </td>
     </tr>
     <tr class="tracking-table-dropdown tracking-table__row_open" v-if="rowData.nested && rowOpened">
@@ -68,6 +69,9 @@
       },
       isCellDropDown(idx) {
         return idx === 0 && !this.rowOpened && this.rowData.nested;
+      },
+      formattingNum(n) {
+        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
       }
     }
   }
