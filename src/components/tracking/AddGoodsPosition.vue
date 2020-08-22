@@ -2,7 +2,7 @@
   <Modal title="Добавить товар" closable @next="onNext">
     <template v-slot:default>
       <div class="modal-tabs">
-        <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
+        <!-- <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
              :key="idx"
              @click="_=>{selectedType=item; firstDone=false}"
              style="display: block; cursor:pointer;">
@@ -10,7 +10,7 @@
             <span style="color: #23242A;" v-html="translatedType(item)"/>
           </strong>
           <span v-else v-html="translatedType(item)"/>
-        </div>
+        </div> -->
       </div>
 
       <div class="modal-form-steps">
