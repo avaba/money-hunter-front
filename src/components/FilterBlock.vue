@@ -21,10 +21,10 @@
           <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Заказы в день" range v-model="ordersRange" :min="0" :max="900000"/>
+          <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Сумма заказов в день" range v-model="revenueRange" :min="0" :max="900000"/>
+          <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
       </div>
       <div class="filter-form__actions">

@@ -1,7 +1,7 @@
 <template>
   <Modal title="Создать группу" closable @next="onNext">
     <template v-slot:default>
-      <div class="modal-tabs">
+      <!-- <div class="modal-tabs">
         <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
              :key="idx"
              @click="selectedType=item"
@@ -11,7 +11,7 @@
           </strong>
           <span v-else v-html="translatedType(item)"/>
         </div>
-      </div>
+      </div> -->
 
       <div class="modal-form-steps">
         <div class="modal-form-steps__line"/>
@@ -51,13 +51,13 @@
               <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
 
-            <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
+            <!-- <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
               <BrandsSelector
                 :errors="errors"
                 v-model="selectedBrands"
               />
 
-            </ValidationProvider>
+            </ValidationProvider> -->
 
             <div class="modal-form__double-submit modal-form__double-submit_save-project">
               <div class="modal-form__double-submit-item">
@@ -87,14 +87,14 @@
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {mapMutations} from "vuex";
-  import BrandsSelector from "@/shared-components/BrandsSelector";
+  // import BrandsSelector from "@/shared-components/BrandsSelector";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
 
   export default {
     name: "CreateGroup",
-    components: {BrandsSelector, FindProductModal, InputField, Btn, Modal, ValidationProvider, ValidationObserver},
+    components: {FindProductModal, InputField, Btn, Modal, ValidationProvider, ValidationObserver},
     data() {
       return {
         firstDone: false,

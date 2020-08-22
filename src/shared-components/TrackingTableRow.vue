@@ -9,7 +9,7 @@
           :key="idx">
         <component v-bind:is="item.content" v-if="typeof item.content==='object'" v-bind="item.component_data"/>
         <!-- <template v-else>{{item.content}}</template> -->
-        <template v-else>{{ formattingNum(item.content) }}</template>
+        <template v-else>{{ formattingNum(item) }}</template>
       </td>
     </tr>
     <tr class="tracking-table-dropdown tracking-table__row_open" v-if="rowData.nested && rowOpened">
@@ -47,7 +47,7 @@
       mappedList() {
         const result = [];
 
-        this.headerKeys.forEach(name => result.push(this.rowData[name]));
+        this.headerKeys.forEach(name => result.push({...this.rowData[name], name: name}));
 
         return result;
       }
@@ -71,7 +71,11 @@
         return idx === 0 && !this.rowOpened && this.rowData.nested;
       },
       formattingNum(n) {
-        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        if(n.name !== 'articul') {
+          return n.content.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        } else {
+          return n.content
+        }
       }
     }
   }
@@ -86,6 +90,7 @@
 
   .width9 {
     width: 9%;
+    white-space: nowrap;
   }
 
   .width23 {

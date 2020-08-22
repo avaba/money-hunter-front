@@ -38,13 +38,13 @@
               <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
 
-            <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
+            <!-- <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
               <BrandsSelector
                 :errors="errors"
                 v-model="selectedBrands"
               />
 
-            </ValidationProvider>
+            </ValidationProvider> -->
 
             <div class="modal-form__submit-item">
               <Btn label="Далее"
@@ -85,7 +85,7 @@
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import SelectGroupModal from "@/shared-components/SelectGroupModal";
   import FindProductModal from "@/shared-components/FindProductModal";
-  import BrandsSelector from "@/shared-components/BrandsSelector";
+  // import BrandsSelector from "@/shared-components/BrandsSelector";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
@@ -93,7 +93,7 @@
   export default {
     name: "AddGoodsPosition",
     components: {
-      BrandsSelector,
+      // BrandsSelector,
       FindProductModal, SelectGroupModal, Modal, Btn, ValidationProvider, ValidationObserver
     },
     data() {
