@@ -94,11 +94,15 @@
 
   .tracking-table-wrapper {
     flex: 1;
+    // width: 1500px !important;
   }
 
   .tracking-table {
     width: 100%;
     border-spacing: 0;
+    & * {
+      box-sizing: border-box;
+    }
 
     &.tracking-table_sticky {
       position: sticky;
@@ -109,7 +113,13 @@
 
   .tracking-table__header {
     position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
     top: 0px;
+    width: 100%;
+    padding: 0px 10px;
   }
 
   .tracking-table__header-label {
@@ -117,9 +127,15 @@
   }
 
   .tracking-table__header-item {
-    text-align: left;
-    padding: 1.85rem 1.21rem;
+    text-align: right;
+    // padding: 1.85rem 1.21rem;
+    padding: 10px 5px;
     background: white;
+    & * {
+      text-align: right;
+      
+        justify-content: flex-end;
+    }
 
     &.tracking-table__header-item_align-center {
 
@@ -128,13 +144,39 @@
       }
     }
 
+    &.tracking-table__header-item_align-left {
+
+      div {
+        justify-content: flex-start;
+      }
+    }
+
+    &.tracking-table__header-item_align-right {
+
+      div {
+        justify-content: flex-end;
+      }
+    }
+
     &:first-child {
-      padding-left: 1.64rem;
+      padding-left: 25px;
+      justify-content: flex-start;
+      & * {
+        justify-content: flex-start;
+      }
     }
 
     &:last-child {
-      padding-right: .78rem;
+      padding-right: 25px;
     }
+
+    // &:first-child {
+    //   padding-left: 1.64rem;
+    // }
+
+    // &:last-child {
+    //   padding-right: .78rem;
+    // }
 
     div {
       display: flex;
@@ -145,6 +187,7 @@
     span {
       color: $titleColor;
       letter-spacing: .2px;
+      line-height: 1rem;
       font-weight: 500;
     }
   }

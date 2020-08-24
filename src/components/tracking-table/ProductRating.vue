@@ -26,7 +26,7 @@
 <style scoped lang="scss">
   .tracking-table__product-rating {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
 
     /deep/ img {
       margin: 0 2.5px;

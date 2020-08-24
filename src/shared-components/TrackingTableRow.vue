@@ -105,7 +105,12 @@
     width: 10%;
   }
 
+  .tracking-table {
+    width: 100%;
+  }
+
   .tracking-table__row {
+    width: 100%;
   }
 
   .tracking-table__row_open {
@@ -115,10 +120,13 @@
   .tracking-table__cell {
     border-top: 1px solid $drayDevider;
     // padding: 1.71rem .5rem 1.71rem 20px;
-    padding: 1.85rem 1.21rem;
-    padding-left: 1.21rem;
-    text-align: left;
+    // padding: 1.85rem 1.21rem;
+    // padding: 15px 15px 15px 15px;
+    // padding-left: 1.21rem;
+    padding: 15px 5px 15px 5px;
+    text-align: right;
     letter-spacing: .2px;
+    box-sizing: border-box;
 
     &.tracking-table__align-center {
       text-align: center;
@@ -133,12 +141,19 @@
       background: url("../assets/img/ikons/tracking-close.svg") no-repeat .71rem center;
     }
 
+    // &:first-child {
+    //   padding-left: 1.64rem;
+    // }
+
+    // &:last-child {
+    //   padding-right: .78rem;
+    // }
     &:first-child {
-      padding-left: 1.64rem;
+      padding-left: 25px;
     }
 
     &:last-child {
-      padding-right: .78rem;
+      padding-right: 25px;
     }
   }
 
