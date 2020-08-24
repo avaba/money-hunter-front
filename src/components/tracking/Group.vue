@@ -49,7 +49,7 @@
     data() {
       return {
         tableHeaders: [
-          {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
+          {name: 'goods', label: 'Товар', clazz: 'width23', sortable: false},
           {
             name: 'currentPrice',
             label: 'Цена',
@@ -62,11 +62,11 @@
           {name: 'yesterdayOrders', label: 'Заказы Вчера', clazz: 'width9', },
           {name: 'weekOrders', label: 'Заказы Неделя', clazz: 'width9', },
           {name: 'monthOrders', label: 'Заказы Месяц', clazz: 'width9', },
-          {name: 'actions', label: 'Действия', sortable: false, clazz: 'width5'},
+          {name: 'actions', label: 'Действия', sortable: false, clazz: 'width9'},
         ],
         list: [],
         trackingActionList: [
-          {label: "Добавить оповещения для групп", img: AlertImg},
+          // {label: "Добавить оповещения для групп", img: AlertImg},
           {
             label: "Автоподсорт", img: AutosortImg, onClick: () => {
               this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
@@ -109,7 +109,7 @@
       map_goods(item) {
         return {
           content: ProductContent,
-          clazz: 'width30',
+          clazz: 'width23',
           component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link}
         };
       },
@@ -131,7 +131,7 @@
         return {
           content: ProductAction,
           component_data: {isRecycle: true, clickHandler: this.deleteProductFromTracking, articul: item.articul},
-          clazz: 'width5 tracking-table__align-center'
+          clazz: 'width9 tracking-table__align-center'
         }
       },
       async loadGoods() {

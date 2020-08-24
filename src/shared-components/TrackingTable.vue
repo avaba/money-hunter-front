@@ -92,6 +92,10 @@
     width: 10%;
   }
 
+  .width25 {
+    width: 100%;
+  }
+
   .tracking-table-wrapper {
     flex: 1;
     // width: 1500px !important;
@@ -131,6 +135,12 @@
     // padding: 1.85rem 1.21rem;
     padding: 10px 5px;
     background: white;
+    &.pl-15 {
+      padding-left: 25px !important;
+    }
+    &.pr-15 {
+      padding-right: 25px !important;
+    }
     & * {
       text-align: right;
       

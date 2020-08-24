@@ -105,6 +105,10 @@
     width: 10%;
   }
 
+  .width25 {
+    width: 25%;
+  }
+
   .tracking-table {
     width: 100%;
   }
@@ -127,10 +131,19 @@
     text-align: right;
     letter-spacing: .2px;
     box-sizing: border-box;
-
     &.tracking-table__align-center {
       text-align: center;
       padding-left: 0;
+    }
+
+    &.tracking-table__align-left {
+      text-align: left;
+      &.pl-35 {
+        padding-left: 35px !important;
+      }
+      &.pr-35 {
+        padding-left: 35px !important;
+      }
     }
 
     &.tracking-table__cell_dropdown {
