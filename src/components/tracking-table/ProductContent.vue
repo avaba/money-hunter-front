@@ -70,6 +70,7 @@
   .tracking-table__product {
     display: flex;
     align-items: center;
+    width: 100%;
   }
 
   .tracking-table__product-photo {

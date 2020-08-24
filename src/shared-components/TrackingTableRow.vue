@@ -114,7 +114,9 @@
 
   .tracking-table__cell {
     border-top: 1px solid $drayDevider;
-    padding: 1.71rem .5rem 1.71rem 20px;
+    // padding: 1.71rem .5rem 1.71rem 20px;
+    padding: 1.85rem 1.21rem;
+    padding-left: 1.21rem;
     text-align: left;
     letter-spacing: .2px;
 
