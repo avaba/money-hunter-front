@@ -187,7 +187,7 @@
     span {
       color: $titleColor;
       letter-spacing: .2px;
-      line-height: 1rem;
+      // line-height: 1rem;
       font-weight: 500;
     }
   }
