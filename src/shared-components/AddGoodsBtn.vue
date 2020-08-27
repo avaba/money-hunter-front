@@ -1,5 +1,5 @@
 <template>
-  <Btn clazz="button_add" label="Добавить товары" @click="addGoodsBtnHandler"/>
+  <Btn :disabled="getSubscription.maxTrackingProducts <= 0" clazz="button_add" label="Добавить товары" @click="addGoodsBtnHandler"/>
 </template>
 
 <script>
@@ -22,6 +22,11 @@
         this[SHOW_MODAL_MUTATION]({component: AddGoodsPosition});
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION]),
+    },
+    computed: {
+      getSubscription() {
+        return this.$store.getters['user/getSubscription']
+      }
     }
   }
 </script>

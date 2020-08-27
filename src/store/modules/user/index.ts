@@ -31,6 +31,9 @@ export default {
   getters: {
     getEmail(state: VuexUserStateInterface) {
       return state.data?.email;
+    },
+    getSubscription(state: VuexUserStateInterface) {
+      return state.subscription
     }
   }
 }

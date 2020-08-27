@@ -18,15 +18,17 @@
                           clazz="input-field__input_password"
                           v-model="password"
                           type="password"
-                          :error="$getValidationError(errors)"/>
+                          @input="passwordError=''"
+                          :error="passwordError || $getValidationError(errors)"/>
             </ValidationProvider>
           </div>
           <div class="modal-form__input-item">
             <ValidationProvider name="Имя" :rules="{required: true}" v-slot="{errors}">
               <InputField label="Имя"
                           clazz="input-field__input_name"
-                          :error="$getValidationError(errors)"
+                          :error="nameError || $getValidationError(errors)"
                           v-model="name"
+                          @input="nameError=''"
               />
             </ValidationProvider>
           </div>
@@ -34,8 +36,9 @@
             <ValidationProvider name="Телефонный номер" :rules="{phonenumber: true, required: true}" v-slot="{errors}">
               <InputField label="Телефонный номер"
                           clazz="input-field__input_phone"
-                          :error="$getValidationError(errors)"
+                          :error="phoneNumberError || $getValidationError(errors)"
                           v-model="phoneNumber"
+                          @input="phoneNumberError=''"
                           placeholder="8 (___) ___-__-__"
                           :mask="'8 (###) ###-##-##'"
               />
@@ -89,6 +92,9 @@
         showPromotionField: false,
 
         loginError: null,
+        passwordError: null,
+        phoneNumberError: null,
+        nameError: null,
 
         login: '',
         password: '',
@@ -123,12 +129,22 @@
         }
       },
       async promocodeCheking () {
-        const service = AuthService.getInstance();
-        const promocodeStatus = await service.getPromocode(this.code)
-        if(promocodeStatus && promocodeStatus != 'promocode is not valid') {
-          this.codeStatus = 'valid'
-        } else if(promocodeStatus && promocodeStatus === 'promocode is not valid') {
-          this.codeStatus = 'notValid'
+        const fields = ['login', 'password', 'phoneNumber', 'name']
+        let isError = false
+        fields.forEach(elem => {
+          if(this[elem] === '') {
+            this[`${elem}Error`] = 'Обязательно для заполнения'
+            isError = true
+          }
+        });
+        if(!isError) {
+          const service = AuthService.getInstance();
+          const promocodeStatus = await service.getPromocode(this.code)
+          if(promocodeStatus && promocodeStatus != 'promocode is not valid') {
+            this.codeStatus = 'valid'
+          } else if(promocodeStatus && promocodeStatus === 'promocode is not valid') {
+            this.codeStatus = 'notValid'
+          }
         }
       }
     }

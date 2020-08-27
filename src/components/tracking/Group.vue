@@ -8,6 +8,12 @@
         <div class="tracking-actions">
           <RowWithIcon :list="trackingActionList"/>
         </div>
+        <progressBar
+          v-if="progress && progressLoaded"
+          :progress="progress"
+          :fontSize="'12px'"
+          :text="`Товаров в отслеживании: ${defaultMaxGoods - getSubscription.maxTrackingProducts} / ${defaultMaxGoods}`"
+        />
       </div>
       <TrackingTable v-if="loaded && tablePositions" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
       <div v-else class="loading-table">
@@ -42,9 +48,13 @@
   import DeleteProductFromTracking from "@/components/tracking/DeleteProductFromTracking";
   import AutoSort from "./AutoSort";
 
+  import progressBar from "@/shared-components/progressBar"
+
+  import {mapActions} from "vuex";
+
   export default {
     name: "Group",
-    components: {AddGoodsBtn, RowWithIcon, TrackingTable, Fragment},
+    components: {AddGoodsBtn, RowWithIcon, TrackingTable, Fragment, progressBar},
     mixins: [tableMixins, orderHandler],
     data() {
       return {
@@ -86,7 +96,13 @@
 
         debounceLoadGoods: debounce(this.loadGoods, 200),
 
-        loaded: false
+        loaded: false,
+
+        defaultMaxGoods: 150,
+
+        progress: 0,
+
+        progressLoaded: false
       }
     },
     computed: {
@@ -103,6 +119,9 @@
       },
       modalResponse() {
         return this.$store.state.modal.componentResponse;
+      },
+      getSubscription() {
+        return this.$store.getters['user/getSubscription']
       }
     },
     methods: {
@@ -138,6 +157,8 @@
         const service = new TrackingService();
         const results = await service.getGroupGoods(this.$route.params.name, this.orderType);
 
+
+        console.log(results)
         if (results === null) {
           this.$router.push({name: 'tracking.group_list'})
         } else {
@@ -163,7 +184,7 @@
           component: DeleteProductFromTracking,
           data: {articul, groupName, callback: () => this.loadGoods()},
         });
-      }
+      },
     },
     async mounted() {
       this.loaded = false
@@ -180,6 +201,19 @@
         // this.debounceLoadGoods();
         console.log(this.orderType)
       },
+      list: {
+        handler: function () {
+          this.progressLoaded = false
+          const progressValue = (this.defaultMaxGoods - this.getSubscription.maxTrackingProducts) * (100 / this.defaultMaxGoods)
+          if(progressValue <= 100 && progressValue >= 0) {
+            this.progress = progressValue
+          } else {
+            this.progress =  false
+          }
+          this.progressLoaded = true
+        },
+        deep: true
+      }
     }
   }
 </script>
