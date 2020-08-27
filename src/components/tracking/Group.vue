@@ -158,7 +158,6 @@
         const results = await service.getGroupGoods(this.$route.params.name, this.orderType);
 
 
-        console.log(results)
         if (results === null) {
           this.$router.push({name: 'tracking.group_list'})
         } else {
