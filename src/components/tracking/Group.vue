@@ -12,7 +12,7 @@
           v-if="progress"
           :progress="progress"
           :fontSize="'12px'"
-          :text="`Товаров в отслеживании: ${defaultMaxGoods - maxTrackingProducts} / ${defaultMaxGoods}`"
+          :text="`Товаров в отслеживании: ${defaultMaxGoods[mySubscription] - maxTrackingProducts} / ${defaultMaxGoods[mySubscription]}`"
         />
       </div>
       <TrackingTable v-if="loaded && tablePositions" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
@@ -97,7 +97,10 @@
 
         loaded: false,
 
-        defaultMaxGoods: 150,
+        defaultMaxGoods: {
+          FREE: 10,
+          PRO: 150
+        },
 
         progress: 0,
         
@@ -118,6 +121,9 @@
       },
       modalResponse() {
         return this.$store.state.modal.componentResponse;
+      },
+      mySubscription() {
+        return this.$store.getters['user/getSubscription'].subscriptionType
       }
     },
     methods: {
@@ -201,7 +207,7 @@
           const userService = new UserService();
           userService.getSubscription().then(res => {
             this.maxTrackingProducts = res.maxTrackingProducts
-            const progressValue = (this.defaultMaxGoods - this.maxTrackingProducts) * (100 / this.defaultMaxGoods)
+            const progressValue = (this.defaultMaxGoods[this.mySubscription] - this.maxTrackingProducts) * (100 / this.defaultMaxGoods[this.mySubscription])
             if(progressValue <= 100 && progressValue >= 0) {
               this.progress = progressValue
             } else {
