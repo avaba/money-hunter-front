@@ -116,8 +116,7 @@ export class TrackingService {
     try {
       const response = await this.authService.refreshWrapper(this.repo.getGroupInfoFile.bind(this.repo, groupName));
       const headers = response.headers;
-      const blob = new Blob([response.data], {type: headers['content-type']});
-
+      const blob = new Blob([`\uFEFF ${response.data}`], { type: headers['content-type'] });
       FileSaver.saveAs(blob, `Moneyhunter_stat.csv`);
     } catch (e) {
       console.log('Cannot download file', e);
