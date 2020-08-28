@@ -9,10 +9,10 @@
           <RowWithIcon :list="trackingActionList"/>
         </div>
         <progressBar
-          v-if="progress && progressLoaded"
+          v-if="progress"
           :progress="progress"
           :fontSize="'12px'"
-          :text="`Товаров в отслеживании: ${defaultMaxGoods - getSubscription.maxTrackingProducts} / ${defaultMaxGoods}`"
+          :text="`Товаров в отслеживании: ${defaultMaxGoods - maxTrackingProducts} / ${defaultMaxGoods}`"
         />
       </div>
       <TrackingTable v-if="loaded && tablePositions" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
@@ -49,8 +49,7 @@
   import AutoSort from "./AutoSort";
 
   import progressBar from "@/shared-components/progressBar"
-
-  import {mapActions} from "vuex";
+  import {UserService} from "@/services/user_service";
 
   export default {
     name: "Group",
@@ -101,8 +100,8 @@
         defaultMaxGoods: 150,
 
         progress: 0,
-
-        progressLoaded: false
+        
+        maxTrackingProducts: 0
       }
     },
     computed: {
@@ -119,9 +118,6 @@
       },
       modalResponse() {
         return this.$store.state.modal.componentResponse;
-      },
-      getSubscription() {
-        return this.$store.getters['user/getSubscription']
       }
     },
     methods: {
@@ -202,14 +198,16 @@
       },
       list: {
         handler: function () {
-          this.progressLoaded = false
-          const progressValue = (this.defaultMaxGoods - this.getSubscription.maxTrackingProducts) * (100 / this.defaultMaxGoods)
-          if(progressValue <= 100 && progressValue >= 0) {
-            this.progress = progressValue
-          } else {
-            this.progress =  false
-          }
-          this.progressLoaded = true
+          const userService = new UserService();
+          userService.getSubscription().then(res => {
+            this.maxTrackingProducts = res.maxTrackingProducts
+            const progressValue = (this.defaultMaxGoods - this.maxTrackingProducts) * (100 / this.defaultMaxGoods)
+            if(progressValue <= 100 && progressValue >= 0) {
+              this.progress = progressValue
+            } else {
+              this.progress =  false
+            }
+          })
         },
         deep: true
       }

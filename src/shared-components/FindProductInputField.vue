@@ -4,7 +4,7 @@
 
     <span class="input-field__error" v-if="!!error">{{error}}</span>
 
-    <div class="input-field-wrapper">
+    <div ref="inputFieldWrapper" class="input-field-wrapper">
       <input :disabled="disabled"
            :type="_type"
            :value="value"
@@ -13,7 +13,11 @@
            v-mask="mask"
            @submit.prevent
            @input="$emit('input', $event.target.value)"
-           :style="`padding-left: ${paddingLeftInput}px`"/>
+           :style="`
+           padding-left: ${paddingLeftInput}px;
+           padding-top: ${paddingTopInput}px;
+           padding-bottom: ${paddingBottomInput}px;
+           `"/>
       <div v-if="products.length > 0" ref="inputValues" class="input-field-wrapper-values">
         <span @click="removeProduct(i)" v-for="i in products" :key="i" class="input-field-wrapper-values-item">
           <p class="text">{{ i }}</p>
@@ -81,7 +85,9 @@
     data() {
       return {
         showPassword: false,
-        paddingLeftInput: 10
+        paddingLeftInput: 10,
+        paddingTopInput: 0,
+        paddingBottomInput: 0
       }
     },
     computed: {
@@ -103,6 +109,16 @@
             this.paddingLeftInput = this.$refs.inputValues.clientWidth
           } else {
             this.paddingLeftInput = 10
+          }
+          if(this.$refs.inputFieldWrapper && this.$refs.inputValues) {
+            if(this.$refs.inputFieldWrapper.clientWidth <= this.$refs.inputValues.clientWidth) {
+              this.paddingLeftInput = 10
+              this.paddingTopInput = this.$refs.inputValues.clientHeight
+              this.paddingBottomInput = 15
+            } else {
+              this.paddingTopInput = 0
+              this.paddingBottomInput = 0
+            }
           }
         })
       }
@@ -159,14 +175,15 @@
   .input-field__input {
     flex: 1 0 100%;
     display: block;
-    margin-top: 3px;
+    margin-top: 4px;
     border: 1px solid $drayDevider;
     border-radius: 4px;
     padding: 0 .92rem;
-    height: 2.85rem;
+    min-height: 2.85rem;
     width: 100%;
     letter-spacing: .2px;
     color: black;
+    position: relative !important;
 
     &.input-field__input_error {
       border-color: red;
@@ -196,7 +213,10 @@
   .input-field-wrapper {
     position: relative;
     width: 100%;
-    height: 2.85rem;
+    min-height: 2.85rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     & .input-field__input {
       position: absolute;
     }
@@ -206,11 +226,11 @@
     position: absolute;
     display: flex;
     align-items: center;
-    top: 50%;
-    padding: 0px 0.46rem;
-    transform: translate(0, -50%);
-    margin-top: 4px;
-    margin: 4px -1px 0px -1px;
+    flex-wrap: wrap;
+    // top: 50%;
+    padding: 10px 0.46rem;
+    // transform: translate(0, -50%);
+    margin: 3px -1px 0px -1px;
   }
   
   .input-field-wrapper-values-item {
@@ -222,7 +242,7 @@
     color: #039be5;
     cursor: pointer;
     user-select: none;
-    margin: 0px 1px;
+    margin: 1px 1px;
     display: flex;
     background: #e3f2fd;
   }

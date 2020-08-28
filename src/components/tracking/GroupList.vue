@@ -7,6 +7,12 @@
       <div class="tracking-actions">
         <RowWithIcon/>
       </div>
+      <progressBar
+        v-if="progress"
+        :progress="progress"
+        :fontSize="'12px'"
+        :text="`Товаров в отслеживании: ${defaultMaxGoods - maxTrackingProducts} / ${defaultMaxGoods}`"
+      />
     </div>
 
     <TrackingTable v-if="tablePositions"
@@ -29,9 +35,12 @@
   import {GROUPS_SORTED_BY_GETTER} from "@/store/modules/tracking/constants";
   import AddGoodsBtn from "@/shared-components/AddGoodsBtn";
 
+  import progressBar from "@/shared-components/progressBar"
+  import {UserService} from "@/services/user_service";
+
   export default {
     name: "Groups",
-    components: {AddGoodsBtn, RowWithIcon, TrackingTable},
+    components: {AddGoodsBtn, RowWithIcon, TrackingTable, progressBar},
     mixins: [orderHandler, tableMixins],
     data() {
       return {
@@ -51,6 +60,12 @@
         ],
 
         orderType: 'count',
+
+        defaultMaxGoods: 150,
+
+        progress: 0,
+        
+        maxTrackingProducts: 0
       };
     },
     computed: {
@@ -76,6 +91,18 @@
         content: ProductPrice,
         component_data: {price: item.details.revenue},
         clazz: 'tracking-table__align-center width23'
+      })
+    },
+    mounted() {
+      const userService = new UserService();
+      userService.getSubscription().then(res => {
+        this.maxTrackingProducts = res.maxTrackingProducts
+        const progressValue = (this.defaultMaxGoods - this.maxTrackingProducts) * (100 / this.defaultMaxGoods)
+        if(progressValue <= 100 && progressValue >= 0) {
+          this.progress = progressValue
+        } else {
+          this.progress =  false
+        }
       })
     },
   }
