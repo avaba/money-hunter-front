@@ -9,7 +9,7 @@
           <RowWithIcon :list="trackingActionList"/>
         </div>
         <progressBar
-          v-if="progress"
+          v-if="progress || progress === 0 && isLoaded"
           :progress="progress"
           :fontSize="'12px'"
           :text="`Товаров в отслеживании: ${defaultMaxGoods[mySubscription] - maxTrackingProducts} / ${defaultMaxGoods[mySubscription]}`"
@@ -104,7 +104,9 @@
 
         progress: 0,
         
-        maxTrackingProducts: 0
+        maxTrackingProducts: 0,
+
+        isLoaded: false
       }
     },
     computed: {
@@ -204,6 +206,7 @@
       },
       list: {
         handler: function () {
+          this.isLoaded = false
           const userService = new UserService();
           userService.getSubscription().then(res => {
             this.maxTrackingProducts = res.maxTrackingProducts
@@ -213,6 +216,7 @@
             } else {
               this.progress =  false
             }
+            this.isLoaded = true
           })
         },
         deep: true

@@ -8,10 +8,10 @@
         <RowWithIcon/>
       </div>
       <progressBar
-        v-if="progress"
+        v-if="progress || progress === 0 && isLoaded"
         :progress="progress"
         :fontSize="'12px'"
-        :text="`Товаров в отслеживании: ${defaultMaxGoods - maxTrackingProducts} / ${defaultMaxGoods}`"
+        :text="`Товаров в отслеживании: ${defaultMaxGoods[mySubscription] - maxTrackingProducts} / ${defaultMaxGoods[mySubscription]}`"
       />
     </div>
 
@@ -61,11 +61,16 @@
 
         orderType: 'count',
 
-        defaultMaxGoods: 150,
+        defaultMaxGoods: {
+          FREE: 10,
+          PRO: 150
+        },
 
         progress: 0,
         
-        maxTrackingProducts: 0
+        maxTrackingProducts: 0,
+
+        isLoaded: false
       };
     },
     computed: {
@@ -76,6 +81,9 @@
         return this.$store.getters[`tracking/${GROUPS_SORTED_BY_GETTER}`](this.orderType);
       },
       ...mapState('tracking', ['groups']),
+      mySubscription() {
+        return this.$store.getters['user/getSubscription'].subscriptionType
+      }
     },
     methods: {
       map_name(item) {
@@ -94,15 +102,17 @@
       })
     },
     mounted() {
+      this.isLoaded = false
       const userService = new UserService();
       userService.getSubscription().then(res => {
         this.maxTrackingProducts = res.maxTrackingProducts
-        const progressValue = (this.defaultMaxGoods - this.maxTrackingProducts) * (100 / this.defaultMaxGoods)
+        const progressValue = (this.defaultMaxGoods[this.mySubscription] - this.maxTrackingProducts) * (100 / this.defaultMaxGoods[this.mySubscription])
         if(progressValue <= 100 && progressValue >= 0) {
           this.progress = progressValue
         } else {
           this.progress =  false
         }
+        this.isLoaded = true
       })
     },
   }
