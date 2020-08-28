@@ -127,7 +127,7 @@ export class TrackingService {
     try {
       const response = await this.authService.refreshWrapper(this.repo.getGroupSortFile.bind(this.repo, groupName, days));
       const headers = response.headers;
-      const blob = new Blob([response.data], {type: headers['content-type']});
+      const blob = new Blob([`\uFEFF ${response.data}`], {type: headers['content-type']});
 
       FileSaver.saveAs(blob, `Moneyhunter_autosort.csv`);
     } catch (e) {
