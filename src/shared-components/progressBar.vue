@@ -12,6 +12,7 @@
         border-radius: ${borderRadius};
         height: ${height};
         width: ${progressData}%;
+        transition-duration: .${100 - progressData}s;
       `"
       class="filled"
     ></span>
@@ -102,9 +103,8 @@ export default {
     overflow: hidden;
     & .filled {
       display: block;
-      transition-duration: .1s;
       transition-timing-function: ease-in-out;
-      min-width: 20px;
+      min-width: 0px;
     }
     & .text {
       position: absolute;
