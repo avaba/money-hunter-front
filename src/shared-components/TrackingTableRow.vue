@@ -135,7 +135,6 @@
       text-align: center;
       padding-left: 0;
     }
-
     &.tracking-table__align-left {
       text-align: left;
       &.pl-35 {

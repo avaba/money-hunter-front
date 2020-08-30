@@ -103,6 +103,21 @@
     &.modal_big {
       max-width: 42.85rem;
     }
+
+    @media screen and (max-height: 740px) {
+      & {
+        padding: 15px 0px;
+        top: 2%;
+        overflow: auto;
+        max-height: 96%;
+      }
+    }
+    @media screen and (max-width: 39.28rem) {
+      & {
+        width: 100%;
+        max-width: 100% !important;
+      }
+    }
   }
 
   .close-modal {
@@ -147,6 +162,13 @@
     flex: 1;
     max-height: 100%;
     overflow: hidden;
+    @media screen and (max-height: 740px) {
+      & {
+        margin-top: 10px;
+        padding-top: 10px;
+        overflow: visible;
+      }
+    }
   }
 
   .modal-form__input-item {
@@ -231,6 +253,12 @@
 
     &.modal-form__double-submit_download-project {
       margin-top: 1.78rem;
+    }
+
+    @media screen and (max-height: 740px) {
+      &.modal-form__double-submit_save-project {
+        margin-top: 10px;
+      }
     }
   }
 
@@ -347,6 +375,11 @@
     margin-top: 1.42rem;
     padding-bottom: 1.42rem;
     border-bottom: 1px solid $drayDevider;
+    @media screen and (max-height: 740px) {
+      & {
+        margin-top: 0px;
+      }
+    }
   }
 
   .modal-form__category-list {
