@@ -91,7 +91,7 @@
             }
           },
         ],
-        orderType: 'currentPrice',
+        orderType: '',
 
         debounceLoadGoods: debounce(this.loadGoods, 200),
 
@@ -111,15 +111,19 @@
     },
     computed: {
       tablePositions() {
-        return this.list.map(item => ({
-          ...this.$mapItemListToTableItem({...item, ...item.ordersInfo}),
-          nested: {
-            content: ProductNestedSizesTable,
-            articul: item.articul,
-            groupName: this.$route.params.name,
-            priceWithDiscount: item.currentPrice
-          },
-        }));
+        if(this.list.length > 0) {
+          return this.list.map(item => ({
+            ...this.$mapItemListToTableItem({...item, ...item.ordersInfo}),
+            nested: {
+              content: ProductNestedSizesTable,
+              articul: item.articul,
+              groupName: this.$route.params.name,
+              priceWithDiscount: item.currentPrice
+            },
+          }));
+        } else {
+          return false
+        }
       },
       modalResponse() {
         return this.$store.state.modal.componentResponse;
@@ -172,6 +176,10 @@
         }
         
         this.loaded = true
+
+        setTimeout(() => {
+          this.orderType = "currentPrice"
+        }, 0);
       },
       /**
        *
@@ -187,7 +195,7 @@
           component: DeleteProductFromTracking,
           data: {articul, groupName, callback: () => this.loadGoods()},
         });
-      },
+      }
     },
     async mounted() {
       this.loaded = false
@@ -201,8 +209,27 @@
     },
     watch: {
       orderType: function () {
-        // this.debounceLoadGoods();
-        console.log(this.orderType)
+        const list = [...this.list]
+        this.list = []
+        const ordersInfo = ['yesterdayOrders', 'weekOrders', 'todayOrders', 'monthOrders']
+        const currentHeaderItem = this.orderType[0] === '-' ? this.orderType.substr(1) : this.orderType
+        const operation = this.orderType[0] === '-' ? 'from' : 'to'
+        if(ordersInfo.find(item => item === currentHeaderItem)) {
+          if(operation === 'to') {
+            list.sort((a, b) => a.ordersInfo[currentHeaderItem] > b.ordersInfo[currentHeaderItem] ? 1 : -1)
+          } else if (operation === 'from'){
+            list.sort((a, b) => a.ordersInfo[currentHeaderItem] < b.ordersInfo[currentHeaderItem] ? 1 : -1)
+          }
+        } else {
+          if(operation === 'to') {
+            list.sort((a, b) => a[currentHeaderItem] > b[currentHeaderItem] ? 1 : -1)
+          } else if (operation === 'from'){
+            list.sort((a, b) => a[currentHeaderItem] < b[currentHeaderItem] ? 1 : -1)
+          }
+        }
+        setTimeout(() => {
+          this.list = [...list]
+        }, 200);
       },
       list: {
         handler: function () {

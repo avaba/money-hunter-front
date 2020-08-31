@@ -15,6 +15,7 @@
       </tr>
     </table>
     <table class="tracking-table" v-if="items.length>0">
+      <!-- {{ items[0].currentPrice.component_data.price }} -->
       <TrackingTableRow :row-data="item" :header-keys="headers.map(h=>h.name)" v-for="(item, idx) in items" :key="idx"/>
     </table>
   </div>

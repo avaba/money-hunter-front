@@ -15,7 +15,7 @@
       />
     </div>
 
-    <TrackingTable v-if="tablePositions"
+    <TrackingTable v-if="tablePositions && loaded"
                    :headers="tableHeaders"
                    :items="tablePositions"
                    :order="orderType"
@@ -70,7 +70,9 @@
         
         maxTrackingProducts: 0,
 
-        isLoaded: false
+        isLoaded: false,
+
+        loaded: true
       };
     },
     computed: {
@@ -78,6 +80,7 @@
         return this.groupsSortedBy.map(item => this.$mapItemListToTableItem(item));
       },
       groupsSortedBy() {
+        console.log(this.$store.getters[`tracking/${GROUPS_SORTED_BY_GETTER}`](this.orderType))
         return this.$store.getters[`tracking/${GROUPS_SORTED_BY_GETTER}`](this.orderType);
       },
       ...mapState('tracking', ['groups']),
@@ -115,6 +118,14 @@
         this.isLoaded = true
       })
     },
+    watch: {
+      orderType: function () {
+        this.loaded = false
+        setTimeout(() => {
+          this.loaded = true
+        }, 0);
+      }
+    }
   }
 </script>
 
