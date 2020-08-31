@@ -71,7 +71,7 @@
         return idx === 0 && !this.rowOpened && this.rowData.nested;
       },
       formattingNum(n) {
-        if(n.name !== 'articul') {
+        if(n.name !== 'articul' && n.name !== 'name') {
           return n.content.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
         } else {
           return n.content
