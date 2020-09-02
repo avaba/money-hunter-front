@@ -32,10 +32,11 @@
 							position: 'left',
 							id: 'y-axis-1',
             }, 
-            {
-							position: 'right',
-							id: 'y-axis-2',
-						}]
+            // {
+						// 	position: 'right',
+						// 	id: 'y-axis-2',
+						// }
+            ]
           }
         }
       }
