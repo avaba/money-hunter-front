@@ -45,6 +45,10 @@ export class AuthService {
         [TokenType.REFRESH_TOKEN]: tokens['refresh']
       });
 
+      // carrot tracking
+
+      window.carrotquest.track("$authorized", {"$email": email, "$name": email})
+
       return true;
     } catch (e) {
       const _e = e as AxiosError;
@@ -56,9 +60,19 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string, name: string, phoneNumber: string): Promise<boolean | string> {
+  async register(email: string, password: string, name: string, phoneNumber: string, code: string): Promise<boolean | string> {
     try {
       const response = await this.authRepo.register(email, password, name, phoneNumber);
+      window.carrotquest.track("$registered", { "$email": email, "$name": email })
+      window.carrotquest.identify([
+        { op: "update_or_create", key: "$phone", value: phoneNumber },
+      ]);
+      window.carrotquest.track('Promocode activated', {
+        'Promocode': code
+      });
+      window.carrotquest.track('Registration date', {
+        'date': `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`
+      });
       return response.status === 201;
     } catch (e) {
       const _e = e as AxiosError;

@@ -39,7 +39,6 @@
   import Btn from "@/shared-components/Btn";
   import {AuthService} from "@/services/auth_service";
   import {ValidationObserver, ValidationProvider} from 'vee-validate';
-
   export default {
     name: "Login",
     components: {Fragment, InputField, Btn, ValidationObserver, ValidationProvider},
@@ -54,7 +53,7 @@
     methods: {
       async handleLoginBtn() {
         const authService = AuthService.getInstance();
-
+        
         const result = await authService.authorize(this.login, this.password);
         if (typeof result === 'boolean' && result) {
           await this.$router.push({name: 'root'});
@@ -62,7 +61,7 @@
           this.loginError = result;
         }
       }
-    }
+    },
   }
 </script>
 

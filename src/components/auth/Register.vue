@@ -118,7 +118,7 @@
     methods: {
       async register() {
         const service = AuthService.getInstance();
-        const status = await service.register(this.login, this.password, this.name, this.phoneNumber);
+        const status = await service.register(this.login, this.password, this.name, this.phoneNumber, this.code);
         if (typeof status === 'boolean' && status) {
           this.confirmMessage = true;
           if(this.codeStatus === 'valid') {
