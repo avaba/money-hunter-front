@@ -30,4 +30,12 @@ export class UserService {
       console.log(e);
     }
   }
+
+  async getPaymentLink(user: any) {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.getPaymentLink.bind(this.repo, user))).data;
+    } catch (e) {
+      return e
+    }
+  }
 }

@@ -21,36 +21,36 @@
     data() {
       return {
         tariffs: [
-          // {
-          //   name: "Free",
-          //   price: 0,
-          //   clazz: "tarif__item_fourth",
-          //   list: [
-          //     {text: "Максимум 5 товаров на отслеживании", success: true},
-          //     {text: "Добавление оповещений", success: true},
-          //     {text: "Полный функционал бота Telegram", error: true},
-          //     {text: "Аналитика по товарам", error: true},
-          //     {text: "Скачивание отчётов", error: false},
-          //     {text: "Автоподсорт", error: true},
-          //     {text: "Анализ категорий", error: true},
-          //     {text: "Запрос истории товаров", error: true}
-          //   ]
-          // },
-          // {
-          //   name: "BASIC",
-          //   price: 3999,
-          //   clazz: "tarif__item_fourth",
-          //   list: [
-          //     {text: "Максимум 5 товаров на отслеживании", success: true},
-          //     {text: "Добавление оповещений", success: true},
-          //     {text: "Полный функционал бота Telegram", success: true},
-          //     {text: "Аналитика по товарам", success: true},
-          //     {text: "Скачивание отчётов", success: true},
-          //     {text: "Автоподсорт", error: true},
-          //     {text: "Анализ категорий", error: true},
-          //     {text: "Запрос истории товаров", error: true}
-          //   ]
-          // },
+          {
+            name: "Free",
+            price: 0,
+            clazz: "tarif__item_fourth",
+            list: [
+              {text: "Максимум 5 товаров на отслеживании", success: true},
+              {text: "Добавление оповещений", success: true},
+              {text: "Полный функционал бота Telegram", error: true},
+              {text: "Аналитика по товарам", error: true},
+              {text: "Скачивание отчётов", error: false},
+              {text: "Автоподсорт", error: true},
+              {text: "Анализ категорий", error: true},
+              {text: "Запрос истории товаров", error: true}
+            ]
+          },
+          {
+            name: "BASIC",
+            price: 3999,
+            clazz: "tarif__item_fourth",
+            list: [
+              {text: "Максимум 5 товаров на отслеживании", success: true},
+              {text: "Добавление оповещений", success: true},
+              {text: "Полный функционал бота Telegram", success: true},
+              {text: "Аналитика по товарам", success: true},
+              {text: "Скачивание отчётов", success: true},
+              {text: "Автоподсорт", error: true},
+              {text: "Анализ категорий", error: true},
+              {text: "Запрос истории товаров", error: true}
+            ]
+          },
           // {
           //   name: "CUSTOM",
           //   price: 4999,
@@ -66,21 +66,21 @@
           //     {text: "Запрос истории товаров", error: true}
           //   ]
           // },
-          // {
-          //   name: "PRO",
-          //   price: 7999,
-          //   clazz: "tarif__item_fourth",
-          //   list: [
-          //     {text: "Максимум 5 товаров на отслеживании", success: true},
-          //     {text: "Добавление оповещений", success: true},
-          //     {text: "Полный функционал бота Telegram", success: true},
-          //     {text: "Аналитика по товарам", success: true},
-          //     {text: "Скачивание отчётов", success: true},
-          //     {text: "Автоподсорт", success: true},
-          //     {text: "Анализ категорий", success: true},
-          //     {text: "Запрос истории товаров", success: true}
-          //   ]
-          // },
+          {
+            name: "PRO",
+            price: 7999,
+            clazz: "tarif__item_fourth",
+            list: [
+              {text: "Максимум 5 товаров на отслеживании", success: true},
+              {text: "Добавление оповещений", success: true},
+              {text: "Полный функционал бота Telegram", success: true},
+              {text: "Аналитика по товарам", success: true},
+              {text: "Скачивание отчётов", success: true},
+              {text: "Автоподсорт", success: true},
+              {text: "Анализ категорий", success: true},
+              {text: "Запрос истории товаров", success: true}
+            ]
+          },
         ]
       }
     }

@@ -12,7 +12,7 @@
     </div>
     <template v-if="isBuyable">
       <div class="tarif-price">{{price}} ₽</div>
-      <Btn label="Купить" :isDisabled="true" @click="handleBuyBtn"/>
+      <Btn label="Купить" :isDisabled="false" @click="handleBuyBtn"/>
     </template>
   </div>
 </template>
@@ -20,6 +20,10 @@
 <script>
   import Btn from "../shared-components/Btn";
   import {AmplitudeService} from "@/services/amplitude_service";
+  import {GET_PAYMENT_LINK_ACTION} from "@/store/modules/user/constants";
+  import {mapActions, mapMutations} from "vuex";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import Warning from "@/components/blackbox/Warning";
 
   export default {
     name: "Tariff",
@@ -47,9 +51,17 @@
       }
     },
     methods: {
-      handleBuyBtn() {
+      async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
-      }
+        const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
+        if(response.response.status === 400) {
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.response.data.detail}});
+        } else if (response.response.status === 200) {
+          this.$router.push(response.response.data.detail)
+        }
+      },
+      ...mapActions('user', [GET_PAYMENT_LINK_ACTION]),
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
   }
 </script>

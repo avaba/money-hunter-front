@@ -60,6 +60,6 @@ export class ApiClient {
     const client = this.getBasicClient();
     const _url = this.generateUrl(url, ApiClient.API_VERSION_V1);
 
-    return client.post(_url, {refresh: token});
+    return client.post(_url, { refresh: token });
   }
 }

@@ -3,6 +3,7 @@ import {ApiClient} from "@/http/api_client";
 export class UserRepository {
   private profileUrl = 'user/profile/';
   private subscriptionUrl = 'user/subscription/';
+  private paymentLink = 'user/payment/';
   private client = new ApiClient();
 
   getProfile() {
@@ -15,5 +16,9 @@ export class UserRepository {
 
   getSubscription() {
     return this.client.sendGet(this.subscriptionUrl);
+  }
+
+  getPaymentLink(data: any) {
+    return this.client.sendPost(this.paymentLink, { email: data.user.email, subscriptionType: data.subscriptionType });
   }
 }
