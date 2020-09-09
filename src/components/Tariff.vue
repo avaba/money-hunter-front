@@ -54,10 +54,10 @@
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
         const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
-        if(response.response.status === 400) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.response.data.detail}});
-        } else if (response.response.status === 200) {
-          this.$router.push(response.response.data.detail)
+        if(response.status === 400) {
+          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.data.detail}});
+        } else if (response.status === 200) {
+          window.open(response.data.detail)
         }
       },
       ...mapActions('user', [GET_PAYMENT_LINK_ACTION]),
