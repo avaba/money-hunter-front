@@ -83,6 +83,19 @@
     &.tarif__item_fourth {
       flex-basis: calc((100% - (2.21rem * 3)) / 4);
     }
+    @media screen and (max-width: 1300px) {
+      &.tarif__item_fourth {
+        flex-basis: calc((100% - (2.21rem * 3)) / 2);
+      }
+    }
+    @media screen and (max-width: 800px) {
+      &.tarif__item_fourth {
+        margin-top: 1.5rem;
+      }
+      &:not(:first-child) {
+        margin-left: 0;
+      }
+    }
   }
 
   .tarif__name {
