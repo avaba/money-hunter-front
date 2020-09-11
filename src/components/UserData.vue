@@ -97,7 +97,8 @@
       async postUser() {
         const result = await this.$store.dispatch(`user/${POST_USER_ACTION}`);
         if (result) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Информация сохранена'}});
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Информация сохранена'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Информация сохранена', status: 'success'})
         }
       },
       setUserData(type, value) {
@@ -113,6 +114,7 @@
         if(promocodeStatus && promocodeStatus != 'promocode is not valid') {
           this.codeStatus = 'valid'
           await service.setPromocode(this.promocode, this.user.email);
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Промокод активирован', status: 'success'})
         } else if(promocodeStatus && promocodeStatus === 'promocode is not valid') {
           this.codeStatus = 'notValid'
         }

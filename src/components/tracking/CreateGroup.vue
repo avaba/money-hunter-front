@@ -140,12 +140,14 @@
           );
 
           if (result) {
-            this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Группа создана'}});
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Группа создана', status: 'success'})
+            // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Группа создана'}});
             await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
             // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
             await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});
           } else {
-            this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+            // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
           }
         }
       },

@@ -55,11 +55,13 @@
         );
 
         if (result) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товар добавлен'}});
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товар добавлен'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Товар добавлен', status: 'success'})
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Достигнут максимум отслеживаемых товаров, обновите подписку'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Достигнут максимум отслеживаемых товаров, обновите подписку', status: 'error'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Достигнут максимум отслеживаемых товаров, обновите подписку'}});
         }
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])

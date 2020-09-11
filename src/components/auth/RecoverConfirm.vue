@@ -49,10 +49,12 @@
         );
 
         if (response) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Пароль успешно изменен'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Пароль успешно изменен', status: 'success'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Пароль успешно изменен'}});
           await this.$router.push({name: 'auth.login'});
         } else {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])

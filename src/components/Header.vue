@@ -8,11 +8,15 @@
       </div> -->
       <div class="notifications" >
         <img src="../assets/img/ikons/notification.svg" alt="">
-        <div class="notifications__circle"><span></span></div>
+        <transition name="fade-notifications" mode="out-in">
+          <div v-if="notification" class="notifications__circle"><span></span></div>
+        </transition>
       </div>
-      <!-- <div class="notifications-wrapper success">
-          <p class="notifications-wrapper-text">Произошла ошибка</p>
-        </div> -->
+      <transition name="fade-notifications" mode="out-in">
+        <div v-if="notification" class="notifications-wrapper" :class="notification.status">
+          <p class="notifications-wrapper-text">{{ notification.text }}</p>
+        </div>
+      </transition>
       <div class="user-name" @click="$router.push({name: 'profile'}).catch(()=>{})">
         <span class="user-name__text">{{email}}</span>
         <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
@@ -37,6 +41,9 @@
     computed: {
       email() {
         return this.$store.state.user.data?.email;
+      },
+      notification() {
+        return this.$store.getters['notifications/notification']
       }
     },
     methods: {
@@ -59,11 +66,16 @@
     background: #fff;
     border-radius: 6px;
     z-index: 9999;
+    border: 1px solid $gray1;
     &.success {
-      border: 1px solid $green;
+      & .notifications-wrapper-text {
+        color: $green;
+      }
     }
     &.error {
-      border: 1px solid $red;
+      & .notifications-wrapper-text {
+        color: $red;
+      }
     }
     &-text {
       user-select: none;
@@ -134,5 +146,13 @@
   .user-name__text {
     margin: 0 .85rem 0 1.85rem;
     padding: .57rem 0;
+  }
+
+  .fade-notifications-enter-active, .fade-notifications-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-notifications-enter, .fade-notifications-leave-to {
+    opacity: 0;
   }
 </style>

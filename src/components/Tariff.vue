@@ -55,7 +55,8 @@
         AmplitudeService.subscription(this.name);
         const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
         if(response.status === 400) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.data.detail}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.data.detail}});
         } else if (response.status === 200) {
           window.open(response.data.detail)
         }

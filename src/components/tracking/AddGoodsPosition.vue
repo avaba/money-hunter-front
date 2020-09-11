@@ -150,7 +150,8 @@
         );
 
         if (result) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товары добавлены'}});
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товары добавлены'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Товары добавлены', status: 'success'})
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           if (this.$route.fullPath !== this.$router.resolve({
@@ -162,7 +163,8 @@
             this.$eventBus.$emit('tracking.group.loadGoods');
           }
         } else {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
       },
 

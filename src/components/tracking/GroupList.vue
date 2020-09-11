@@ -80,7 +80,6 @@
         return this.groupsSortedBy.map(item => this.$mapItemListToTableItem(item));
       },
       groupsSortedBy() {
-        console.log(this.$store.getters[`tracking/${GROUPS_SORTED_BY_GETTER}`](this.orderType))
         return this.$store.getters[`tracking/${GROUPS_SORTED_BY_GETTER}`](this.orderType);
       },
       ...mapState('tracking', ['groups']),
