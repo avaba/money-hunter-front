@@ -2,14 +2,17 @@
   <header class="header block_container">
     <h1 class="page-title" v-text="header"/>
     <div class="header-right">
-      <div class="education" @click="showTraining">
+      <!-- <div class="education" @click="showTraining">
         <img src="../assets/img/ikons/education.svg" alt="">
         <span class="education__text">Обучение</span>
-      </div>
-      <div class="notifications" v-if="false">
+      </div> -->
+      <div class="notifications" >
         <img src="../assets/img/ikons/notification.svg" alt="">
         <div class="notifications__circle"><span></span></div>
       </div>
+      <!-- <div class="notifications-wrapper success">
+          <p class="notifications-wrapper-text">Произошла ошибка</p>
+        </div> -->
       <div class="user-name" @click="$router.push({name: 'profile'}).catch(()=>{})">
         <span class="user-name__text">{{email}}</span>
         <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
@@ -47,6 +50,25 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
+  
+  .notifications-wrapper {
+    position: absolute;
+    right: 200px;
+    top: 50px;
+    padding: 12px 24px;
+    background: #fff;
+    border-radius: 6px;
+    z-index: 9999;
+    &.success {
+      border: 1px solid $green;
+    }
+    &.error {
+      border: 1px solid $red;
+    }
+    &-text {
+      user-select: none;
+    }
+  }
 
   .header {
     display: flex;
