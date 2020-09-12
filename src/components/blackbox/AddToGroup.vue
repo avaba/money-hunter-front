@@ -20,7 +20,7 @@
   import Btn from "../../shared-components/Btn";
   import {TrackingService} from "@/services/tracking_service";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  // import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import Modal from "@/components/Modal";
 
   import Warning from "@/components/blackbox/Warning";
@@ -58,9 +58,10 @@
           // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товар добавлен'}});
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Товар добавлен', status: 'success'})
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
-          // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Достигнут максимум отслеживаемых товаров, обновите подписку', status: 'error'})
+          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Достигнут максимум отслеживаемых товаров, обновите подписку'}});
         }
       },
