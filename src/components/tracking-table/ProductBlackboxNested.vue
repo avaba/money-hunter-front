@@ -31,10 +31,22 @@
             {
 							position: 'left',
 							id: 'y-axis-1',
+              ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return value % 1 ? '' : value
+                }
+              }
             }, 
             {
 							position: 'right',
 							id: 'y-axis-2',
+              ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return value % 1 ? '' : value
+                }
+              }
 						}
             ]
           }
