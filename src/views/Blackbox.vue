@@ -219,4 +219,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  @media screen and (max-width: 710px) {
+    .blackbox {
+      margin: 10px;
+    }
+  }
 </style>

@@ -2,14 +2,21 @@
   <header class="header block_container">
     <h1 class="page-title" v-text="header"/>
     <div class="header-right">
-      <div class="education" @click="showTraining">
+      <!-- <div class="education" @click="showTraining">
         <img src="../assets/img/ikons/education.svg" alt="">
         <span class="education__text">Обучение</span>
-      </div>
-      <div class="notifications" v-if="false">
+      </div> -->
+      <div class="notifications" >
         <img src="../assets/img/ikons/notification.svg" alt="">
-        <div class="notifications__circle"><span></span></div>
+        <transition name="fade-notifications" mode="out-in">
+          <div v-if="notification" class="notifications__circle"><span></span></div>
+        </transition>
       </div>
+      <transition name="fade-notifications" mode="out-in">
+        <div v-if="notification" class="notifications-wrapper" :class="notification.status">
+          <p class="notifications-wrapper-text">{{ notification.text }}</p>
+        </div>
+      </transition>
       <div class="user-name" @click="$router.push({name: 'profile'}).catch(()=>{})">
         <span class="user-name__text">{{email}}</span>
         <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
@@ -34,6 +41,9 @@
     computed: {
       email() {
         return this.$store.state.user.data?.email;
+      },
+      notification() {
+        return this.$store.getters['notifications/notification']
       }
     },
     methods: {
@@ -47,6 +57,30 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
+  
+  .notifications-wrapper {
+    position: absolute;
+    right: 200px;
+    top: 50px;
+    padding: 12px 24px;
+    background: #fff;
+    border-radius: 6px;
+    z-index: 9999;
+    border: 1px solid $gray1;
+    &.success {
+      & .notifications-wrapper-text {
+        color: $green;
+      }
+    }
+    &.error {
+      & .notifications-wrapper-text {
+        color: $red;
+      }
+    }
+    &-text {
+      user-select: none;
+    }
+  }
 
   .header {
     display: flex;
@@ -112,5 +146,33 @@
   .user-name__text {
     margin: 0 .85rem 0 1.85rem;
     padding: .57rem 0;
+  }
+
+  .fade-notifications-enter-active, .fade-notifications-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-notifications-enter, .fade-notifications-leave-to {
+    opacity: 0;
+  }
+  @media screen and (max-width: 600px) {
+    .notifications {
+      margin-right: 10px;
+    }
+    .user-name__text {
+      margin-left: 10%;
+    }
+  }
+  @media screen and (max-width: 470px) {
+    .header {
+      flex-wrap: wrap-reverse;
+    }
+    .header-right {
+      width: 100%;
+    }
+    .page-title {
+      margin: 0px auto;
+      margin-top: 20px;
+    }
   }
 </style>

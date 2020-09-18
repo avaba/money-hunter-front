@@ -251,4 +251,49 @@
   .filter-form__searchs-count {
     font-weight: bold;
   }
+   @media screen and (max-width: 1300px) {
+    .filter-form__fields {
+      flex-wrap: wrap;
+    }
+    .filter-form__item {
+      max-width: 250px !important;
+      width: 100% !important;
+      margin: 10px 5px !important;
+    }
+    .filter-form__item .input-field {
+      display: block;
+    }
+  }
+  @media screen and (max-width: 710px) {
+    .filter-form__fields {
+      justify-content: center;
+    }
+    .filter {
+      margin: 10px;
+    }
+  }
+  @media screen and (max-width: 900px) {
+    .filter-form__actions {
+      flex-wrap: wrap;
+      & button {
+        margin: 5px 10px !important;
+        width: 170px;
+      }
+    }
+    .filter-form__buttons {
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 0px auto;
+    }
+    .block_container {
+      padding-bottom: 10px;
+    }
+    .filter-form__send {
+      margin: 10px auto;
+      width: auto;
+      & .button_save {
+        width: 170px;
+      }
+    }
+  }
 </style>

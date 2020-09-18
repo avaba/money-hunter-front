@@ -158,7 +158,7 @@
     z-index: 3;
     width: 6.35rem;
     top: 30px;
-    right: -20%;
+    right: -50%;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     border: 1px solid $drayDevider;
   }

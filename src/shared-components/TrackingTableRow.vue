@@ -115,6 +115,11 @@
 
   .tracking-table__row {
     width: 100%;
+    @media screen and (max-width: 1400px) {
+      & .tracking-table__cell {
+        font-size: 12px;
+      }
+    }
   }
 
   .tracking-table__row_open {

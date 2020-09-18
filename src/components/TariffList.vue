@@ -37,8 +37,8 @@
             ]
           },
           {
-            name: "BASIC",
-            price: 3999,
+            name: "PRO",
+            price: 990,
             clazz: "tarif__item_fourth",
             list: [
               {text: "Максимум 5 товаров на отслеживании", success: true},

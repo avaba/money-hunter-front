@@ -155,4 +155,14 @@
     display: flex;
     align-items: center;
   }
+
+  @media screen and (max-width: 800px) {
+    .tracking-info {
+      flex-wrap: wrap;
+    }
+    .progressBar {
+      max-width: 100% !important;
+      margin-top: 15px;
+    }
+  }
 </style>
