@@ -13,6 +13,7 @@ export class BlackboxService {
     _data.priceRange = this.normalizeRangeData(data.priceRange);
     _data.ratingRange = this.normalizeRangeData(data.ratingRange);
     _data.revenueRange = this.normalizeRangeData(data.revenueRange);
+    _data.brands = [...data.brands];
     _data.categories = [...data.categories];
 
     return _data;

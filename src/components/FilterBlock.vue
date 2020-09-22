@@ -26,13 +26,13 @@
         <div class="filter-form__item">
           <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
-        <!-- <div class="filter-form__item-brands">
+        <div class="filter-form__item-brands">
           <ValidationProvider :rules="{required: true}" key="byBrandType">
               <BrandsSelector
                 v-model="brands"
               />
         </ValidationProvider>
-        </div> -->
+        </div>
       </div>
       <div class="filter-form__actions">
         <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
@@ -76,13 +76,12 @@
   import {CHECK_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {BlackboxService} from "../services/blackbox_service";
-  // import {ValidationProvider} from 'vee-validate';
-  // import BrandsSelector from "@/shared-components/BrandsSelector";
+  import {ValidationProvider} from 'vee-validate';
+  import BrandsSelector from "@/shared-components/BrandsSelector";
 
   export default {
     name: "FilterBlock",
-    // components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
-    components: {TreeSelect, Btn, InputField, RowWithIcon},
+    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
     props: {
       searchHandler: {
         type: Function,
