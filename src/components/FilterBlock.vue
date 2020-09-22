@@ -12,7 +12,7 @@
                       :multiple="true"/>
         </div>
         <div class="filter-form__item">
-          <InputField label="Цена" range v-model="priceRange" :min="0" :max="900000"/>
+          <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
         </div>
         <div class="filter-form__item">
           <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
@@ -26,6 +26,13 @@
         <div class="filter-form__item">
           <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
+        <!-- <div class="filter-form__item-brands">
+          <ValidationProvider :rules="{required: true}" key="byBrandType">
+              <BrandsSelector
+                v-model="brands"
+              />
+        </ValidationProvider>
+        </div> -->
       </div>
       <div class="filter-form__actions">
         <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
@@ -69,9 +76,12 @@
   import {CHECK_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {BlackboxService} from "../services/blackbox_service";
+  // import {ValidationProvider} from 'vee-validate';
+  // import BrandsSelector from "@/shared-components/BrandsSelector";
 
   export default {
     name: "FilterBlock",
+    // components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
     components: {TreeSelect, Btn, InputField, RowWithIcon},
     props: {
       searchHandler: {
@@ -90,6 +100,7 @@
         feedbackRange: [],
         revenueRange: [],
         categories: [-1],
+        brands: []
       }
     },
     computed: {
@@ -98,10 +109,13 @@
       },
       userSubscription() {
         return this.$store.state.user.subscription?.subscriptionType;
-      }
+      },
     },
     methods: {
       async searchBtnHandler() {
+        if(this.brands.length <= 0) {
+          this.brands = ['all']
+        }
         await this.checkSearchID();
         this.searchHandler();
       }
@@ -129,6 +143,7 @@
         this.feedbackRange = [];
         this.revenueRange = [];
         this.categories = [-1];
+        this.brands = [];
       }
       ,
       loadProject() {
@@ -140,6 +155,7 @@
           this.feedbackRange = data.feedbackRange;
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
+          this.brands = data.brands;
         })
       }
       ,
@@ -219,6 +235,10 @@
     &:not(:last-child) {
       margin-right: 1.42rem;
     }
+
+    &-brands {
+      max-width: 180px;
+    }
   }
 
   .filter-form__actions {
@@ -259,6 +279,11 @@
       max-width: 250px !important;
       width: 100% !important;
       margin: 10px 5px !important;
+      &-brands {
+        max-width: 250px !important;
+        margin: 10px 5px !important;
+        width: 100% !important;
+      }
     }
     .filter-form__item .input-field {
       display: block;
