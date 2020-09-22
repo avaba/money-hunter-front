@@ -162,6 +162,7 @@
       }
     }
 
+
     &.tracking-table__header-item_align-right {
 
       div {
@@ -214,6 +215,27 @@
 
     &.tracking-table__sort_up {
       background: url("../assets/img/ikons/sort-up.svg") no-repeat;
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+      .tracking-table__header-label {
+        font-size: 12px;
+        line-height: 12px;
+      }
+      .tracking-table__header-item {
+        font-size: 12px !important;
+        line-height: 12px;
+      }
+    }
+  @media screen and (max-width: 1300px) {
+    .tracking-table-wrapper {
+      overflow-x: auto;
+      max-width: 100%;
+      width: 100%;
+      & .tracking-table {
+        width: 1140px;
+      }
     }
   }
 </style>

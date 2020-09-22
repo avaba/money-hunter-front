@@ -290,4 +290,35 @@
     align-items: center;
     justify-content: center;
   }
+  @media screen and (max-width: 1030px){
+    .tracking-info {
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .progressBar {
+      max-width: 100% !important;
+      // margin: 10px 0px;
+      margin-top: 15px;
+    }
+    .tracking-actions {
+      flex: 0 0 auto;
+    }
+  }
+
+  @media screen and (max-width: 600px){
+    .tracking-info {
+      justify-content: center;
+    }
+    .progressBar {
+      max-width: 100% !important;
+      // margin: 10px 0px;
+      margin-top: 15px;
+    }
+    .tracking-actions {
+      width: 100%;
+      margin-left: 0px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+  }
 </style>

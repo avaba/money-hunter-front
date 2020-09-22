@@ -67,4 +67,9 @@
     background: url("../assets/img/ikons/plus2.svg") no-repeat center, $yellow;
     border-radius: 4px 4px 0 0;
   }
+  @media screen and (max-width: 710px) {
+    .tracking {
+      padding: 10px;
+    }
+  }
 </style>

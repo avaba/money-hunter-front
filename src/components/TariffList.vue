@@ -63,7 +63,7 @@
           //   ]
           // },
           {
-            name: "Pro",
+            name: "PRO",
             price: 990,
             clazz: "tarif__item_fourth",
             list: [

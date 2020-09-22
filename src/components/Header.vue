@@ -155,4 +155,24 @@
   .fade-notifications-enter, .fade-notifications-leave-to {
     opacity: 0;
   }
+  @media screen and (max-width: 600px) {
+    .notifications {
+      margin-right: 10px;
+    }
+    .user-name__text {
+      margin-left: 10%;
+    }
+  }
+  @media screen and (max-width: 470px) {
+    .header {
+      flex-wrap: wrap-reverse;
+    }
+    .header-right {
+      width: 100%;
+    }
+    .page-title {
+      margin: 0px auto;
+      margin-top: 20px;
+    }
+  }
 </style>
