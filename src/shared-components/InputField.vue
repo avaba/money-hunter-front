@@ -10,6 +10,8 @@
              placeholder="Min"
              :disabled="disabled"
              v-model.number="value[0]"
+             :min="min"
+             :max="max"
              @blur="$emit('input', minTransformer())">
       <span>-</span>
       <input type="number"
@@ -17,6 +19,8 @@
              placeholder="Max"
              :disabled="disabled"
              v-model.number="value[1]"
+             :min="min"
+             :max="max"
              @blur="$emit('input', maxTransformer())">
     </div>
 
