@@ -2,7 +2,7 @@
   <div class="filter block_container">
     <form action="" class="filter-form">
       <div class="filter-form__fields">
-        <div class="filter-form__item">
+        <div class="filter-form__item filter-form__item-brands">
           <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="availableOptions"
@@ -10,7 +10,19 @@
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"/>
+          <ValidationProvider :rules="{required: true}" key="byBrandType">
+              <BrandsSelector
+                v-model="brands"
+              />
+          </ValidationProvider>
         </div>
+        <!-- <div class="filter-form__item-brands">
+          <ValidationProvider :rules="{required: true}" key="byBrandType">
+              <BrandsSelector
+                v-model="brands"
+              />
+        </ValidationProvider>
+        </div> -->
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
         </div>
@@ -25,13 +37,6 @@
         </div>
         <div class="filter-form__item">
           <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
-        </div>
-        <div class="filter-form__item-brands">
-          <ValidationProvider :rules="{required: true}" key="byBrandType">
-              <BrandsSelector
-                v-model="brands"
-              />
-        </ValidationProvider>
         </div>
       </div>
       <div class="filter-form__actions">
@@ -236,7 +241,7 @@
     }
 
     &-brands {
-      max-width: 180px;
+      // max-width: 180px;
     }
   }
 
@@ -279,7 +284,7 @@
       width: 100% !important;
       margin: 10px 5px !important;
       &-brands {
-        max-width: 250px !important;
+        // max-width: 250px !important;
         margin: 10px 5px !important;
         width: 100% !important;
       }
