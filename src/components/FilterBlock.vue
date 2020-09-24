@@ -10,7 +10,7 @@
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"/>
-          <ValidationProvider :rules="{required: true}" key="byBrandType">
+          <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
               <BrandsSelector
                 v-model="brands"
               />
@@ -46,11 +46,11 @@
         </div>
         <div class="filter-form__buttons">
           <Btn without-default-class
-               label="Загрузить проект"
+               label="Загрузить фильтр"
                clazz="filter-form__action-button filter-form__action-button_download"
                @click="loadProject"/>
           <Btn without-default-class
-               label="Сохранить проект"
+               label="Сохранить фильтр"
                clazz="filter-form__action-button filter-form__action-button_save"
                @click="saveProject"/>
           <Btn without-default-class
@@ -164,6 +164,9 @@
       }
       ,
       saveProject() {
+        if(this.brands.length <= 0) {
+          this.brands = ['all']
+        }
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
       }
       ,
@@ -242,6 +245,10 @@
 
     &-brands {
       // max-width: 180px;
+      & .brandsSelector {
+        display: block;
+        margin: 10px 0px;
+      }
     }
   }
 
