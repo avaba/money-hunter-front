@@ -43,7 +43,8 @@
           <Btn without-default-class
                label="Загрузить проект"
                clazz="filter-form__action-button filter-form__action-button_download"
-               @click="loadProject"/>
+               @click="loadProject"
+               />
           <Btn without-default-class
                label="Сохранить проект"
                clazz="filter-form__action-button filter-form__action-button_save"
@@ -113,9 +114,10 @@
     },
     methods: {
       async searchBtnHandler() {
-        if(this.brands.length <= 0) {
-          this.brands = ['all']
-        }
+        
+        // if(this.brands.length <= 0) {
+        //   this.brands = ['all']
+        // }
         await this.checkSearchID();
         this.searchHandler();
       }
@@ -156,6 +158,7 @@
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           this.brands = data.brands;
+          this.searchBtnHandler()
         })
       }
       ,
