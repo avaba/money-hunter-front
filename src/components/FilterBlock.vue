@@ -117,9 +117,6 @@
     },
     methods: {
       async searchBtnHandler() {
-        if(this.brands.length <= 0) {
-          this.brands = ['all']
-        }
         await this.checkSearchID();
         this.searchHandler();
       }
@@ -129,6 +126,7 @@
         delete data.searchIcon;
         delete data.availableOptions;
         delete data.categories;
+        delete data.brands;
 
         const cats = [...this.categories];
         if (cats.length === 1 && cats[0] === -1) {
@@ -137,6 +135,13 @@
           data.categories = this.categories;
         }
 
+        const brands = [...this.brands];
+        if(brands.length < 1 || brands[0] === 'Все') {
+          data.brands = ['all']
+        } else {
+          data.brands = this.brands
+        }
+        
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -164,9 +169,6 @@
       }
       ,
       saveProject() {
-        if(this.brands.length <= 0) {
-          this.brands = ['all']
-        }
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
       }
       ,
@@ -180,11 +182,16 @@
         }];
       }
       ,
+      async loadBrands() {
+        this.brands = ['Все']
+      }
+      ,
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
+      this.loadBrands();
     }
   }
 </script>
