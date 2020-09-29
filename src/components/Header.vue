@@ -2,10 +2,10 @@
   <header class="header block_container">
     <h1 class="page-title" v-text="header"/>
     <div class="header-right">
-      <!-- <div class="education" @click="showTraining">
+      <div class="education" @click="showTraining">
         <img src="../assets/img/ikons/education.svg" alt="">
         <span class="education__text">Обучение</span>
-      </div> -->
+      </div>
       <div class="notifications" >
         <img src="../assets/img/ikons/notification.svg" alt="">
         <transition name="fade-notifications" mode="out-in">
