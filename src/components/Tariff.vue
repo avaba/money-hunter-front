@@ -54,10 +54,11 @@
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
         const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
-        if(response.response.status === 400) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.response.data.detail}});
-        } else if (response.response.status === 200) {
-          this.$router.push(response.response.data.detail)
+        if(response.status === 400) {
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.data.detail}});
+        } else if (response.status === 200) {
+          window.open(response.data.detail)
         }
       },
       ...mapActions('user', [GET_PAYMENT_LINK_ACTION]),
@@ -82,6 +83,19 @@
 
     &.tarif__item_fourth {
       flex-basis: calc((100% - (2.21rem * 3)) / 4);
+    }
+    @media screen and (max-width: 1300px) {
+      &.tarif__item_fourth {
+        flex-basis: calc((100% - (2.21rem * 3)) / 2);
+      }
+    }
+    @media screen and (max-width: 800px) {
+      &.tarif__item_fourth {
+        margin-top: 1.5rem;
+      }
+      &:not(:first-child) {
+        margin-left: 0;
+      }
     }
   }
 

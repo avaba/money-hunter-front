@@ -33,7 +33,7 @@ export class UserService {
 
   async getPaymentLink(user: any) {
     try {
-      return (await this.authService.refreshWrapper(this.repo.getPaymentLink.bind(this.repo, user))).data;
+      return (await this.authService.refreshWrapper(this.repo.getPaymentLink.bind(this.repo, user)));
     } catch (e) {
       return e
     }

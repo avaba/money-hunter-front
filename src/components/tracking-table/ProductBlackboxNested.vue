@@ -31,11 +31,23 @@
             {
 							position: 'left',
 							id: 'y-axis-1',
+              ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return value % 1 ? '' : value
+                }
+              }
             }, 
-            // {
-						// 	position: 'right',
-						// 	id: 'y-axis-2',
-						// }
+            {
+							position: 'right',
+							id: 'y-axis-2',
+              ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                    return value % 1 ? '' : value
+                }
+              }
+						}
             ]
           }
         }
@@ -65,7 +77,7 @@
         labels,
         datasets: [
           {yAxisID: 'y-axis-1', data: orders, fill: false, borderColor: "#FFC700", lineTension: 0, label: 'Заказы'},
-          // {yAxisID: 'y-axis-2', data: qty, fill: false, borderColor: "#ff3f3f", lineTension: 0, label: 'Остаток на складе'}
+          {yAxisID: 'y-axis-2', data: qty, fill: false, borderColor: "#ff3f3f", lineTension: 0, label: 'Остаток на складе'}
         ]
       }
     }

@@ -16,7 +16,11 @@
     }),
     methods: {
       formattingNum() {
-        this.currentPrice = this.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        if(this.price) {
+          this.currentPrice = this.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        } else {
+          this.currentPrice = '0'
+        }
       }
     },
     mounted() {

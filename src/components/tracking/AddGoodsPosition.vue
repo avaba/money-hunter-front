@@ -79,7 +79,7 @@
   import Warning from "@/components/blackbox/Warning";
   import Btn from "@/shared-components/Btn";
   import {TrackingService} from "@/services/tracking_service";
-  import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION, HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {mapMutations} from "vuex";
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
@@ -150,9 +150,10 @@
         );
 
         if (result) {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товары добавлены'}});
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товары добавлены'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Товары добавлены', status: 'success'})
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
-          // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           if (this.$route.fullPath !== this.$router.resolve({
             name: 'tracking.group',
             params: {name: this.selectedGroup.toUpperCase()}
@@ -162,7 +163,9 @@
             this.$eventBus.$emit('tracking.group.loadGoods');
           }
         } else {
-          this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+          await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
       },
 
@@ -171,7 +174,8 @@
       },
 
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
-      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION]),
+      ...mapMutations('modal', [HIDE_MODAL_MUTATION])
     },
   }
 </script>
