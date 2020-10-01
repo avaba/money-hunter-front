@@ -130,9 +130,10 @@
   .input-field {
     position: relative;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-content: center;
     flex-wrap: wrap;
+    display: block;
   }
 
   .input-field__label {
