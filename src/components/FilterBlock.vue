@@ -189,13 +189,37 @@
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
       }
       ,
+      compareTime(dateString, now) {
+        const oneDayTime = 86400000
+        if(dateString + oneDayTime >= now) {
+          return true
+        } else {
+          return false
+        }
+      }
+      ,
       async loadCategories() {
         const service = new BlackboxService();
+        let categories = null
+        if(JSON.parse(localStorage.getItem("categories"))) {
+          const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
+          const timeNow = new Date().getTime()
+          if(this.compareTime(timestamp, timeNow)) {
+            categories = JSON.parse(localStorage.getItem("categories")).categories
+          } else {
+            categories = await service.getCategories()
+            localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+          }
+        } else {
+          categories = await service.getCategories()
+          localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+        }
+        // const categories = await service.getCategories()
         this.availableOptions = [{
           id: -1,
           name: 'Все',
           isDefaultExpanded: true,
-          children: await service.getCategories()
+          children: categories
         }];
       }
       ,
