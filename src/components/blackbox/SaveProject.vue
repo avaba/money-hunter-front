@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Сохранить проект" @next="saveHandler">
+  <Modal title="Сохранить фильтр" @next="saveHandler">
     <template v-slot:default>
       <ValidationProvider v-slot="{errors}" :rules="{required: true}" ref="validation">
         <form action="" class="modal-form" @submit.prevent>

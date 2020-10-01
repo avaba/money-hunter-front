@@ -131,11 +131,9 @@
     position: relative;
     display: flex;
     // justify-content: space-between;
-    justify-content: flex-start;
     align-content: center;
     flex-wrap: wrap;
     display: block;
-    // min-height: 60px;
   }
 
   .input-field__label {

@@ -6,8 +6,15 @@
     ref="brandsSelector"
     label="Выберите бренд"
     :multiple="true"
+    :limit="3"
+    :limitText="count=>`и еще ${count}`"
     :load-options="loadBrands"
-    :options="brandOptions"
+    :options="[{
+      id: -1,
+      name: 'Все',
+      isDefaultExpanded: true,
+      children: brandOptions
+    }]"
     :normalizer="brandsNormalizer"
     :dont-use-local-search="true"
     @open="handleMenuOpen"
@@ -47,9 +54,18 @@
       async loadBrands() {
         const service = new TrackingService();
         this.loadedBrands = await service.getBrands();
-        this.brandOptions = this.loadedBrands.slice(0, this.brandsPortionSize);
+        const brands = []
+        this.loadedBrands.forEach((item, index) => {
+          brands.push({
+            id: index,
+            name: item.brand
+          })
+        })
+        this.loadedBrands = brands
+        this.$emit('brands', this.loadedBrands)
+        this.brandOptions = brands.slice(0, this.brandsPortionSize);
       },
-      brandsNormalizer: node => ({id: node.brand, label: node.brand}),
+      brandsNormalizer: node=>({...node, label: node.name}),
       handleMenuOpen() {
         this.$nextTick(() => {
           const menu = this.$refs.brandsSelector.getMenu();
@@ -65,12 +81,14 @@
 
               if (this.brandsSearchQuery) {
                 this.brandOptions.push(...this.handleBrandsSearch(fromIndex))
+                this.$emit('brands', this.loadedBrands)
               } else {
                 this.brandOptions.push(
                   ...this
                     .loadedBrands
                     .slice(fromIndex, toIndex)
                 );
+                this.$emit('brands', this.loadedBrands)
               }
             }
           });
@@ -80,6 +98,7 @@
         this.$nextTick(() => {
           this.brandOptions = this.loadedBrands.slice(0, this.brandsPortionSize);
           this.brandsPortionPage = 1;
+          this.$emit('brands', this.loadedBrands)
         })
       },
       handleBrandsSearch(fromIndex = 0) {
