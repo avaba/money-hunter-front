@@ -13,6 +13,7 @@
           <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
               <BrandsSelector
                 v-model="brands"
+                @brands="brandsFinding"
               />
           </ValidationProvider>
         </div>
@@ -105,7 +106,9 @@
         feedbackRange: [],
         revenueRange: [],
         categories: [-1],
-        brands: []
+        brands: [-1],
+
+        foundedBrands: null
       }
     },
     computed: {
@@ -126,6 +129,10 @@
         this.searchHandler();
       }
       ,
+      brandsFinding(brands) {
+        this.foundedBrands = brands
+      } 
+      ,
       async checkSearchID() {
         const data = {...this.$data};
         delete data.searchIcon;
@@ -141,10 +148,14 @@
         }
 
         const brands = [...this.brands];
-        if(brands.length < 1 || brands[0] === 'Все') {
+        if(brands.length < 1 || brands[0] === -1) {
           data.brands = ['all']
         } else {
-          data.brands = this.brands
+          const brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
+          data.brands = brands
         }
         
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
@@ -188,16 +199,16 @@
         }];
       }
       ,
-      async loadBrands() {
-        this.brands = ['Все']
-      }
-      ,
+      // async loadBrands() {
+        
+      // }
+      // ,
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
-      this.loadBrands();
+      // this.loadBrands();
     }
   }
 </script>
