@@ -178,7 +178,6 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
-
   .blackbox {
     margin: 1.42rem 2.28rem 0;
     background: white;

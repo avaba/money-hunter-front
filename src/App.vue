@@ -5,6 +5,9 @@
       <main>
         <Header :header="getTitle()"/>
         <router-view/>
+        <div class="error-working">
+          <p class="error-working-message">Ведутся технические работы</p>
+        </div>
       </main>
       <component v-bind:is="component" v-if="isShow" v-bind="nested"/>
     </template>
@@ -184,6 +187,29 @@
     .input-field__input {
       flex: 0 0 100%;
       margin-left: .78rem;
+    }
+  }
+  .error-working {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    pointer-events: none;
+    z-index: 98;
+  }
+  .error-working-message {
+    color: #fff;
+    font-weight: 500;
+    font-size: 32px;
+  }
+  @media screen and (max-width: 770px) {
+    .error-working-message {
+      font-size: 16px;
     }
   }
 </style>
