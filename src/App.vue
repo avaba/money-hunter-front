@@ -5,8 +5,8 @@
       <main>
         <Header :header="getTitle()"/>
         <router-view/>
-        <div class="error-working">
-          <p class="error-working-message">Ведутся технические работы</p>
+        <div v-if="isTechnicalWorks" class="error-working">
+          <p class="error-working-message">{{ technicalMessage }}</p>
         </div>
       </main>
       <component v-bind:is="component" v-if="isShow" v-bind="nested"/>
@@ -29,7 +29,10 @@
   export default {
     components: {Sidebar, Header},
     data() {
-      return {}
+      return {
+        isTechnicalWorks: true,
+        technicalMessage: 'Ведутся технические работы'
+      }
     },
     computed: {
       ...mapState('auth', ['isLoggedIn']),
