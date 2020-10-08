@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="root">
-    <template v-if="isLoggedIn">
+    <template v-if="isLoggedIn && notPaymentRoute">
       <Sidebar/>
       <main>
         <Header :header="getTitle()"/>
@@ -11,7 +11,6 @@
       </main>
       <component v-bind:is="component" v-if="isShow" v-bind="nested"/>
     </template>
-
     <!--    login/register and other similar windows-->
     <router-view v-else/>
   </div>
@@ -37,10 +36,14 @@
     computed: {
       ...mapState('auth', ['isLoggedIn']),
       ...mapState('modal', ['isShow', 'component', 'nested']),
+      notPaymentRoute() {
+        return this.$route.name !== 'payment-results' 
+      }
     },
     created() {
       const tokenService = new TokenService();
       const trackingService = new TrackingService();
+      console.log(this.$route)
       if (tokenService.isLoggedIn()) {
         this[GET_PROFILE_ACTION]();
         this[GET_SUBSCRIPTION_ACTION]();

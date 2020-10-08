@@ -3,13 +3,14 @@ import VueRouter, {RouteConfig} from "vue-router";
 import Auth from '../views/Auth.vue';
 import Profile from '../views/Profile.vue';
 import Tracking from '../views/Tracking.vue';
+import PaymentResults from '../views/payment-results.vue';
 
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
 import RecoverRequest from '../components/auth/RecoverRequest.vue';
 import RecoverConfirm from '../components/auth/RecoverConfirm.vue';
 
-import GroupList from '../components/tracking/GroupList.vue';
+import GroupList from '../components/tracking/GroupList.vue'; 
 
 import {TokenService} from "@/services/token_service";
 import {lazyLoad} from "@/helpers";
@@ -49,14 +50,22 @@ const routes: Array<RouteConfig> = [
     path: '/tracking',
     name: 'tracking',
     component: Tracking,
-    redirect: {name: 'tracking.group_list'},
+    redirect: { name: 'tracking.group_list' },
     meta: {
       title: 'Отслеживание',
     },
     children: [
-      {path: 'groups', name: 'tracking.group_list', component: GroupList},
-      {path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group')}
+      { path: 'groups', name: 'tracking.group_list', component: GroupList },
+      { path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group') }
     ]
+  },
+  {
+    path: '/payment/:results',
+    name: 'payment-results',
+    component: PaymentResults,
+    meta: {
+      title: 'Результат оплаты',
+    },
   },
   {
     path: "/reset/:uidb64/:token",
