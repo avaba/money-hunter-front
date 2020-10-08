@@ -141,6 +141,9 @@
         delete data.brands;
 
         const cats = [...this.categories];
+        if(cats.length <= 0) {
+          cats.push(-1)
+        }
         if (cats.length === 1 && cats[0] === -1) {
           data.categories = this.availableOptions[0].children.map(child => child.id);
         } else {

@@ -106,9 +106,9 @@
         const searchQuery = this.brandsSearchQuery;
 
         for (let i = fromIndex; i < this.loadedBrands.length && results.length < this.brandsPortionSize; i++) {
-          const loadedName = this.loadedBrands[i].brand.toLowerCase();
+          const loadedName = this.loadedBrands[i].name.toLowerCase();
           const _searchQuery = searchQuery.toLowerCase();
-          if (loadedName.indexOf(_searchQuery) > -1 && !this.brandOptions.find(e => e.brand.toLowerCase() === loadedName)) {
+          if (loadedName.indexOf(_searchQuery) > -1 && !this.brandOptions.find(e => e.name.toLowerCase() === loadedName)) {
             results.push(this.loadedBrands[i]);
           }
 
