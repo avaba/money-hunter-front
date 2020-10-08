@@ -160,7 +160,7 @@
           },
           qtyAvg: {
             label: "currentQty",
-            title: "Среднее кол-во заказов",
+            title: "Cреднее кол-во остатков",
             value: null
           },
           orderSum: {
