@@ -140,7 +140,9 @@
               potentialHeaders.push({label: resultItem, value: result[resultItem]})
             }
           })
-          this.insertHeaders(potentialHeaders)
+          if(potentialHeaders.length > 0) {
+            this.insertHeaders(potentialHeaders)
+          }
           this.paginationData.totalCount = result.countAll;
           this.list = [];
           this.$nextTick(() => {
