@@ -1,8 +1,8 @@
 <template>
   <div class="tracking-table-wrapper">
-    <table class="tracking-table tracking-table_sticky">
-      <tr class="tracking-table__header tracking-table__header-subheader">
-        <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
+    
+    <tr class="tracking-table__header tracking-table__header-subheader">
+        <th v-for="item in subheaders" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
           <div v-show="false">
             <span :class="{'tracking-table__header-label': isSortable(item)}"
                   @click="headerClickHandler(item)">{{item.label}}</span>
@@ -14,6 +14,7 @@
           <span v-if="item.subheader && item.subheaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subheaderValue }}</span></span>
         </th>
       </tr>
+    <table class="tracking-table tracking-table_sticky">
       <tr class="tracking-table__header">
         <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
           <div>
@@ -62,6 +63,11 @@
     },
     data() {
       return {}
+    },
+    computed: {
+      subheaders() {
+        return this.headers.filter(item => item.subheader)
+      }
     },
     methods: {
       isSortable(item) {
@@ -144,6 +150,12 @@
 
   .tracking-table__header-subheader {
     position: static;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #DFE0EB;
+    & .tracking-table__header-item {
+      min-width: 120px;
+    }
   }
 
   .tracking-table__header-label {
