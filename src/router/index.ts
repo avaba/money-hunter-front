@@ -26,7 +26,6 @@ const routes: Array<RouteConfig> = [
     name: 'root',
     redirect: () => {
       const tokenService = new TokenService();
-
       return tokenService.isLoggedIn() ? '/blackbox' : '/auth/login'
     }
   },
@@ -112,7 +111,11 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   const tokenService = new TokenService();
   if (!to.name?.startsWith('auth.') && !tokenService.isLoggedIn()) {
-    next({name: 'auth.login'})
+    if(to.name === 'payment-results') {
+      next()
+    } else {
+      next({ name: 'auth.login' })
+    }
   } else {
     if (!to.name?.startsWith('auth.')) {
       if(!store.getters[`user/getEmail`]){
