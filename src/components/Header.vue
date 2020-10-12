@@ -46,10 +46,10 @@
         return this.$store.getters['notifications/notification']
       },
       isShowGoodsSearch () {
-        return this.$route.matched[0].path=== '/blackbox'
+        return this.$route.matched[0] ? this.$route.matched[0].path === '/blackbox' : false
       },
       isShowGoodsFolowing () {
-        return this.$route.matched[0].path=== '/tracking'
+        return this.$route.matched[0] ? this.$route.matched[0].path === '/tracking' : false
       }
     },
     methods: {
