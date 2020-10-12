@@ -136,6 +136,9 @@
     text-align: right;
     letter-spacing: .2px;
     box-sizing: border-box;
+    &.width5 {
+      white-space: nowrap;
+    }
     &.tracking-table__align-center {
       text-align: center;
       padding-left: 0;

@@ -154,39 +154,47 @@
           priceAvg: {
             label: "currentPrice",
             title: "Средняя цена",
-            value: "₽"
+            value: "₽",
+            formatting: true
           },
           qtyAvg: {
             label: "currentQty",
             title: "Cреднее кол-во остатков",
-            value: null
+            value: null,
+            formatting: true
           },
           orderSum: {
             label: "avOrdersSpeed",
             title: "Кол-во заказов",
-            value: null
+            value: null,
+            formatting: true
           },
           revenueSum: {
             label: "avRevenue",
             title: "Сумма заказов",
-            value: "₽"
+            value: "₽",
+            formatting: true
           },
           ratingAvg: {
             label: "currentRating",
             title: "Средний рейтинг",
-            value: null
+            value: null,
+            formatting: false
           },
           feedbackAvg: {
             label: "currentFeedBackCount",
             title: "Среднее кол-во отзывов",
-            value: null
+            value: null,
+            formatting: true
           }
         }
         Object.keys(renamedHeaders).forEach(header => {
           this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
           let subHeaderValue = headers.find(item => item.label === header).value
-          
-          if(!Number.isInteger(subHeaderValue, 1)) {
+          if(renamedHeaders[header].formatting) {
+            subHeaderValue = subHeaderValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }
+          if(typeof subHeaderValue === "number" && !Number.isInteger(subHeaderValue, 1)) {
             subHeaderValue = subHeaderValue.toFixed(2)
           }
           if(renamedHeaders[header].value) {

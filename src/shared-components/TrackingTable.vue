@@ -152,9 +152,12 @@
     position: static;
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid #DFE0EB;
+    // border-bottom: 1px solid #DFE0EB;
     & .tracking-table__header-item {
       min-width: 120px;
+      border-bottom: 1px solid #DFE0EB;
+      padding: 10px 5px !important;
+      margin: 0px 5px;
     }
   }
 
