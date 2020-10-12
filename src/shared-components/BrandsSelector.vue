@@ -6,14 +6,26 @@
     ref="brandsSelector"
     label="Выберите бренд"
     :multiple="true"
+    :limit="3"
+    :limitText="count=>`и еще ${count}`"
     :load-options="loadBrands"
-    :options="brandOptions"
+    :options="[{
+      id: -1,
+      name: 'Все',
+      isDefaultExpanded: true,
+      children: brandOptions
+    }]"
     :normalizer="brandsNormalizer"
     :dont-use-local-search="true"
     @open="handleMenuOpen"
     @close="handleMenuClose"
     @search-change="handleSearchChange"
-  />
+  >
+    <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
+      {{ node.label }}1
+      <span v-if="shouldShowCount" :class="countClassName">({{ count }})2</span>
+    </label>
+  </TreeSelect>
 </template>
 
 <script>
@@ -47,9 +59,18 @@
       async loadBrands() {
         const service = new TrackingService();
         this.loadedBrands = await service.getBrands();
-        this.brandOptions = this.loadedBrands.slice(0, this.brandsPortionSize);
+        const brands = []
+        this.loadedBrands.forEach((item, index) => {
+          brands.push({
+            id: index,
+            name: item.brand
+          })
+        })
+        this.loadedBrands = brands
+        this.$emit('brands', this.loadedBrands)
+        this.brandOptions = brands.slice(0, this.brandsPortionSize);
       },
-      brandsNormalizer: node => ({id: node.brand, label: node.brand}),
+      brandsNormalizer: node=>({...node, label: node.name}),
       handleMenuOpen() {
         this.$nextTick(() => {
           const menu = this.$refs.brandsSelector.getMenu();
@@ -65,12 +86,14 @@
 
               if (this.brandsSearchQuery) {
                 this.brandOptions.push(...this.handleBrandsSearch(fromIndex))
+                this.$emit('brands', this.loadedBrands)
               } else {
                 this.brandOptions.push(
                   ...this
                     .loadedBrands
                     .slice(fromIndex, toIndex)
                 );
+                this.$emit('brands', this.loadedBrands)
               }
             }
           });
@@ -80,16 +103,16 @@
         this.$nextTick(() => {
           this.brandOptions = this.loadedBrands.slice(0, this.brandsPortionSize);
           this.brandsPortionPage = 1;
+          this.$emit('brands', this.loadedBrands)
         })
       },
       handleBrandsSearch(fromIndex = 0) {
         const results = [];
         const searchQuery = this.brandsSearchQuery;
-
         for (let i = fromIndex; i < this.loadedBrands.length && results.length < this.brandsPortionSize; i++) {
-          const loadedName = this.loadedBrands[i].brand.toLowerCase();
+          const loadedName = this.loadedBrands[i].name.toLowerCase();
           const _searchQuery = searchQuery.toLowerCase();
-          if (loadedName.indexOf(_searchQuery) > -1 && !this.brandOptions.find(e => e.brand.toLowerCase() === loadedName)) {
+          if (loadedName.indexOf(_searchQuery) > -1 && !this.brandOptions.find(e => e.name.toLowerCase() === loadedName)) {
             results.push(this.loadedBrands[i]);
           }
 
@@ -104,7 +127,7 @@
         this.brandsSearchQuery = searchQuery;
         this.brandOptions = [];
         this.$nextTick(() => {
-          this.brandOptions = this.handleBrandsSearch();
+          this.brandOptions = [...this.handleBrandsSearch(), {id: 'hidden'}];
         });
       },
     }

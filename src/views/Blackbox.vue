@@ -66,7 +66,7 @@
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true},
+          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true, subheader: null},
           {name: 'currentPrice', label: 'Цена', clazz: 'width5'},
           {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
           {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9'},
@@ -131,6 +131,16 @@
             this.paginationData.perPage
           );
 
+          const mainInfo = ['onPage', 'products', "countAll"]
+          const potentialHeaders = []
+          Object.keys(result).forEach(resultItem => {
+            if(!mainInfo.find(resultPotentialItem => resultPotentialItem === resultItem)) {
+              potentialHeaders.push({label: resultItem, value: result[resultItem]})
+            }
+          })
+          if(potentialHeaders.length > 0) {
+            this.insertHeaders(potentialHeaders)
+          }
           this.paginationData.totalCount = result.countAll;
           this.list = [];
           this.$nextTick(() => {
@@ -138,6 +148,52 @@
             this.isLoading = false
           })
         }
+      },
+      insertHeaders(headers) {
+        const renamedHeaders = {
+          priceAvg: {
+            label: "currentPrice",
+            title: "Средняя цена",
+            value: "₽"
+          },
+          qtyAvg: {
+            label: "currentQty",
+            title: "Cреднее кол-во остатков",
+            value: null
+          },
+          orderSum: {
+            label: "avOrdersSpeed",
+            title: "Кол-во заказов",
+            value: null
+          },
+          revenueSum: {
+            label: "avRevenue",
+            title: "Сумма заказов",
+            value: "₽"
+          },
+          ratingAvg: {
+            label: "currentRating",
+            title: "Средний рейтинг",
+            value: null
+          },
+          feedbackAvg: {
+            label: "currentFeedBackCount",
+            title: "Среднее кол-во отзывов",
+            value: null
+          }
+        }
+        Object.keys(renamedHeaders).forEach(header => {
+          this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
+          let subHeaderValue = headers.find(item => item.label === header).value
+          
+          if(!Number.isInteger(subHeaderValue, 1)) {
+            subHeaderValue = subHeaderValue.toFixed(2)
+          }
+          if(renamedHeaders[header].value) {
+            subHeaderValue += renamedHeaders[header].value
+          }
+          this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
+        })
       },
       map_goods(item) {
         return {

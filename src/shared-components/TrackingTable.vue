@@ -1,5 +1,19 @@
 <template>
   <div class="tracking-table-wrapper">
+    
+    <tr class="tracking-table__header tracking-table__header-subheader">
+        <th v-for="item in subheaders" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
+          <div v-show="false">
+            <span :class="{'tracking-table__header-label': isSortable(item)}"
+                  @click="headerClickHandler(item)">{{item.label}}</span>
+            <Btn v-if="isSortable(item) && getSortClass(item)"
+                 @click="headerClickHandler(item)"
+                 without-default-class
+                 :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
+          </div>
+          <span v-if="item.subheader && item.subheaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subheaderValue }}</span></span>
+        </th>
+      </tr>
     <table class="tracking-table tracking-table_sticky">
       <tr class="tracking-table__header">
         <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
@@ -11,6 +25,7 @@
                  without-default-class
                  :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
           </div>
+          <!-- <span v-if="item.subheader && item.subheaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subheaderValue }}</span></span> -->
         </th>
       </tr>
     </table>
@@ -48,6 +63,11 @@
     },
     data() {
       return {}
+    },
+    computed: {
+      subheaders() {
+        return this.headers.filter(item => item.subheader)
+      }
     },
     methods: {
       isSortable(item) {
@@ -125,6 +145,17 @@
     top: 0px;
     width: 100%;
     padding: 0px 10px;
+    // height: 95px;
+  }
+
+  .tracking-table__header-subheader {
+    position: static;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #DFE0EB;
+    & .tracking-table__header-item {
+      min-width: 120px;
+    }
   }
 
   .tracking-table__header-label {
@@ -136,6 +167,11 @@
     // padding: 1.85rem 1.21rem;
     padding: 10px 5px;
     background: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    line-height: 1;
     &.pl-15 {
       padding-left: 25px !important;
     }
@@ -146,6 +182,9 @@
       text-align: right;
       
         justify-content: flex-end;
+    }
+    & div {
+      // height: 40px
     }
 
     &.tracking-table__header-item_align-center {
@@ -201,6 +240,22 @@
       letter-spacing: .2px;
       // line-height: 1rem;
       font-weight: 500;
+    }
+    .tracking-table__header-item-subheader {
+      font-weight: 300;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      line-height: .8;
+      font-size: 12px;
+      height: 35px;
+      & span {
+        color: #000;
+        font-weight: 500;
+        display: block;
+        line-height: 1;
+        font-size: 14px;
+      }
     }
   }
 

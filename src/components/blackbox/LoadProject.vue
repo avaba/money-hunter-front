@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Загрузить проект" @next="saveHandler">
+  <Modal title="Загрузить фильтр" @next="saveHandler">
     <template v-slot:default>
       <form action="" class="modal-form" @submit.prevent>
         <div class="modal-form__download-project">

@@ -2,7 +2,7 @@
   <div class="filter block_container">
     <form action="" class="filter-form">
       <div class="filter-form__fields">
-        <div class="filter-form__item">
+        <div class="filter-form__item filter-form__item-brands">
           <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="availableOptions"
@@ -10,7 +10,20 @@
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"/>
+          <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
+              <BrandsSelector
+                v-model="brands"
+                @brands="brandsFinding"
+              />
+          </ValidationProvider>
         </div>
+        <!-- <div class="filter-form__item-brands">
+          <ValidationProvider :rules="{required: true}" key="byBrandType">
+              <BrandsSelector
+                v-model="brands"
+              />
+        </ValidationProvider>
+        </div> -->
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
         </div>
@@ -26,13 +39,6 @@
         <div class="filter-form__item">
           <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
-        <!-- <div class="filter-form__item-brands">
-          <ValidationProvider :rules="{required: true}" key="byBrandType">
-              <BrandsSelector
-                v-model="brands"
-              />
-        </ValidationProvider>
-        </div> -->
       </div>
       <div class="filter-form__actions">
         <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
@@ -41,12 +47,12 @@
         </div>
         <div class="filter-form__buttons">
           <Btn without-default-class
-               label="Загрузить проект"
+               label="Загрузить фильтр"
                clazz="filter-form__action-button filter-form__action-button_download"
                @click="loadProject"
                />
           <Btn without-default-class
-               label="Сохранить проект"
+               label="Сохранить фильтр"
                clazz="filter-form__action-button filter-form__action-button_save"
                @click="saveProject"/>
           <Btn without-default-class
@@ -77,13 +83,12 @@
   import {CHECK_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {BlackboxService} from "../services/blackbox_service";
-  // import {ValidationProvider} from 'vee-validate';
-  // import BrandsSelector from "@/shared-components/BrandsSelector";
+  import {ValidationProvider} from 'vee-validate';
+  import BrandsSelector from "@/shared-components/BrandsSelector";
 
   export default {
     name: "FilterBlock",
-    // components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
-    components: {TreeSelect, Btn, InputField, RowWithIcon},
+    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
     props: {
       searchHandler: {
         type: Function,
@@ -101,7 +106,9 @@
         feedbackRange: [],
         revenueRange: [],
         categories: [-1],
-        brands: []
+        brands: [-1],
+
+        foundedBrands: null
       }
     },
     computed: {
@@ -122,19 +129,38 @@
         this.searchHandler();
       }
       ,
+      brandsFinding(brands) {
+        this.foundedBrands = brands
+      } 
+      ,
       async checkSearchID() {
         const data = {...this.$data};
         delete data.searchIcon;
         delete data.availableOptions;
         delete data.categories;
+        delete data.brands;
 
         const cats = [...this.categories];
+        if(cats.length <= 0) {
+          cats.push(-1)
+        }
         if (cats.length === 1 && cats[0] === -1) {
           data.categories = this.availableOptions[0].children.map(child => child.id);
         } else {
           data.categories = this.categories;
         }
 
+        const brands = [...this.brands];
+        if(brands.length < 1 || brands[0] === -1) {
+          data.brands = ['all']
+        } else {
+          const brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
+          data.brands = brands
+        }
+        
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -166,21 +192,50 @@
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
       }
       ,
+      compareTime(dateString, now) {
+        const oneDayTime = 86400000
+        if(dateString + oneDayTime >= now) {
+          return true
+        } else {
+          return false
+        }
+      }
+      ,
       async loadCategories() {
         const service = new BlackboxService();
+        let categories = null
+        if(JSON.parse(localStorage.getItem("categories"))) {
+          const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
+          const timeNow = new Date().getTime()
+          if(this.compareTime(timestamp, timeNow)) {
+            categories = JSON.parse(localStorage.getItem("categories")).categories
+          } else {
+            categories = await service.getCategories()
+            localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+          }
+        } else {
+          categories = await service.getCategories()
+          localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+        }
+        // const categories = await service.getCategories()
         this.availableOptions = [{
           id: -1,
           name: 'Все',
           isDefaultExpanded: true,
-          children: await service.getCategories()
+          children: categories
         }];
       }
       ,
+      // async loadBrands() {
+        
+      // }
+      // ,
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
+      // this.loadBrands();
     }
   }
 </script>
@@ -240,7 +295,11 @@
     }
 
     &-brands {
-      max-width: 180px;
+      // max-width: 180px;
+      & .brandsSelector {
+        display: block;
+        margin: 10px 0px;
+      }
     }
   }
 
@@ -283,7 +342,7 @@
       width: 100% !important;
       margin: 10px 5px !important;
       &-brands {
-        max-width: 250px !important;
+        // max-width: 250px !important;
         margin: 10px 5px !important;
         width: 100% !important;
       }

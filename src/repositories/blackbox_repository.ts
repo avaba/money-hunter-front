@@ -10,6 +10,7 @@ export interface GetSearchIDDataInterface {
   feedbackRange: RangeOfIntegersType;
   revenueRange: RangeOfIntegersType;
   categories: Array<number>;
+  brands: Array<string>;
 }
 
 export class BlackboxRepository {
@@ -24,6 +25,7 @@ export class BlackboxRepository {
   private getCategoriesUrl = 'wb/blackbox/categories/';
 
   getNewSearchID(data: GetSearchIDDataInterface) {
+    console.log(data)
     return this.client.sendPost(this.getNewSearchIDUrl, data);
   }
 
