@@ -20,7 +20,12 @@
     @open="handleMenuOpen"
     @close="handleMenuClose"
     @search-change="handleSearchChange"
-  />
+  >
+    <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
+      {{ node.label }}1
+      <span v-if="shouldShowCount" :class="countClassName">({{ count }})2</span>
+    </label>
+  </TreeSelect>
 </template>
 
 <script>
@@ -104,7 +109,6 @@
       handleBrandsSearch(fromIndex = 0) {
         const results = [];
         const searchQuery = this.brandsSearchQuery;
-
         for (let i = fromIndex; i < this.loadedBrands.length && results.length < this.brandsPortionSize; i++) {
           const loadedName = this.loadedBrands[i].name.toLowerCase();
           const _searchQuery = searchQuery.toLowerCase();
@@ -123,7 +127,7 @@
         this.brandsSearchQuery = searchQuery;
         this.brandOptions = [];
         this.$nextTick(() => {
-          this.brandOptions = this.handleBrandsSearch();
+          this.brandOptions = [...this.handleBrandsSearch(), {id: 'hidden'}];
         });
       },
     }

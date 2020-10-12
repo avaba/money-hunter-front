@@ -131,8 +131,6 @@
             this.paginationData.perPage
           );
 
-          console.log(result)
-
           const mainInfo = ['onPage', 'products', "countAll"]
           const potentialHeaders = []
           Object.keys(result).forEach(resultItem => {
@@ -189,9 +187,7 @@
           let subHeaderValue = headers.find(item => item.label === header).value
           
           if(!Number.isInteger(subHeaderValue, 1)) {
-            console.log(subHeaderValue)
             subHeaderValue = subHeaderValue.toFixed(2)
-            console.log(subHeaderValue)
           }
           if(renamedHeaders[header].value) {
             subHeaderValue += renamedHeaders[header].value

@@ -14,6 +14,7 @@
               <BrandsSelector
                 v-model="brands"
                 @brands="brandsFinding"
+                @input="input"
               />
           </ValidationProvider>
         </div>
