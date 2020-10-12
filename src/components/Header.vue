@@ -2,7 +2,7 @@
   <header class="header block_container">
     <h1 class="page-title" v-text="header"/>
     <div class="header-right">
-      <div class="education" @click="showTraining">
+      <div v-if="isShowGoodsSearch || isShowGoodsFolowing" class="education" @click="showTraining">
         <img src="../assets/img/ikons/education.svg" alt="">
         <span class="education__text">Обучение</span>
       </div>
@@ -44,6 +44,12 @@
       },
       notification() {
         return this.$store.getters['notifications/notification']
+      },
+      isShowGoodsSearch () {
+        return this.$route.matched[0].path=== '/blackbox'
+      },
+      isShowGoodsFolowing () {
+        return this.$route.matched[0].path=== '/tracking'
       }
     },
     methods: {
