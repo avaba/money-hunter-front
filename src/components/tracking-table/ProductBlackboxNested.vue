@@ -34,8 +34,12 @@
               ticks: {
                 beginAtZero: true,
                 callback: function(value, index, values) {
-                    return value % 1 ? '' : value
+                    return value % 1 ? '' : value + ' шт.'
                 }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Заказы'
               }
             }, 
             {
@@ -44,8 +48,12 @@
               ticks: {
                 beginAtZero: true,
                 callback: function(value, index, values) {
-                    return value % 1 ? '' : value
+                    return value % 1 ? '' : value + ' шт.'
                 }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Остатки'
               }
 						}
             ]
