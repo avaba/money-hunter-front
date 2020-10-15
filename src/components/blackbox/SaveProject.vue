@@ -52,6 +52,9 @@
         if (await this.$validationProviderIsValid(this.$refs.validation)) {
           const blackboxService = new BlackboxService();
           const _nested = {...this.nested};
+          if(_nested.brands[0] === -1) {
+            _nested.brands[0] = 'Все'
+          }
 
           const result = await blackboxService.saveSearch(this.name, _nested);
 

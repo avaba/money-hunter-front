@@ -171,7 +171,7 @@
         this.feedbackRange = [];
         this.revenueRange = [];
         this.categories = [-1];
-        this.brands = [];
+        this.brands = [-1];
       }
       ,
       loadProject() {
@@ -184,6 +184,9 @@
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           this.brands = data.brands;
+          if(data.brands[0] === 'Все') {
+            this.brands = [-1]
+          }
           this.searchBtnHandler()
         })
       }
