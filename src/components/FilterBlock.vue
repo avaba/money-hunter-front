@@ -289,6 +289,11 @@
       max-width: 240px;
       min-width: 240px;
     }
+    & .vue-treeselect__list {
+      // width: 300px !important;
+      // max-width: 300px !important;
+      // min-width: 300px !important;
+    }
 
     &:not(:last-child) {
       margin-right: 1.42rem;
@@ -338,9 +343,13 @@
       flex-wrap: wrap;
     }
     .filter-form__item {
-      max-width: 250px !important;
+      max-width: 150px !important;
       width: 100% !important;
       margin: 10px 5px !important;
+      overflow: visible !important;
+      & * {
+        overflow: visible !important;
+      }
       &-brands {
         // max-width: 250px !important;
         margin: 10px 5px !important;
