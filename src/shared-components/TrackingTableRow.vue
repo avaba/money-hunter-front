@@ -199,6 +199,7 @@
       /deep/ & .chartjs-render-monitor {
         width: 650px !important;
         height: 240px !important;
+        margin: 0px auto !important;
       }
     }
   }
