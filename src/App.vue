@@ -21,6 +21,7 @@
   import {mapActions, mapState} from "vuex";
   import {TokenService} from "@/services/token_service";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
+  import {LOAD_POSITIONS_ACTION} from "@/store/modules/trackingPositions/constants";
   import {TrackingService} from "@/services/tracking_service";
 
   export default {
@@ -39,6 +40,7 @@
         this[GET_PROFILE_ACTION]();
         this[GET_SUBSCRIPTION_ACTION]();
         this[LOAD_GROUPS_ACTION]();
+        this[LOAD_POSITIONS_ACTION]();
 
         trackingService.getBrands();
       }

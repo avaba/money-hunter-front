@@ -3,6 +3,7 @@ import VueRouter, {RouteConfig} from "vue-router";
 import Auth from '../views/Auth.vue';
 import Profile from '../views/Profile.vue';
 import Tracking from '../views/Tracking.vue';
+import TrackingPositions from '../views/TrackingPositions.vue';
 
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
@@ -57,6 +58,32 @@ const routes: Array<RouteConfig> = [
       {path: 'groups', name: 'tracking.group_list', component: GroupList},
       {path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group')}
     ]
+  },
+  {
+    path: '/tracking',
+    name: 'tracking',
+    component: Tracking,
+    redirect: {name: 'tracking.group_list'},
+    meta: {
+      title: 'Отслеживание',
+    },
+    children: [
+      {path: 'groups', name: 'tracking.group_list', component: GroupList},
+      {path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group')}
+    ]
+  },
+  {
+    path: '/tracking-positions',
+    name: 'trackingPositions',
+    component: TrackingPositions,
+    // redirect: { name: 'tracking.group_list' },
+    meta: {
+      title: 'Отслеживание позиций',
+    },
+    // children: [
+    //   { path: 'groups', name: 'tracking.group_list', component: GroupList },
+    //   { path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group') }
+    // ]
   },
   {
     path: "/reset/:uidb64/:token",

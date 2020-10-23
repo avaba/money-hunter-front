@@ -1,5 +1,5 @@
-import {ApiClient} from "@/http/api_client";
-import {queryStringBuilder} from "@/helpers";
+import { ApiClient } from "@/http/api_client";
+import { queryStringBuilder } from "@/helpers";
 
 export class TrackingRepository {
   private client = new ApiClient();
@@ -22,49 +22,49 @@ export class TrackingRepository {
   }
 
   addGoodsPosition(groupName: string, items: [string], addBrands: boolean) {
-    return this.client.sendPost(this.createUpdateGroup, {groupName, items, addBrands});
+    return this.client.sendPost(this.createUpdateGroup, { groupName, items, addBrands });
   }
 
   getGroupGoods(groupName: string, orderType: string) {
-    const url = queryStringBuilder(this.groupDataUrl, {groupName, orderType});
+    const url = queryStringBuilder(this.groupDataUrl, { groupName, orderType });
     return this.client.sendGet(url);
   }
 
   updateGroupName(groupName: string, newName: string) {
-    const url = queryStringBuilder(this.groupDataUrl, {groupName});
-    return this.client.sendPut(url, {newName});
+    const url = queryStringBuilder(this.groupDataUrl, { groupName });
+    return this.client.sendPut(url, { newName });
   }
 
   deleteGroup(groupName: string) {
-    const url = queryStringBuilder(this.groupDataUrl, {groupName});
+    const url = queryStringBuilder(this.groupDataUrl, { groupName });
     return this.client.sendDelete(url);
   }
 
   getRatingAndSizes(groupName: string, articul: string) {
-    const url = queryStringBuilder(this.productDataUrl, {groupName, articul});
+    const url = queryStringBuilder(this.productDataUrl, { groupName, articul });
     return this.client.sendGet(url);
   }
 
   deleteProductFromTracking(groupName: string, articul: string) {
-    const url = queryStringBuilder(this.productDataUrl, {groupName, articul});
+    const url = queryStringBuilder(this.productDataUrl, { groupName, articul });
     return this.client.sendDelete(url);
   }
 
   getProductInfoByArticul(articul: string) {
-    return this.client.sendGet(queryStringBuilder(this.getProductInfoByArticulUrl, {articul}));
+    return this.client.sendGet(queryStringBuilder(this.getProductInfoByArticulUrl, { articul }));
   }
 
   getGroupInfoFile(groupName: string) {
     return this.client.sendGet(
-      queryStringBuilder(this.getGroupInfoFileUrl, {groupName}),
-      {responseType: 'blob'}
+      queryStringBuilder(this.getGroupInfoFileUrl, { groupName }),
+      { responseType: 'blob' }
     );
   }
 
   getGroupSortFile(groupName: string, days: number) {
     return this.client.sendGet(
-      queryStringBuilder(this.getGroupSortFileUrl, {groupName, days}),
-      {responseType: 'blob'}
+      queryStringBuilder(this.getGroupSortFileUrl, { groupName, days }),
+      { responseType: 'blob' }
     )
   }
 }
