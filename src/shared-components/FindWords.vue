@@ -73,6 +73,10 @@
         this.items.push(word)
         this.word = ''
         this.$emit('input', this.items)
+      },
+      removeProduct (word) {
+        this.items.splice(this.items.findIndex(item => item === word), 1)
+        this.$emit('input', this.items)
       }
     }
   }

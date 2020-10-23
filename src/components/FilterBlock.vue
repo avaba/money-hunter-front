@@ -169,7 +169,6 @@
           })
           data.brands = brands
         }
-        console.log(data)
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
