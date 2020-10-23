@@ -17,13 +17,6 @@
               />
           </ValidationProvider>
         </div>
-        <!-- <div class="filter-form__item-brands">
-          <ValidationProvider :rules="{required: true}" key="byBrandType">
-              <BrandsSelector
-                v-model="brands"
-              />
-        </ValidationProvider>
-        </div> -->
         <div class="filter-form__item">
           <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
         </div>
@@ -121,10 +114,6 @@
     },
     methods: {
       async searchBtnHandler() {
-        
-        // if(this.brands.length <= 0) {
-        //   this.brands = ['all']
-        // }
         await this.checkSearchID();
         this.searchHandler();
       }
@@ -151,13 +140,10 @@
         }
 
         const brands = [...this.brands];
+        console.log(brands)
         if(brands.length < 1 || brands[0] === -1) {
           data.brands = ['all']
         } else {
-          const brands = []
-          this.brands.forEach(id => {
-            brands.push(this.foundedBrands.find(item => item.id === id).name)
-          })
           data.brands = brands
         }
         
@@ -183,7 +169,11 @@
           this.feedbackRange = data.feedbackRange;
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
-          this.brands = data.brands;
+          const brands = []
+          data.brands.forEach(name => {
+            brands.push(this.foundedBrands.find(item => item.name === name).name)
+          })
+          this.brands = brands
           if(data.brands[0] === 'Все') {
             this.brands = [-1]
           }
@@ -192,7 +182,8 @@
       }
       ,
       saveProject() {
-        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
+        const data = {...this.$data}
+        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: data});
       }
       ,
       compareTime(dateString, now) {
