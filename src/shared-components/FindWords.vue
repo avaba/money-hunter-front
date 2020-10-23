@@ -7,7 +7,7 @@
     <div ref="inputWordsWrapper" class="input-field-wrapper">
       <input 
            @keyup.enter="word.replace(/\s+/g, '').length > 0 ? addNewWord(word) : false"
-
+           @blur="word.replace(/\s+/g, '').length > 0 ? addNewWord(word) : false"
            v-model="word"
            :class="`input-field__input`"
            :style="`
