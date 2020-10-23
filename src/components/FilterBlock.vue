@@ -39,6 +39,12 @@
         <div class="filter-form__item">
           <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
         </div>
+        <div class="filter-form__item">
+          <FindWords label="Плюс слова" v-model="addWords"></FindWords>
+        </div>
+        <div class="filter-form__item">
+          <FindWords label="Минус слова" v-model="minusWords"></FindWords>
+        </div>
       </div>
       <div class="filter-form__actions">
         <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
@@ -85,10 +91,11 @@
   import {BlackboxService} from "../services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
   import BrandsSelector from "@/shared-components/BrandsSelector";
+  import FindWords from "@/shared-components/FindWords";
 
   export default {
     name: "FilterBlock",
-    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
+    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon, FindWords},
     props: {
       searchHandler: {
         type: Function,
@@ -108,6 +115,9 @@
         categories: [-1],
         brands: [-1],
 
+        addWords: [],
+        minusWords: [],
+
         foundedBrands: null
       }
     },
@@ -121,7 +131,6 @@
     },
     methods: {
       async searchBtnHandler() {
-        
         // if(this.brands.length <= 0) {
         //   this.brands = ['all']
         // }
@@ -160,7 +169,7 @@
           })
           data.brands = brands
         }
-        
+        console.log(data)
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -172,6 +181,8 @@
         this.revenueRange = [];
         this.categories = [-1];
         this.brands = [];
+        this.addWords = [];
+        this.minusWords = [];
       }
       ,
       loadProject() {
@@ -184,6 +195,8 @@
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           this.brands = data.brands;
+          this.addWords = data.addWords;
+          this.minusWords = data.minusWords;
           this.searchBtnHandler()
         })
       }

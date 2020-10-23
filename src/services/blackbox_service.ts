@@ -15,6 +15,8 @@ export class BlackboxService {
     _data.revenueRange = this.normalizeRangeData(data.revenueRange);
     _data.brands = [...data.brands];
     _data.categories = [...data.categories];
+    _data.addWords = [...data.addWords];
+    _data.minusWords = [...data.minusWords];
 
     return _data;
   }
