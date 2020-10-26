@@ -6,7 +6,7 @@
           :list="trackingNavList"
         />
       </div>
-      <Btn clazz="tracking-add-category" @click="handleCreateGroupBtn"/>
+      <!-- <Btn clazz="tracking-add-category" @click="handleCreateGroupBtn"/> -->
     </div>
 
     <router-view :key="$route.fullPath"/>
@@ -15,28 +15,28 @@
 
 <script>
   import TrackingPositionsNav from "@/components/TrackingPositionsNav";
-  import Btn from "@/shared-components/Btn";
+  // import Btn from "@/shared-components/Btn";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import CreateGroup from "@/components/tracking/CreateGroup";
-  import {GROUP_NAMES_GETTER} from "@/store/modules/tracking/constants";
+  import {POSITION_GETTER} from "@/store/modules/trackingPositions/constants";
   import {mapGetters} from "vuex";
 
   export default {
     name: "TrackingPositions",
-    components: {TrackingPositionsNav, Btn},
+    components: {TrackingPositionsNav},
     computed: {
-      // ...mapGetters('tracking', [GROUP_NAMES_GETTER]),
+      ...mapGetters('trackingPositions', [POSITION_GETTER]),
       trackingNavList() {
         return [
           {label: "Список ключевых слов", system: true},
-          // ...this[GROUP_NAMES_GETTER].map(name => ({label: name, actions: true}))
+          ...this[POSITION_GETTER].map(name => ({label: name.articul, actions: false}))
         ]
       }
     },
     methods: {
-      handleCreateGroupBtn() {
+      // handleCreateGroupBtn() {
         // this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: CreateGroup});
-      },
+      // },
     },
   }
 </script>

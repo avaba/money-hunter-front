@@ -56,6 +56,7 @@
       },
       ...mapActions('user', [GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION]),
       ...mapActions('tracking', [LOAD_GROUPS_ACTION]),
+      ...mapActions('trackingPositions', [LOAD_POSITIONS_ACTION])
     },
     watch: {
       isLoggedIn: function (newState) {
@@ -63,6 +64,7 @@
           this[GET_PROFILE_ACTION]();
           this[GET_SUBSCRIPTION_ACTION]();
           this[LOAD_GROUPS_ACTION]();
+          this[LOAD_POSITIONS_ACTION]();
         }
       }
     }

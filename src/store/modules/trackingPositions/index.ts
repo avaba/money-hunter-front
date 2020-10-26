@@ -3,19 +3,14 @@ import {
 } from "@/store/modules/trackingPositions/constants";
 // import { sorters } from "@/store/modules/tracking/sorters";
 import { actions } from "@/store/modules/trackingPositions/actions";
-// import { mutations } from "@/store/modules/trackingPositions/mutations";
+import { mutations } from "@/store/modules/trackingPositions/mutations";
 
 export interface VuexTrackingPositionsStateGroupItemInterface {
-  name: string,
-  details: {
-    orders: number,
-    revenue: number,
-    count: number,
-  } | null
+  detail: any
 }
 
 export interface VuexTrackingPositionsStateInterface {
-  positions: [VuexTrackingPositionsStateGroupItemInterface]
+  positions: [VuexTrackingPositionsStateGroupItemInterface],
 }
 
 export default {
@@ -28,6 +23,6 @@ export default {
       return state.positions.map(position => position);
     },
   },
-  // mutations,
+  mutations,
   actions
 }

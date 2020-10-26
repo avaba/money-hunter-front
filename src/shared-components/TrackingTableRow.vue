@@ -1,6 +1,10 @@
 <template>
   <Fragment>
-    <tr class="tracking-table__row" :class="{'tracking-table__row_open': rowOpened}" @click="open">
+    <tr class="tracking-table__row" 
+      :class="{'tracking-table__row_open': rowOpened}"
+      @click="open" 
+      :style="mappedList[0].linkTo === 'articul' ? 'cursor: pointer' : false" 
+      @mousedown="mappedList[0].linkTo === 'articul' ? linkTo(mappedList[1].content) : false">
       <td class="tracking-table__cell"
           :class="{[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
           :style="{cursor: item.onClick ? 'pointer' : 'inherit'}"
@@ -76,6 +80,9 @@
         } else {
           return n.content
         }
+      },
+      linkTo(articul) {
+        this.$router.push({name: 'trackingPositions.group', params: {name: articul}});
       }
     }
   }
@@ -115,6 +122,10 @@
 
   .tracking-table__row {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid $drayDevider;
     @media screen and (max-width: 1400px) {
       & .tracking-table__cell {
         font-size: 12px;
@@ -127,12 +138,12 @@
   }
 
   .tracking-table__cell {
-    border-top: 1px solid $drayDevider;
+    // border-top: 1px solid $drayDevider;
     // padding: 1.71rem .5rem 1.71rem 20px;
     // padding: 1.85rem 1.21rem;
     // padding: 15px 15px 15px 15px;
     // padding-left: 1.21rem;
-    padding: 15px 5px 15px 5px;
+    padding: 15px 10px 15px 5px;
     text-align: right;
     letter-spacing: .2px;
     box-sizing: border-box;
@@ -169,11 +180,11 @@
     //   padding-right: .78rem;
     // }
     &:first-child {
-      padding-left: 25px;
+      padding-left: 35px;
     }
 
     &:last-child {
-      padding-right: 25px;
+      padding-right: 35px;
     }
   }
 

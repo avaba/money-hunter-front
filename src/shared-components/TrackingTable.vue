@@ -54,11 +54,11 @@
       },
       order: {
         type: String,
-        required: true,
+        required: false,
       },
       orderHandler: {
         type: Function,
-        required: true,
+        required: false,
       }
     },
     data() {
@@ -85,8 +85,11 @@
         if (this.isSortable(item)) {
           this.orderHandler(item.name);
         }
+      },
+      routerTo(item) {
+        console.log(item)
       }
-    }
+    },
   }
 </script>
 
@@ -168,7 +171,7 @@
   .tracking-table__header-item {
     text-align: right;
     // padding: 1.85rem 1.21rem;
-    padding: 10px 5px;
+    padding: 10px 10px 10px 5px;
     background: white;
     height: 100%;
     display: flex;

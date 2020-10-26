@@ -33,7 +33,23 @@ export class TrackingPositionsService {
 
   async getUserPositions(): Promise<[VuexTrackingPositionsStateGroupItemInterface] | []> {
     try {
-      return (await this.authService.refreshWrapper(this.repo.getUserPositions.bind(this.repo))).data;
+      return (await this.authService.refreshWrapper(this.repo.getUserPositions.bind(this.repo))).data.detail;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async getPosition(articul: string) {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.getPosition.bind(this.repo, articul))).data.detail;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async setPositions(articules: Array<string>) {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.setPositions.bind(this.repo, {articules})));
     } catch (e) {
       return [];
     }

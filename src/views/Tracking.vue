@@ -66,6 +66,7 @@
     height: 2.75rem;
     background: url("../assets/img/ikons/plus2.svg") no-repeat center, $yellow;
     border-radius: 4px 4px 0 0;
+    margin-left: 5px;
   }
   @media screen and (max-width: 710px) {
     .tracking {

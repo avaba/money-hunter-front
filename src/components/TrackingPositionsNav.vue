@@ -6,7 +6,7 @@
         :key="idx"
         :class="{'tracking-navlist__item_active':  isActive(item) , 'tracking-navlist__item_actions': item.actions}">
       <span>{{item.label}}</span>
-      <template v-if="item.actions">
+      <!-- <template v-if="item.actions">
         <button class="tracking-navlist-trigger" @click.stop="$event=>showActions($event, idx)"/>
         <div class="tracking-navlist-actions" ref="actionsBlock">
           <div class="tracking-navlist-actions__item tracking-navlist-actions__item_change"
@@ -20,14 +20,14 @@
             <img src="../assets/img/ikons/delete.svg" alt="">
           </div>
         </div>
-      </template>
+      </template> -->
     </li>
   </ul>
 </template>
 
 <script>
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
-  import ChangeGroupName from "@/components/tracking/ChangeGroupName";
+  // import ChangeGroupName from "@/components/tracking/ChangeGroupName";
   import DeleteGroup from "@/components/tracking/DeleteGroup";
 
   export default {
@@ -67,41 +67,41 @@
        * @param {MouseEvent} $event
        * @param {number} idx
        */
-      showActions($event, idx) {
-        this.openedActionBlock = this.$refs.actionsBlock[idx - 1];
-        this.$refs.actionsBlock.forEach(this.hideActionBlock);
+      // showActions($event, idx) {
+      //   this.openedActionBlock = this.$refs.actionsBlock[idx - 1];
+      //   this.$refs.actionsBlock.forEach(this.hideActionBlock);
 
-        this.openedActionBlock.style.top = ($event.clientY + 20) + 'px';
-        this.openedActionBlock.style.left = ($event.clientX - 10) + 'px';
-      },
-      hideActionBlock(actionBlock = this.openedActionBlock) {
-        if (actionBlock) {
-          actionBlock.style.left = '-300px';
-        }
-      },
-      handleChangeAction(idx) {
-        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
-          component: ChangeGroupName,
-          data: {title: this.list[idx].label}
-        });
+      //   this.openedActionBlock.style.top = ($event.clientY + 20) + 'px';
+      //   this.openedActionBlock.style.left = ($event.clientX - 10) + 'px';
+      // },
+      // hideActionBlock(actionBlock = this.openedActionBlock) {
+      //   if (actionBlock) {
+      //     actionBlock.style.left = '-300px';
+      //   }
+      // },
+      // handleChangeAction(idx) {
+      //   this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
+      //     component: ChangeGroupName,
+      //     data: {title: this.list[idx].label}
+      //   });
 
-        this.hideActionBlock();
-      },
-      handleRemoveAction(idx) {
-        this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
-          component: DeleteGroup,
-          data: {title: this.list[idx].label}
-        });
+      //   this.hideActionBlock();
+      // },
+      // handleRemoveAction(idx) {
+      //   this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {
+      //     component: DeleteGroup,
+      //     data: {title: this.list[idx].label}
+      //   });
 
-        this.hideActionBlock();
-      },
+      //   this.hideActionBlock();
+      // },
     },
-    mounted() {
-      document.addEventListener('click', () => this.hideActionBlock());
-    },
-    beforeDestroy() {
-      document.removeEventListener('click', this.hideActionBlock);
-    }
+    // mounted() {
+    //   document.addEventListener('click', () => this.hideActionBlock());
+    // },
+    // beforeDestroy() {
+    //   document.removeEventListener('click', this.hideActionBlock);
+    // }
   }
 </script>
 

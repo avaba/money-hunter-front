@@ -12,6 +12,8 @@ import RecoverConfirm from '../components/auth/RecoverConfirm.vue';
 
 import GroupList from '../components/tracking/GroupList.vue';
 
+import PositionsList from '../components/trackingPositions/PositionsList.vue';
+
 import {TokenService} from "@/services/token_service";
 import {lazyLoad} from "@/helpers";
 import {AmplitudeService} from "@/services/amplitude_service";
@@ -60,30 +62,17 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/tracking',
-    name: 'tracking',
-    component: Tracking,
-    redirect: {name: 'tracking.group_list'},
-    meta: {
-      title: 'Отслеживание',
-    },
-    children: [
-      {path: 'groups', name: 'tracking.group_list', component: GroupList},
-      {path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group')}
-    ]
-  },
-  {
     path: '/tracking-positions',
     name: 'trackingPositions',
     component: TrackingPositions,
-    // redirect: { name: 'tracking.group_list' },
+    redirect: { name: 'trackingPositions.group_list' },
     meta: {
       title: 'Отслеживание позиций',
     },
-    // children: [
-    //   { path: 'groups', name: 'tracking.group_list', component: GroupList },
-    //   { path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group') }
-    // ]
+    children: [
+      { path: 'positions', name: 'trackingPositions.group_list', component: PositionsList },
+      { path: 'position/:name', name: 'trackingPositions.group', component: lazyLoad('components/trackingPositions/Position') }
+    ]
   },
   {
     path: "/reset/:uidb64/:token",

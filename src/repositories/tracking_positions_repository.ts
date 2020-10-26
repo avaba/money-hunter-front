@@ -4,67 +4,18 @@ import { queryStringBuilder } from "@/helpers";
 export class TrackingPositionsRepository {
   private client = new ApiClient();
   private getUserPositionsUrl = 'wb/positions_tracker/products/'
-  // private getBrandsUrl = 'wb/tracking/brands/';
-  // private getUserGroupsUrl = 'wb/tracking/user/groups/';
-  // private createUpdateGroup = 'wb/tracking/user/groups/';
-  // private groupDataUrl = 'wb/tracking/user/groups/{groupName}/';
-  // private productDataUrl = 'wb/tracking/{groupName}/{articul}/';
-  // private getProductInfoByArticulUrl = 'wb/tracking/product/info/{articul}/';
-  // private getGroupInfoFileUrl = 'wb/tracking/user/groups/{groupName}/download/';
-  // private getGroupSortFileUrl = 'wb/tracking/user/groups/{groupName}/{days}/autosort/';
-
-  // getBrands() {
-  //   return this.client.sendGet(this.getBrandsUrl);
-  // }
+  private getPositionUrl = 'wb/positions_tracker/products/'
+  private setPositionsUrl = 'wb/positions_tracker/products/'
 
   getUserPositions() {
     return this.client.sendGet(this.getUserPositionsUrl);
   }
 
-  // addGoodsPosition(groupName: string, items: [string], addBrands: boolean) {
-  //   return this.client.sendPost(this.createUpdateGroup, {groupName, items, addBrands});
-  // }
+  getPosition(articul: string) {
+    return this.client.sendGet(`${this.getPositionUrl}${articul}/`);
+  }
 
-  // getGroupGoods(groupName: string, orderType: string) {
-  //   const url = queryStringBuilder(this.groupDataUrl, {groupName, orderType});
-  //   return this.client.sendGet(url);
-  // }
-
-  // updateGroupName(groupName: string, newName: string) {
-  //   const url = queryStringBuilder(this.groupDataUrl, {groupName});
-  //   return this.client.sendPut(url, {newName});
-  // }
-
-  // deleteGroup(groupName: string) {
-  //   const url = queryStringBuilder(this.groupDataUrl, {groupName});
-  //   return this.client.sendDelete(url);
-  // }
-
-  // getRatingAndSizes(groupName: string, articul: string) {
-  //   const url = queryStringBuilder(this.productDataUrl, {groupName, articul});
-  //   return this.client.sendGet(url);
-  // }
-
-  // deleteProductFromTracking(groupName: string, articul: string) {
-  //   const url = queryStringBuilder(this.productDataUrl, {groupName, articul});
-  //   return this.client.sendDelete(url);
-  // }
-
-  // getProductInfoByArticul(articul: string) {
-  //   return this.client.sendGet(queryStringBuilder(this.getProductInfoByArticulUrl, {articul}));
-  // }
-
-  // getGroupInfoFile(groupName: string) {
-  //   return this.client.sendGet(
-  //     queryStringBuilder(this.getGroupInfoFileUrl, {groupName}),
-  //     {responseType: 'blob'}
-  //   );
-  // }
-
-  // getGroupSortFile(groupName: string, days: number) {
-  //   return this.client.sendGet(
-  //     queryStringBuilder(this.getGroupSortFileUrl, {groupName, days}),
-  //     {responseType: 'blob'}
-  //   )
-  // }
+  setPositions(articules: Array<string>) {
+    return this.client.sendPost(this.setPositionsUrl, articules);
+  }
 }

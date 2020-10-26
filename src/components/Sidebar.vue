@@ -119,11 +119,11 @@
     }
 
     &:nth-child(2) {
-      background: url("../assets/img/ikons/nav-ikon_1.svg") no-repeat;
+      background: url("../assets/img/ikons/nav-ikon_4.svg") no-repeat;
       background-position: 2.28rem center;
 
       &.sidebar-navigation-item_active {
-        background: url("../assets/img/ikons/nav-ikon_1_active.svg") no-repeat, rgba(159, 162, 180, .08);
+        background: url("../assets/img/ikons/nav-ikon_4_active.svg") no-repeat, rgba(159, 162, 180, .08);
         background-position: calc(2.28rem - 3px) center;
       }
     }
