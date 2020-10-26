@@ -24,9 +24,16 @@ export class BlackboxService {
     // если данных нет или ни не соответствуют условию
     // _data[0] = (!data[0] || data[0] < 0) ? 0 : data[0];
     // _data[1] = (!data[1] || data[1] > 900000) ? 900000 : data[1];
-
-    _data[0] = data.min
-    _data[1] = data.max
+    if (!data.data[0] || data.data[0] < data.min) {
+      _data[0] = data.min
+    } else {
+      _data[0] = data.data[0]
+    }
+    if (!data.data[1] || data.data[1] > data.max) {
+      _data[1] = data.max
+    } else {
+      _data[1] = data.data[1]
+    }
 
     return _data as RangeOfIntegersType;
   };

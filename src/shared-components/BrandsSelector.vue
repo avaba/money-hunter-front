@@ -9,6 +9,7 @@
     :limit="3"
     :limitText="count=>`и еще ${count}`"
     :load-options="loadBrands"
+    :clear-on-select="true"
     :options="[{
       id: -1,
       name: 'Все',
@@ -68,6 +69,9 @@
     },
     methods: {
       emitting(data) {
+        if(data.length > 0) {
+          document.querySelector(".brandsSelector .vue-treeselect__input").value = ''
+        }
         this.$emit('input', data)
       },
       async loadBrands() {

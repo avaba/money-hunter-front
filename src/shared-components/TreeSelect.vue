@@ -4,6 +4,7 @@
     <span class="select-field__error" v-if="!!error">{{error}}</span>
     <VendorTreeSelect ref="treeselect"
                       v-bind="$attrs"
+                      :clear-on-select="true"
                       :value="value"
                       v-on="listeners"
                       class="select-field__select">
