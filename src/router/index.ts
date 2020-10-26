@@ -3,6 +3,7 @@ import VueRouter, {RouteConfig} from "vue-router";
 import Auth from '../views/Auth.vue';
 import Profile from '../views/Profile.vue';
 import Tracking from '../views/Tracking.vue';
+import TrackingPositions from '../views/TrackingPositions.vue';
 
 import Login from '../components/auth/Login.vue';
 import Register from '../components/auth/Register.vue';
@@ -10,6 +11,8 @@ import RecoverRequest from '../components/auth/RecoverRequest.vue';
 import RecoverConfirm from '../components/auth/RecoverConfirm.vue';
 
 import GroupList from '../components/tracking/GroupList.vue';
+
+import PositionsList from '../components/trackingPositions/PositionsList.vue';
 
 import {TokenService} from "@/services/token_service";
 import {lazyLoad} from "@/helpers";
@@ -56,6 +59,19 @@ const routes: Array<RouteConfig> = [
     children: [
       {path: 'groups', name: 'tracking.group_list', component: GroupList},
       {path: 'group/:name', name: 'tracking.group', component: lazyLoad('components/tracking/Group')}
+    ]
+  },
+  {
+    path: '/tracking-positions',
+    name: 'trackingPositions',
+    component: TrackingPositions,
+    redirect: { name: 'trackingPositions.group_list' },
+    meta: {
+      title: 'Отслеживание позиций',
+    },
+    children: [
+      { path: 'positions', name: 'trackingPositions.group_list', component: PositionsList },
+      { path: 'position/:name', name: 'trackingPositions.group', component: lazyLoad('components/trackingPositions/Position') }
     ]
   },
   {
