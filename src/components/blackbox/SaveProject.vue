@@ -54,6 +54,12 @@
           const _nested = {...this.nested};
           if(_nested.brands[0] === -1) {
             _nested.brands[0] = 'Все'
+          } else {
+            const brands = []
+            _nested.brands.forEach(brand => {
+              brands.push(_nested.foundedBrands.find(item => item.id === brand).name)
+            });
+            _nested.brands = brands
           }
 
           const result = await blackboxService.saveSearch(this.name, _nested);

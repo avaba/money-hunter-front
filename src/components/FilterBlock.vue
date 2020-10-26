@@ -140,11 +140,18 @@
         }
 
         const brands = [...this.brands];
-        console.log(brands)
         if(brands.length < 1 || brands[0] === -1) {
           data.brands = ['all']
         } else {
-          data.brands = brands
+          if(typeof brands[0] == 'string') {
+            data.brands = brands
+          } else {
+            const potentialBrands = []
+            brands.forEach(item => {
+              potentialBrands.push(this.foundedBrands.find(brand => brand.id === item).name)
+            })
+            data.brands = potentialBrands
+          }
         }
         
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
