@@ -2,7 +2,7 @@
   <TreeSelect
     :error="$getValidationError(errors)"
     :value="value"
-    @input="data=>$emit('input', data)"
+    @input="data => emitting(data)"
     ref="brandsSelector"
     label="Выберите бренд"
     :multiple="true"
@@ -43,6 +43,9 @@
       value: {
         type: Array,
         required: true
+      },
+      updateValues: {
+        type: Boolean
       }
     },
     data() {
@@ -55,7 +58,18 @@
         brandsSearchQuery: '',
       }
     },
+    watch: {
+      updateValues: function () {
+        this.value.forEach(val => {
+          this.brandOptions.push(this.loadedBrands.find(item => item.name === val))
+          this.$emit('input', [this.loadedBrands.find(item => item.name === val).id])
+        })
+      }
+    },
     methods: {
+      emitting(data) {
+        this.$emit('input', data)
+      },
       async loadBrands() {
         const service = new TrackingService();
         this.loadedBrands = await service.getBrands();
@@ -66,6 +80,7 @@
             name: item.brand
           })
         })
+        console.log(this.value)
         this.loadedBrands = brands
         this.$emit('brands', this.loadedBrands)
         this.brandOptions = brands.slice(0, this.brandsPortionSize);

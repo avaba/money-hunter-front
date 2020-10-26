@@ -14,6 +14,8 @@
               <BrandsSelector
                 v-model="brands"
                 @brands="brandsFinding"
+                :value="brands"
+                :updateValues="updateValues"
               />
           </ValidationProvider>
         </div>
@@ -101,6 +103,8 @@
         categories: [-1],
         brands: [-1],
 
+        updateValues: false,
+
         foundedBrands: null
       }
     },
@@ -184,6 +188,7 @@
           if(data.brands[0] === 'Все') {
             this.brands = [-1]
           }
+          this.updateValues = true
           this.searchBtnHandler()
         })
       }
