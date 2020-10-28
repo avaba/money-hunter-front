@@ -238,7 +238,7 @@
       async loadCategories() {
         const service = new BlackboxService();
         let categories = null
-        if(JSON.parse(localStorage.getItem("categories"))) {
+        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("isCategoriesUpdated"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
           if(this.compareTime(timestamp, timeNow)) {
@@ -249,6 +249,7 @@
           }
         } else {
           categories = await service.getCategories()
+          localStorage.setItem("isCategoriesUpdated", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
         this.allCategories = categories
