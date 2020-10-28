@@ -249,6 +249,7 @@
     border: 1px solid $drayDevider;
     flex: 1;
     position: relative;
+    min-height: 200px;
   }
 
   .loading-table {
@@ -282,10 +283,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    @media screen and (max-width: 768px) {
+      font-size: 1.41rem;
+    }
+    @media screen and (max-width: 550px) {
+      font-size: 1.2rem;
+    }
   }
   @media screen and (max-width: 710px) {
     .blackbox {
       margin: 10px;
+      min-height: 140px;
     }
   }
 </style>

@@ -141,6 +141,7 @@
     color: $titleColor;
     font-weight: bold;
     display: block;
+    white-space: nowrap;
   }
 
   .input-field__error {
@@ -183,5 +184,6 @@
     width: 50%;
     height: 2.85rem;
     padding: 0 5px;
+    min-width: 60px;
   }
 </style>

@@ -1,49 +1,54 @@
 <template>
   <div class="filter block_container">
     <form action="" class="filter-form">
-      <div class="filter-form__fields">
-        <div class="filter-form__item filter-form__item-brands">
-          <TreeSelect label="Выберите категории"
+      <div class="filter-form__columns">
+        <div class="filter-form__column selectors">
+          <div class="filter-form__column-item">
+            <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="availableOptions"
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"/>
-          <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
+          </div>
+          <div class="filter-form__column-item">
+            <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
               <BrandsSelector
                 v-model="brands"
                 @brands="brandsFinding"
               />
-          </ValidationProvider>
+            </ValidationProvider>
+          </div>
         </div>
-        <!-- <div class="filter-form__item-brands">
-          <ValidationProvider :rules="{required: true}" key="byBrandType">
-              <BrandsSelector
-                v-model="brands"
-              />
-        </ValidationProvider>
-        </div> -->
-        <div class="filter-form__item">
-          <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
+        <div class="filter-form__column column-fields-price">
+          <div class="filter-form__column-item">
+            <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
+          </div>
+          <div class="filter-form__column-item">
+            <FindWords label="Плюс слова" v-model="addWords"></FindWords>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
+        <div class="filter-form__column column-fields-rating">
+          <div class="filter-form__column-item">
+            <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
+          </div>
+          <div class="filter-form__column-item">
+            <FindWords label="Минус слова" v-model="minusWords"></FindWords>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
+        <div class="filter-form__column column-fields-custom">
+          <div class="filter-form__column-item">
+            <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
+          </div>
+          <div class="filter-form__column-item">
+            <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
-        </div>
-        <div class="filter-form__item">
-          <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
-        </div>
-        <div class="filter-form__item">
-          <FindWords label="Плюс слова" v-model="addWords"></FindWords>
-        </div>
-        <div class="filter-form__item">
-          <FindWords label="Минус слова" v-model="minusWords"></FindWords>
+        <div class="filter-form__column column-fields-last">
+          <div class="filter-form__column-item">
+            <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
+          </div>
         </div>
       </div>
       <div class="filter-form__actions">
@@ -305,37 +310,221 @@
     border-radius: 8px;
     background: white;
     border: 1px solid $drayDevider;
-  }
-
-  .filter-form__fields {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .filter-form__item {
-
-    &:first-child {
-      max-width: 240px;
-      min-width: 240px;
-    }
-    & .vue-treeselect__list {
-      // width: 300px !important;
-      // max-width: 300px !important;
-      // min-width: 300px !important;
-    }
-
-    &:not(:last-child) {
-      margin-right: 1.42rem;
-    }
-
-    &-brands {
-      // max-width: 180px;
-      & .brandsSelector {
-        display: block;
-        margin: 10px 0px;
+    &-form__columns {
+      display: flex;
+      & .filter-form__column {
+        display: flex;
+        flex-direction: column;
+        margin: 0px 10px;
+        min-width: 150px;
+        width: 100%;
+        &-item {
+          margin: 10px 0px;
+        }
+        &.selectors {
+          max-width: 250px;
+        }
+        &.column-fields-custom {
+          flex-direction: row;
+          min-width: 300px;
+          width: 200%;
+          & .filter-form__column-item {
+            margin: 10px 0px;
+            width: 100%;
+            &:nth-child(1) {
+              margin-right: 10px;
+            }
+            &:nth-child(2) {
+              margin-left: 10px;
+            }
+          }
+        }
       }
     }
   }
+
+  @media screen and (max-width: 1300px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 10px;
+          min-width: 150px;
+          width: 100%;
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 250px;
+          }
+          &.column-fields-custom {
+            flex-direction: column;
+            min-width: 150px;
+            width: 100%;
+            & .filter-form__column-item {
+              margin: 10px 0px;
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 1050px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        flex-wrap: wrap;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 10px;
+          min-width: 150px;
+          width: calc((100% / 3) - 20px);
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 250px;
+          }
+          &.column-fields-custom {
+            flex-direction: row;
+            min-width: 300px;
+            width: calc((100% / 1.5) - 20px);
+            & .filter-form__column-item {
+              margin: 10px 0px;
+              width: 100%;
+              &:nth-child(1) {
+                margin-right: 10px;
+              }
+              &:nth-child(2) {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        flex-wrap: wrap;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 10px;
+          min-width: 150px;
+          width: calc((100% / 2) - 20px);
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 100%;
+            width: 100%;
+          }
+          &.column-fields-custom {
+            flex-direction: row;
+            min-width: 300px;
+            width: 100%;
+            & .filter-form__column-item {
+              width: 100%;
+              margin: 10px 0px;
+              width: 100%;
+              &:nth-child(1) {
+                margin-right: 10px;
+              }
+              &:nth-child(2) {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 550px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        flex-wrap: wrap;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 0px !important;
+          min-width: 150px;
+          width: 100%;
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 100%;
+            width: 100%;
+            order: 1;
+          }
+          &.column-fields-rating {
+            order: 3;
+            .filter-form__column-item:nth-child(1) {
+              order: 2;
+            }
+            .filter-form__column-item:nth-child(2) {
+              order: 1;
+            }
+          }
+          &.column-fields-price {
+            order: 2;
+          }
+          &.column-fields-last {
+            order: 5;
+          }
+          &.column-fields-custom {
+            flex-direction: column;
+            min-width: 300px;
+            width: 100%;
+            order: 4;
+            & .filter-form__column-item {
+              width: 100%;
+              margin: 10px 0px !important;
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // .filter-form__fields {
+  //   display: flex;
+  //   justify-content: space-between;
+  // }
+
+  // .filter-form__item {
+
+  //   &:first-child {
+  //     max-width: 240px;
+  //     min-width: 240px;
+  //   }
+  //   & .vue-treeselect__list {
+  //     // width: 300px !important;
+  //     // max-width: 300px !important;
+  //     // min-width: 300px !important;
+  //   }
+
+  //   &:not(:last-child) {
+  //     margin-right: 1.42rem;
+  //   }
+
+  //   &-brands {
+  //     // max-width: 180px;
+  //     & .brandsSelector {
+  //       display: block;
+  //       margin: 10px 0px;
+  //     }
+  //   }
+  // }
 
   .filter-form__actions {
     margin-top: 1.42rem;
