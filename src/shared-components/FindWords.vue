@@ -117,6 +117,7 @@
     letter-spacing: .2px;
     color: black;
     position: relative !important;
+    margin-top: 5px;
 
     &.input-field__input_error {
       border-color: red;

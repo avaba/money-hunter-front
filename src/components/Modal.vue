@@ -407,4 +407,14 @@
       font-weight: 500;
     }
   }
+  @media screen and (max-width: 550px) {
+    .modal {
+      min-height: 100vh;
+      border-radius: 0px;
+      top: 0px;
+      min-width: 100%;
+      max-width: 100%;
+      width: 100%;
+    }
+  }
 </style>
