@@ -132,7 +132,6 @@
             },
           })
         });
-        console.log(detailsFinalObject)
         return detailsFinalObject
       }
     },

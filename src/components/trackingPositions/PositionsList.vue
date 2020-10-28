@@ -83,7 +83,7 @@
         return {
           name: {
             clazz: "tracking-table__align-left width23",
-            content: "test name",
+            content: item.name,
             linkTo: 'articul'
           },
           articul: {
