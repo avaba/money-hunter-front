@@ -14,7 +14,7 @@
             <Btn label="Отмена" clazz="button_gray" @click="hideModal"/>
           </div>
           <div class="modal-form__double-submit-item">
-            <Btn label="Загрузить" @click="saveHandler"/>
+            <Btn :loading="loading" label="Загрузить" @click="saveHandler"/>
           </div>
         </div>
       </form>
@@ -37,7 +37,9 @@
     data() {
       return {
         checked: null,
-        positions: []
+        positions: [],
+
+        loading: false
       }
     },
     computed: {
@@ -53,6 +55,8 @@
     },
     methods: {
       async saveHandler() {
+        this.loading = true
+        
         if (this.checkedPositionName === null) {
           return;
         }
@@ -61,6 +65,8 @@
         if (searchResult) {
           this.$eventBus.$emit('find_search_id_data', searchResult);
         }
+
+        this.loading = false
 
         this[HIDE_MODAL_MUTATION]();
       },

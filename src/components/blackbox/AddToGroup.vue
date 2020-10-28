@@ -6,7 +6,7 @@
           <SelectGroupModal v-model="selectedGroup" :error="$getValidationError(errors)"/>
 
           <div class="modal-form__submit-item">
-            <Btn label="Добавить" type="button" @click="addBtnHandler"/>
+            <Btn :loading="loading" label="Добавить" type="button" @click="addBtnHandler"/>
           </div>
         </ValidationProvider>
       </form>
@@ -39,10 +39,14 @@
     data() {
       return {
         selectedGroup: '',
+
+        loading: false
       }
     },
     methods: {
       async addBtnHandler() {
+        this.loading = true
+
         if (!this.$validationProviderIsValid(this.$refs.validation)) {
           return;
         }
@@ -64,6 +68,8 @@
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Достигнут максимум отслеживаемых товаров, обновите подписку'}});
         }
+
+        this.loading = false
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }

@@ -1,6 +1,12 @@
 <template>
-  <button :disabled="isDisabled" :class="`${defaultClass} ${_clazz}`" :type="type" @click="onClick">{{label}}
-    <slot/>
+  <button class="btn btn-primary" :disabled="isDisabled" :class="`${defaultClass} ${_clazz} ${loading ? 'loading ld-ext-right running' : ''}`" :type="type" @click="onClick">
+    <span v-if="!loading">
+      {{label}}
+      <slot/>
+    </span>
+    <span v-else>
+      <div class="ld ld-ring ld-spin"></div>
+    </span>
   </button>
 </template>
 
@@ -29,6 +35,10 @@
         default: null,
       },
       isDisabled: {
+        type: Boolean,
+        default: false
+      },
+      loading: {
         type: Boolean,
         default: false
       }
@@ -91,7 +101,27 @@
 
     &:disabled {
       background: #DFE0EB;
-      cursor: pointer;
+      cursor: default;
+    }
+    &.loading {
+      background: #DFE0EB;
+      cursor: default;
+      pointer-events: none;
+      font-size: 20px;
+      padding: 0px 2rem !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition-duration: 0s;
+      & span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition-duration: 0s;
+      }
+      & * {
+        transition-duration: 0s;
+      }
     }
   }
 

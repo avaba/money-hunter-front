@@ -73,7 +73,7 @@
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn :loading="isLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -105,6 +105,10 @@
       searchHandler: {
         type: Function,
         required: true,
+      },
+      isLoading: {
+        type: Boolean,
+        required: false
       }
     },
     data() {
@@ -125,7 +129,9 @@
         addWords: [],
         minusWords: [],
 
-        foundedBrands: null
+        foundedBrands: null,
+
+        isSearching: false
       }
     },
     computed: {
@@ -138,9 +144,6 @@
     },
     methods: {
       async searchBtnHandler() {
-        // if(this.brands.length <= 0) {
-        //   this.brands = ['all']
-        // }
         await this.checkSearchID();
         this.searchHandler();
       }

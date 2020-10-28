@@ -1,6 +1,6 @@
 <template>
   <Fragment>
-    <FilterBlock :searchHandler="searchHandler"/>
+    <FilterBlock :isLoading="isLoading" :searchHandler="searchHandler"/>
 
     <div class="blackbox">
       <TrackingTable v-if="!isLoading && tablePositions.length > 0"

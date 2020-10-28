@@ -17,7 +17,7 @@
               <Btn label="Отмена" clazz="button_gray" @click="cancelHandler"/>
             </div>
             <div class="modal-form__double-submit-item">
-              <Btn label="Отправить" @click="send"/>
+              <Btn :loading="loading" label="Отправить" @click="send"/>
             </div>
           </div>
         </ValidationProvider>
@@ -47,6 +47,8 @@
     data() {
       return {
         daysCount: null,
+
+        loading: false
       }
     },
     methods: {
@@ -54,12 +56,17 @@
         this.closeModal();
       },
       async send() {
+        this.loading = true
+
         if (!this.$validationProviderIsValid(this.$refs.validation)) {
           return;
         }
 
         const service = new TrackingService();
         await service.getGroupSortFile(this.$route.params.name, this.daysCount);
+
+        this.loading = false
+
         this.closeModal();
       },
       closeModal() {

@@ -11,7 +11,7 @@
         </ValidationProvider>
       </div>
       <div class="modal-form__submit-item">
-        <Btn label="Восстановление пароля" type="submit"/>
+        <Btn :loading="loading" label="Восстановление пароля" type="submit"/>
       </div>
       <div class="modal-form__links modal-form__links_align-center">
         <router-link :to="{name: 'auth.login'}">Авторизоваться</router-link>
@@ -35,11 +35,14 @@
     components: {Btn, InputField, ValidationProvider, ValidationObserver},
     data() {
       return {
-        email: ''
+        email: '',
+        
+        loading: false
       }
     },
     methods: {
       async handleRecoverRequest() {
+        this.loading = true
         const service = AuthService.getInstance();
         if (await service.sendPasswordResetLink(this.email)) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Сообщение отправлено', status: 'success'})
@@ -49,6 +52,8 @@
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Не найден такой email', status: 'error'})
           // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Не найден такой email'}});
         }
+
+        this.loading = false
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }

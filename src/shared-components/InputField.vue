@@ -141,6 +141,9 @@
     color: $titleColor;
     font-weight: bold;
     display: block;
+  }
+
+  .filter-form__column-item .input-field__label {
     white-space: nowrap;
   }
 

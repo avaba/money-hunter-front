@@ -23,6 +23,16 @@
             </ValidationProvider>
           </div>
           <div class="modal-form__input-item">
+            <ValidationProvider :rules="{required: true, min: 6}" v-slot="{errors}" name="Подтверждение пароля">
+              <InputField label="Подтверждение пароль"
+                          clazz="input-field__input_password"
+                          v-model="passwordConfirm"
+                          type="password"
+                          @input="checkingConfirmPass"
+                          :error="passwordConfirmError || $getValidationError(errors)"/>
+            </ValidationProvider>
+          </div>
+          <div class="modal-form__input-item">
             <ValidationProvider name="Имя" :rules="{required: true}" v-slot="{errors}">
               <InputField label="Имя"
                           clazz="input-field__input_name"
@@ -57,7 +67,7 @@
           </div>
           <p class="promocode-status" :class="codeStatus" v-if="showPromotionField && codeStatus">{{ codeStatus === 'valid' ? 'Промокод применён' : 'Промокод больше не действителен'}}</p>
           <div class="modal-form__submit-item">
-            <Btn label="Зарегистрироваться" type="submit"/>
+            <Btn :loading="loading" :isDisabled="isDisabled" label="Зарегистрироваться" type="submit"/>
           </div>
           <div class="modal-form__links modal-form__links_align-center">
             <router-link :to="{name: 'auth.login'}">Уже есть учетная запись? Войти</router-link>
@@ -95,6 +105,7 @@
         passwordError: null,
         phoneNumberError: null,
         nameError: null,
+        passwordConfirmError: null,
 
         login: '',
         password: '',
@@ -102,7 +113,11 @@
         phoneNumber: '',
         name: '',
         
-        codeStatus: null
+        codeStatus: null,
+
+        loading: false,
+
+        passwordConfirm: ''
       }
     },
     computed: {
@@ -115,19 +130,48 @@
         //     Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
         // }
         return text
+      },
+      isDisabled() {
+        let isError = false
+        const errors = ["loginError", "passwordError", "phoneNumberError", "nameError", "passwordConfirmError"]
+        errors.forEach(error => {
+          if(this[error]) {
+            isError = true
+          }
+        })
+        return isError
       }
     },
     methods: {
       async register() {
-        const service = AuthService.getInstance();
-        const status = await service.register(this.login, this.password, this.name, this.phoneNumber, this.code);
-        if (typeof status === 'boolean' && status) {
-          this.confirmMessage = true;
-          if(this.codeStatus === 'valid') {
-            const promocodeStatus = await service.setPromocode(this.code, this.login);
+        this.loading = true
+        const fields = ['login', 'password', 'phoneNumber', 'name']
+        let isError = false
+        fields.forEach(elem => {
+          if(this[elem] === '') {
+            this[`${elem}Error`] = 'Обязательно для заполнения'
+            isError = true
           }
+        });
+        if(!this.isDisabled) {
+          const service = AuthService.getInstance();
+          const status = await service.register(this.login, this.password, this.name, this.phoneNumber, this.code);
+          if (typeof status === 'boolean' && status) {
+            this.confirmMessage = true;
+            if(this.codeStatus === 'valid') {
+              const promocodeStatus = await service.setPromocode(this.code, this.login);
+            }
+          } else {
+            this.loginError = status;
+          }
+        }
+        this.loading = false
+      },
+      checkingConfirmPass() {
+        if(this.password !== this.passwordConfirm) {
+          this.passwordConfirmError = 'Пароли не совпадают'
         } else {
-          this.loginError = status;
+          this.passwordConfirmError = null
         }
       },
       async promocodeCheking () {

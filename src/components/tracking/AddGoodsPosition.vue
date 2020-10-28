@@ -63,7 +63,7 @@
                 <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
               </div>
               <div class="modal-form__double-submit-item">
-                <Btn label="Сохранить" @click="handleSaveBtn"/>
+                <Btn :loading="loading" label="Сохранить" @click="handleSaveBtn"/>
               </div>
             </div>
           </ValidationProvider>
@@ -107,7 +107,9 @@
         selectedBrands: [],
         selectedGroup: '',
 
-        products: null
+        products: null,
+
+        loading: false
       }
     },
     computed: {
@@ -137,6 +139,8 @@
         this.firstDone = await this.$refs.firstStepObserver.validate();
       },
       async handleSaveBtn() {
+        this.loading = true
+
         if (!this.$validationProviderIsValid(this.$refs.secondStepProvider)) {
           return;
         }
@@ -167,6 +171,8 @@
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
           // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
+
+        this.loading = false
       },
 
       selectedProducts (products) {

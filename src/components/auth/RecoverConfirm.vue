@@ -11,7 +11,7 @@
         </ValidationProvider>
       </div>
       <div class="modal-form__submit-item">
-        <Btn label="Восстановить" type="submit"/>
+        <Btn :loading="loading" label="Восстановить" type="submit"/>
       </div>
       <div class="modal-form__links modal-form__links_align-center">
         <router-link :to="{name: 'auth.login'}">Авторизоваться</router-link>
@@ -35,12 +35,15 @@
     name: "RecoverConfirm",
     data() {
       return {
-        password: ''
+        password: '',
+        
+        loading: false
       }
     },
     components: {Btn, InputField, ValidationObserver, ValidationProvider},
     methods: {
       async handleRecoverRequest() {
+        this.loading = true
         const service = AuthService.getInstance();
         const response = await service.setPassword(
           this.password,
@@ -56,6 +59,8 @@
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
           // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
+        
+        this.loading = false
       },
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
