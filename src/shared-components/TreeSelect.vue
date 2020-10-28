@@ -80,7 +80,9 @@
             extraWidth += extraWidthSize
           }
         }
-        document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+        if(document.querySelector(".vue-treeselect__menu")) {
+          document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+        }
       },
       handleLocalSearch() {
         const origFunc = this.$refs.treeselect.handleLocalSearch;
