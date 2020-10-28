@@ -9,9 +9,9 @@ export const mutations = {
     state.positions = [] as any;
   },
   [LOAD_CURRENT_POSITION_MUTATION](state: VuexTrackingPositionsStateInterface, data: any) {
-    state.positions.find(item => item.articul === data.articul).data = data.item
+    state.positions.find(item => item.articul === data.articul).data.push(data.item)
   },
   [CLEAR_CURRENT_POSITION_MUTATION](state: VuexTrackingPositionsStateInterface, articul: string) {
-    state.positions.find(item => item.articul === articul).data = {}
+    state.positions.find(item => item.articul === articul).data = []
   }
 };

@@ -114,22 +114,26 @@
         return this.$store.getters['user/getSubscription'].subscriptionType
       },
       tablePositions() {
-        const details = this.$store.getters[`trackingPositions/${POSITION_GETTER}`].find(item => item.articul === this.$route.params.name)
-        console.log(details.data)
-          return [{
+        const details = this.$store.getters[`trackingPositions/${POSITION_GETTER}`].find(item => item.articul === this.$route.params.name).data
+        const detailsFinalObject = [] 
+        details.forEach(row => {
+          detailsFinalObject.push({
             category: {
               clazz: "tracking-table__align-left width23",
-              content: details.data.category_name
+              content: row.category_name
             },
             position: {
               clazz: "tracking-table__align-center width23",
-              content: details.data.position
+              content: row.position
             },
             change_position: {
               clazz: "tracking-table__align-center width23",
-              content: details.data.position_change > 0 ? `+${details.data.position_change}` : details.data.position_change
+              content: row.position_change > 0 ? `+${row.position_change}` : row.position_change
             },
-          }]
+          })
+        });
+        console.log(detailsFinalObject)
+        return detailsFinalObject
       }
     },
     methods: {

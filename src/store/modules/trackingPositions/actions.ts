@@ -28,7 +28,7 @@ export const actions = {
     const position = await service.getPosition(articul);
 
     context.commit(CLEAR_CURRENT_POSITION_MUTATION, articul);
-
+    
     position.forEach((item: any) => {
       context.commit(LOAD_CURRENT_POSITION_MUTATION, {item: item, articul: articul});
     })
