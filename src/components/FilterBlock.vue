@@ -366,6 +366,12 @@
             & .filter-form__column-item {
               margin: 10px 0px;
               width: 100%;
+              &:nth-child(1) {
+                margin-right: 0px;
+              }
+              &:nth-child(2) {
+                margin-left: 0px;
+              }
             }
           }
         }
@@ -448,6 +454,8 @@
   }
   @media screen and (max-width: 550px) {
     .filter {
+      padding: 5px 10px;
+      margin-top: 20px !important;
       &-form__columns {
         display: flex;
         flex-wrap: wrap;
@@ -482,7 +490,7 @@
           }
           &.column-fields-custom {
             flex-direction: column;
-            min-width: 300px;
+            min-width: 100%;
             width: 100%;
             order: 4;
             & .filter-form__column-item {
