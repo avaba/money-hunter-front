@@ -9,7 +9,7 @@
                      :order="orderType"
                      :order-handler="$orderHandler"/>
       <div v-else-if="isLoading" class="loading-table">
-        <img ondragstart="return false" src="../assets/img/loading.gif" alt="">
+        <img ondragstart="return false" src="../assets/img/loading.svg" alt="">
       </div>
       <div v-else-if="isLoading === false && tablePositions.length <= 0" class="table-notFounded">
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
@@ -248,6 +248,7 @@
     border: 1px solid $drayDevider;
     flex: 1;
     position: relative;
+    min-height: 200px;
   }
 
   .loading-table {

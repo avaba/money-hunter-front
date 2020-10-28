@@ -183,5 +183,6 @@
     width: 50%;
     height: 2.85rem;
     padding: 0 5px;
+    min-width: 50px;
   }
 </style>
