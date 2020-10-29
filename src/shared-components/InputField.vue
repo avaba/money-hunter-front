@@ -143,6 +143,10 @@
     display: block;
   }
 
+  .filter-form__column-item .input-field__label {
+    white-space: nowrap;
+  }
+
   .input-field__error {
     color: $red;
     letter-spacing: .2px;
@@ -183,6 +187,6 @@
     width: 50%;
     height: 2.85rem;
     padding: 0 5px;
-    min-width: 50px;
+    min-width: 60px;
   }
 </style>

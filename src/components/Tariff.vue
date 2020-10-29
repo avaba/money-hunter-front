@@ -53,11 +53,11 @@
     methods: {
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
-        const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
+        const results = await this[GET_PAYMENT_LINK_ACTION](this.name)
+        const response = results.response
         if(response.status === 400) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
-          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: response.data.detail}});
-        } else if (response.status === 200 && this.$store.state.user.subscription?.subscriptionType !== this.name) {
+        } else if (response.status === 200) {
           window.open(response.data.detail)
         } else if (JSON.parse(response.config.data).subscriptionType === this.name) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: `У вас уже подписка ${this.name}`, status: 'error'})

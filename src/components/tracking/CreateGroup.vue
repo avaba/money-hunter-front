@@ -64,7 +64,7 @@
                 <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
               </div>
               <div class="modal-form__double-submit-item">
-                <Btn label="Сохранить" @click="createGroupBtnHandler"/>
+                <Btn :loading="loading" label="Сохранить" @click="createGroupBtnHandler"/>
               </div>
             </div>
           </ValidationObserver>
@@ -105,7 +105,9 @@
         addTypes: [ADD_BY_GOODS, ADD_BY_BRAND],
         selectedType: ADD_BY_GOODS,
 
-        products: null
+        products: null,
+
+        loading: false
       }
     },
     computed: {
@@ -130,6 +132,8 @@
         this.firstDone = await this.$validationProviderIsValid(this.$refs.firstStepProvider);
       },
       async createGroupBtnHandler() {
+        this.loading = true
+
         if (await this.$refs.secondStepObserver.validate) {
           const service = new TrackingService();
           const result = await service.createUpdateGroup(
@@ -150,6 +154,8 @@
             // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
           }
         }
+
+        this.loading = false
       },
 
       selectedProducts(products) {

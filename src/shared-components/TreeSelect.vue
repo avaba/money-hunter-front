@@ -71,6 +71,20 @@
       getMenu() {
         return this.$refs.treeselect.getMenu();
       },
+      // chekingWidth() {
+      //   const amountOfNodes = 10
+      //   const defaultWidth = document.querySelector(".select-field").offsetWidth
+      //   const extraWidthSize = 75
+      //   let extraWidth = 0
+      //   for(let i = 2; i < amountOfNodes; i++) {
+      //     if(document.querySelector(`.vue-treeselect__indent-level-${i}`)) {
+      //       extraWidth += extraWidthSize
+      //     }
+      //   }
+      //   if(document.querySelector(".vue-treeselect__menu")) {
+      //     document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+      //   }
+      // },
       handleLocalSearch() {
         const origFunc = this.$refs.treeselect.handleLocalSearch;
 

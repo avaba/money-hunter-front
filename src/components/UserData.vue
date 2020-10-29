@@ -142,6 +142,26 @@
     position: relative;
   }
 
+  @media screen and (max-width: 968px) {
+    .user-data__item {
+      flex-basis: calc((100% - 1rem) / 2);
+      margin: .5rem 0px;
+      position: relative;
+    }
+  }
+  @media screen and (max-width: 580px) {
+    .user-data__item {
+      flex-basis: 100%;
+      margin: .5rem 0px;
+      position: relative;
+    }
+  }
+  @media screen and (max-width: 420px) {
+    .user-data {
+      padding: 0px 10px;
+    }
+  }
+
   .user-data-change {
     width: 12.14rem;
     margin: 2.14rem auto 0;

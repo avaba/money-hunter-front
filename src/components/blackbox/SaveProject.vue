@@ -16,7 +16,7 @@
               <Btn label="Отмена" clazz="button_gray" @click="hideModal"/>
             </div>
             <div class="modal-form__double-submit-item">
-              <Btn label="Сохранить" @click="saveHandler"/>
+              <Btn :loading="loading" label="Сохранить" @click="saveHandler"/>
             </div>
           </div>
         </form>
@@ -42,6 +42,8 @@
       return {
         name: '',
         nameError: null,
+
+        loading: false
       }
     },
     computed: {
@@ -49,6 +51,8 @@
     },
     methods: {
       async saveHandler() {
+        this.loading = true
+
         if (await this.$validationProviderIsValid(this.$refs.validation)) {
           const blackboxService = new BlackboxService();
           const _nested = {...this.nested};
@@ -63,7 +67,7 @@
           }
 
           const result = await blackboxService.saveSearch(this.name, _nested);
-
+          
           if (typeof result === 'boolean' && result) {
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Проект сохранен', status: 'success'})
             await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
@@ -72,6 +76,8 @@
             this.nameError = result;
           }
         }
+
+        this.loading = false
       },
       ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),

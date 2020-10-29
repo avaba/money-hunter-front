@@ -121,5 +121,9 @@
       flex-direction: column;
       margin-top: 1rem;
     }
+    @media screen and (max-width: 420px) {
+      padding: 0px 10px;
+    }
   }
+  
 </style>

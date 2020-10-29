@@ -40,7 +40,6 @@ export class ApiClient {
 
   sendGet(url: string, config?: AxiosRequestConfig, apiVersion = ApiClient.API_VERSION_V1) {
     const _url = this.generateUrl(url, apiVersion);
-
     return this.getClient().get(_url);
   }
 

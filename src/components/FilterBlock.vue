@@ -1,38 +1,56 @@
 <template>
   <div class="filter block_container">
     <form action="" class="filter-form">
-      <div class="filter-form__fields">
-        <div class="filter-form__item filter-form__item-brands">
-          <TreeSelect label="Выберите категории"
+      <div class="filter-form__columns">
+        <div class="filter-form__column selectors">
+          <div class="filter-form__column-item">
+            <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="availableOptions"
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
-                      :multiple="true"/>
-          <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
+                      :multiple="true"
+                      :disabled="isCategoriesLoading"/>
+          </div>
+          <div class="filter-form__column-item">
+            <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
               <BrandsSelector
                 v-model="brands"
                 @brands="brandsFinding"
                 :value="brands"
-                :updateValues="updateValues"
               />
-          </ValidationProvider>
+            </ValidationProvider>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
+        <div class="filter-form__column column-fields-price">
+          <div class="filter-form__column-item">
+            <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
+          </div>
+          <div class="filter-form__column-item">
+            <FindWords label="Плюс слова"></FindWords>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
+        <div class="filter-form__column column-fields-rating">
+          <div class="filter-form__column-item">
+            <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
+          </div>
+          <div class="filter-form__column-item">
+            <FindWords label="Минус слова"></FindWords>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
+        <div class="filter-form__column column-fields-custom">
+          <div class="filter-form__column-item">
+            <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
+          </div>
+          <div class="filter-form__column-item">
+            <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
+          </div>
         </div>
-        <div class="filter-form__item">
-          <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
-        </div>
-        <div class="filter-form__item">
-          <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
+        <div class="filter-form__column column-fields-last">
+          <div class="filter-form__column-item">
+            <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
+          </div>
         </div>
       </div>
       <div class="filter-form__actions">
@@ -57,7 +75,7 @@
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn :isDisabled="isCategoriesLoading" :loading="isLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -80,14 +98,19 @@
   import {BlackboxService} from "../services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
   import BrandsSelector from "@/shared-components/BrandsSelector";
+  import FindWords from "@/shared-components/FindWords";
 
   export default {
     name: "FilterBlock",
-    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon},
+    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon, FindWords},
     props: {
       searchHandler: {
         type: Function,
         required: true,
+      },
+      isLoading: {
+        type: Boolean,
+        required: false
       }
     },
     data() {
@@ -103,9 +126,16 @@
         categories: [-1],
         brands: [-1],
 
-        updateValues: false,
+        allCategories: null,
 
-        foundedBrands: null
+        // addWords: [],
+        // minusWords: [],
+
+        foundedBrands: null,
+
+        isSearching: false,
+
+        isCategoriesLoading: false
       }
     },
     computed: {
@@ -137,10 +167,24 @@
         if(cats.length <= 0) {
           cats.push(-1)
         }
+        const categories = []
         if (cats.length === 1 && cats[0] === -1) {
-          data.categories = this.availableOptions[0].children.map(child => child.id);
+          // data.categories = this.availableOptions[0].children.map(child => child.id);
+          data.categories = [0]
         } else {
-          data.categories = this.categories;
+          this.categories.forEach(category => {
+            const isIncluded = this.allCategories.find(item => item.id === category)
+            console.log(this.allCategories, category)
+            if(isIncluded) {
+              const childCategories = isIncluded.children_id
+              if(childCategories.length > 0) {
+                categories.push(...childCategories)
+              }
+            } else {
+              categories.push(category)
+            }
+          })
+          data.categories = categories
         }
 
         const brands = [...this.brands];
@@ -157,7 +201,6 @@
             data.brands = potentialBrands
           }
         }
-        
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -169,6 +212,8 @@
         this.revenueRange = [];
         this.categories = [-1];
         this.brands = [-1];
+        // this.addWords = [];
+        // this.minusWords = [];
       }
       ,
       loadProject() {
@@ -180,15 +225,9 @@
           this.feedbackRange = data.feedbackRange;
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
-          const brands = []
-          data.brands.forEach(name => {
-            brands.push(this.foundedBrands.find(item => item.name === name).name)
-          })
-          this.brands = brands
-          if(data.brands[0] === 'Все') {
-            this.brands = [-1]
-          }
-          this.updateValues = true
+          this.brands = data.brands;
+          // this.addWords = data.addWords;
+          // this.minusWords = data.minusWords;
           this.searchBtnHandler()
         })
       }
@@ -210,7 +249,14 @@
       async loadCategories() {
         const service = new BlackboxService();
         let categories = null
-        if(JSON.parse(localStorage.getItem("categories"))) {
+        this.isCategoriesLoading = true
+        this.availableOptions = [{
+          id: -2,
+          name: 'Загрузка...',
+          isDefaultExpanded: true
+        }];
+        this.categories = [-2]
+        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("isCategoriesUpdated"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
           if(this.compareTime(timestamp, timeNow)) {
@@ -221,27 +267,25 @@
           }
         } else {
           categories = await service.getCategories()
+          localStorage.setItem("isCategoriesUpdated", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
-        // const categories = await service.getCategories()
+        this.allCategories = categories
+        this.categories = [-1]
         this.availableOptions = [{
           id: -1,
           name: 'Все',
           isDefaultExpanded: true,
           children: categories
         }];
+        this.isCategoriesLoading = false
       }
       ,
-      // async loadBrands() {
-        
-      // }
-      // ,
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
-      // this.loadBrands();
     }
   }
 </script>
@@ -282,29 +326,196 @@
     border-radius: 8px;
     background: white;
     border: 1px solid $drayDevider;
+    &-form__columns {
+      display: flex;
+      & .filter-form__column {
+        display: flex;
+        flex-direction: column;
+        margin: 0px 10px;
+        min-width: 150px;
+        width: 100%;
+        &-item {
+          margin: 10px 0px;
+        }
+        &.selectors {
+          max-width: 250px;
+        }
+        &.column-fields-custom {
+          flex-direction: row;
+          min-width: 300px;
+          width: 200%;
+          & .filter-form__column-item {
+            margin: 10px 0px;
+            width: 100%;
+            &:nth-child(1) {
+              margin-right: 10px;
+            }
+            &:nth-child(2) {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
+    }
   }
 
-  .filter-form__fields {
-    display: flex;
-    justify-content: space-between;
+  @media screen and (max-width: 1300px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 10px;
+          min-width: 150px;
+          width: 100%;
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 250px;
+          }
+          &.column-fields-custom {
+            flex-direction: column;
+            min-width: 150px;
+            width: 100%;
+            & .filter-form__column-item {
+              margin: 10px 0px;
+              width: 100%;
+              &:nth-child(1) {
+                margin-right: 0px;
+              }
+              &:nth-child(2) {
+                margin-left: 0px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
-
-  .filter-form__item {
-
-    &:first-child {
-      max-width: 240px;
-      min-width: 240px;
+  @media screen and (max-width: 1050px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        flex-wrap: wrap;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 10px;
+          min-width: 150px;
+          width: calc((100% / 3) - 20px);
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 250px;
+          }
+          &.column-fields-custom {
+            flex-direction: row;
+            min-width: 300px;
+            width: calc((100% / 1.5) - 20px);
+            & .filter-form__column-item {
+              margin: 10px 0px;
+              width: 100%;
+              &:nth-child(1) {
+                margin-right: 10px;
+              }
+              &:nth-child(2) {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
     }
-
-    &:not(:last-child) {
-      margin-right: 1.42rem;
+  }
+  @media screen and (max-width: 768px) {
+    .filter {
+      &-form__columns {
+        display: flex;
+        flex-wrap: wrap;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 10px;
+          min-width: 150px;
+          width: calc((100% / 2) - 20px);
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 100%;
+            width: 100%;
+          }
+          &.column-fields-custom {
+            flex-direction: row;
+            min-width: 300px;
+            width: 100%;
+            & .filter-form__column-item {
+              width: 100%;
+              margin: 10px 0px;
+              width: 100%;
+              &:nth-child(1) {
+                margin-right: 10px;
+              }
+              &:nth-child(2) {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
     }
-
-    &-brands {
-      // max-width: 180px;
-      & .brandsSelector {
-        display: block;
-        margin: 10px 0px;
+  }
+  @media screen and (max-width: 550px) {
+    .filter {
+      padding: 5px 10px;
+      margin-top: 20px !important;
+      &-form__columns {
+        display: flex;
+        flex-wrap: wrap;
+        & .filter-form__column {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 0px !important;
+          min-width: 150px;
+          width: 100%;
+          &-item {
+            margin: 10px 0px;
+          }
+          &.selectors {
+            max-width: 100%;
+            width: 100%;
+            order: 1;
+          }
+          &.column-fields-rating {
+            order: 3;
+            .filter-form__column-item:nth-child(1) {
+              order: 2;
+            }
+            .filter-form__column-item:nth-child(2) {
+              order: 1;
+            }
+          }
+          &.column-fields-price {
+            order: 2;
+          }
+          &.column-fields-last {
+            order: 5;
+          }
+          &.column-fields-custom {
+            flex-direction: column;
+            min-width: 100%;
+            width: 100%;
+            order: 4;
+            & .filter-form__column-item {
+              width: 100%;
+              margin: 10px 0px !important;
+              width: 100%;
+            }
+          }
+        }
       }
     }
   }
@@ -344,9 +555,13 @@
       flex-wrap: wrap;
     }
     .filter-form__item {
-      max-width: 250px !important;
+      max-width: 150px !important;
       width: 100% !important;
       margin: 10px 5px !important;
+      overflow: visible !important;
+      & * {
+        overflow: visible !important;
+      }
       &-brands {
         // max-width: 250px !important;
         margin: 10px 5px !important;
