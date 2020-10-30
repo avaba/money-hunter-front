@@ -113,6 +113,7 @@
     border: 1px solid $gray1;
     display: flex;
     align-items: center;
+    z-index: 99999;
     & .alert-dash {
       display: block;
       height: 20px;

@@ -7,6 +7,7 @@
             <Btn :label="item.name"
                  :clazz="{'button_align-left': true, 'button_empty':idx!==checked, 'button_check': idx===checked}"
                  @click="checked=idx"/>
+            <div @click="deleteFilter(item)" :class="idx == checked ? 'hidden' : ''" class="modal-form__download-project-item-close"></div>
           </div>
         </div>
         <div class="modal-form__double-submit modal-form__double-submit_save-project">
@@ -70,12 +71,43 @@
 
         this[HIDE_MODAL_MUTATION]();
       },
+      async deleteFilter(item) {
+        const blackboxService = new BlackboxService();
+        const result = await blackboxService.deleteSearch(item.name);
+        console.log(result)
+        if(result.details === `search ${item.name} deleted`) {
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: `Группа ${item.name} удалена`, status: 'success'})
+
+          const searches = await blackboxService.getSavedSearches();
+          this.positions = [...searches.userSavedSearches];
+          
+        } else {
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: `Произошла ошибка. Группа ${item.name} не была удалена`, status: 'success'})
+        }
+      },
       ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
       ...mapActions('blackbox', [FIND_SEARCH_ID_BY_NAME_ACTION])
     }
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .modal-form__download-project-item {
+    position: relative;
+  }
+  .modal-form__download-project-item-close {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translate(0, -50%);
+    width: 1.71rem;
+    height: 1.71rem;
+    background: url("../../assets/img/ikons/close.svg") no-repeat;
+    &.hidden {
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
 </style>
