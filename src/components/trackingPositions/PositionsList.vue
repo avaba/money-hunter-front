@@ -29,6 +29,7 @@
   import {POSITION_GETTER} from "@/store/modules/trackingPositions/constants";
   import AddGoodsPositionsBtn from "@/shared-components/AddGoodsPositionsBtn";
   import {LOAD_POSITIONS_ACTION} from "@/store/modules/trackingPositions/constants";
+  import {BlackboxService} from "@/services/blackbox_service";
   // import AddGoodsBtn from "@/shared-components/AddGoodsBtn";
 
   // import {UserService} from "@/services/user_service";
@@ -75,6 +76,13 @@
       }
     },
     methods: {
+      async loadImages() {
+        this.tablePositions.forEach(async function (row) {
+          const service = new BlackboxService();
+          const data = await service.getProductImagePathAndName(row.articul.content);
+          row.name.image = data.imageLink
+        });
+      },
       ...mapActions('trackingPositions', [LOAD_POSITIONS_ACTION]),
     },
     mounted() {
@@ -84,7 +92,8 @@
           name: {
             clazz: "tracking-table__align-left width23",
             content: item.name,
-            linkTo: 'articul'
+            linkTo: 'articul',
+            image: ''
           },
           articul: {
             clazz: "tracking-table__align-center width23",
@@ -96,6 +105,7 @@
           },
         }
       })
+      this.loadImages()
       this.loaded = true
     },
     watch: {
@@ -115,8 +125,9 @@
             return {
               name: {
                 clazz: "tracking-table__align-left width23",
-                content: "test name",
-                linkTo: 'articul'
+                content: item.name,
+                linkTo: 'articul',
+                image: ''
               },
               articul: {
                 clazz: "tracking-table__align-center width23",
@@ -128,6 +139,7 @@
               },
             }
           })
+          this.loadImages()
           this.loaded = true
         },
         deep: true
