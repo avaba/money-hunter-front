@@ -75,7 +75,6 @@
         ],
         list: [],
         trackingActionList: [
-          // {label: "Добавить оповещения для групп", img: AlertImg},
           {
             label: "Автоподсорт", img: AutosortImg, onClick: () => {
               this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {

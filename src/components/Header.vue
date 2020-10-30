@@ -28,11 +28,6 @@
           <span class="alert-text">{{ notification.text }}</span>
         </div>
       </transition>
-      <!-- <transition name="fade-notifications" mode="out-in">
-        <div v-if="notification" class="notifications-wrapper" :class="notification.status">
-          <p class="notifications-wrapper-text">{{ notification.text }}</p>
-        </div>
-      </transition> -->
       <div class="user-name" @click="$router.push({name: 'profile'}).catch(()=>{})">
         <span class="user-name__text">{{email}}</span>
         <img src="../assets/img/ikons/logout.svg" alt="" @click="logout">
@@ -79,27 +74,6 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
-  
-  // .notifications-wrapper {
-  //   position: absolute;
-  //   right: 200px;
-  //   top: 50px;
-  //   padding: 12px 24px;
-  //   background: #fff;
-  //   border-radius: 6px;
-  //   z-index: 9999;
-  //   border: 1px solid $gray1;
-  //   &.success {
-  //     & .notifications-wrapper-text {
-  //       color: $green;
-  //     }
-  //   }
-  //   &.error {
-  //     & .notifications-wrapper-text {
-  //       color: $red;
-  //     }
-  //   }
-  // }
 
   
   .alert {

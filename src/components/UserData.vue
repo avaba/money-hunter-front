@@ -97,7 +97,6 @@
       async postUser() {
         const result = await this.$store.dispatch(`user/${POST_USER_ACTION}`);
         if (result) {
-          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Информация сохранена'}});
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Информация сохранена', status: 'success'})
         }
       },

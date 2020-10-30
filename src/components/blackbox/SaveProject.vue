@@ -71,7 +71,6 @@
           if (typeof result === 'boolean' && result) {
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Проект сохранен', status: 'success'})
             await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
-            // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Проект сохранен'}});
           } else {
             this.nameError = result;
           }

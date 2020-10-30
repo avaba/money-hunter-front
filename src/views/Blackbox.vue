@@ -53,16 +53,7 @@
     mixins: [tableMixins, paginationMixin],
     data() {
       return {
-        list: [
-          // {
-          //   articul: '12313',
-          //   currentQty: 123,
-          //   avOrdersSpeed: 123,
-          //   avRevenue: 1,
-          //   currentRating: 1,
-          //   currentFeedBackCount: 1
-          // }
-        ],
+        list: [],
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},

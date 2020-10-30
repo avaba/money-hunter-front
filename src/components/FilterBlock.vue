@@ -128,9 +128,6 @@
 
         allCategories: null,
 
-        // addWords: [],
-        // minusWords: [],
-
         foundedBrands: null,
 
         isSearching: false,
@@ -169,12 +166,10 @@
         }
         const categories = []
         if (cats.length === 1 && cats[0] === -1) {
-          // data.categories = this.availableOptions[0].children.map(child => child.id);
           data.categories = [0]
         } else {
           this.categories.forEach(category => {
             const isIncluded = this.allCategories.find(item => item.id === category)
-            console.log(this.allCategories, category)
             if(isIncluded) {
               const childCategories = isIncluded.children_id
               if(childCategories.length > 0) {
@@ -212,8 +207,6 @@
         this.revenueRange = [];
         this.categories = [-1];
         this.brands = [-1];
-        // this.addWords = [];
-        // this.minusWords = [];
       }
       ,
       loadProject() {
@@ -226,8 +219,6 @@
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           this.brands = data.brands;
-          // this.addWords = data.addWords;
-          // this.minusWords = data.minusWords;
           this.searchBtnHandler()
         })
       }

@@ -84,7 +84,6 @@
             name: item.brand
           })
         })
-        console.log(this.value)
         this.loadedBrands = brands
         this.$emit('brands', this.loadedBrands)
         this.brandOptions = brands.slice(0, this.brandsPortionSize);

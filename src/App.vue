@@ -43,7 +43,6 @@
     created() {
       const tokenService = new TokenService();
       const trackingService = new TrackingService();
-      console.log(this.$route)
       if (tokenService.isLoggedIn()) {
         this[GET_PROFILE_ACTION]();
         this[GET_SUBSCRIPTION_ACTION]();

@@ -34,6 +34,7 @@
     align-items: center;
     padding-top: 100px;
     padding-bottom: 65px;
+    min-height: 100vh;
   }
 
   @media screen and(max-height: 870px) {

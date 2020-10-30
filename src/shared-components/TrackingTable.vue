@@ -85,9 +85,6 @@
         if (this.isSortable(item)) {
           this.orderHandler(item.name);
         }
-      },
-      routerTo(item) {
-        console.log(item)
       }
     },
   }

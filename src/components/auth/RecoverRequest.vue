@@ -46,11 +46,9 @@
         const service = AuthService.getInstance();
         if (await service.sendPasswordResetLink(this.email)) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Сообщение отправлено', status: 'success'})
-          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Сообщение отправлено'}});
           await this.$router.push({name: 'auth.login'});
         } else {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Не найден такой email', status: 'error'})
-          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Не найден такой email'}});
         }
 
         this.loading = false

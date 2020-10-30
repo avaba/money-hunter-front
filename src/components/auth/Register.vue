@@ -124,10 +124,6 @@
       successText() {
         const text = `Мы отправили сообщение на адрес ${this.login}.
             Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
-        // if(this.confirmMessage && this.codeStatus === 'valid') {
-        //   text = `Мы отправили сообщение на адрес ${this.login}.
-        //     Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
-        // }
         return text
       },
       isDisabled() {

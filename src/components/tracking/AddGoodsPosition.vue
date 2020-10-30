@@ -1,17 +1,6 @@
 <template>
   <Modal title="Добавить товар" closable @next="onNext">
     <template v-slot:default>
-      <!-- <div class="modal-tabs">
-        <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
-             :key="idx"
-             @click="_=>{selectedType=item; firstDone=false}"
-             style="display: block; cursor:pointer;">
-          <strong  v-if="selectedType===item">
-            <span style="color: #23242A;" v-html="translatedType(item)"/>
-          </strong>
-          <span v-else v-html="translatedType(item)"/>
-        </div>
-      </div> -->
 
       <div class="modal-form-steps">
         <div class="modal-form-steps__line"/>
@@ -37,14 +26,6 @@
               key="byGoodsType">
               <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
-
-            <!-- <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
-              <BrandsSelector
-                :errors="errors"
-                v-model="selectedBrands"
-              />
-
-            </ValidationProvider> -->
 
             <div class="modal-form__submit-item">
               <Btn label="Далее"
@@ -85,7 +66,6 @@
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import SelectGroupModal from "@/shared-components/SelectGroupModal";
   import FindProductModal from "@/shared-components/FindProductModal";
-  // import BrandsSelector from "@/shared-components/BrandsSelector";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
@@ -93,7 +73,6 @@
   export default {
     name: "AddGoodsPosition",
     components: {
-      // BrandsSelector,
       FindProductModal, SelectGroupModal, Modal, Btn, ValidationProvider, ValidationObserver
     },
     data() {
@@ -148,13 +127,11 @@
         const service = new TrackingService();
         const result = await service.createUpdateGroup(
           this.selectedGroup,
-          // this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
           this.selectedType === ADD_BY_GOODS ? this.products : this.selectedBrands,
           this.selectedType === ADD_BY_BRAND
         );
 
         if (result) {
-          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Товары добавлены'}});
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Товары добавлены', status: 'success'})
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
@@ -169,7 +146,6 @@
         } else {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
           await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
-          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
         }
 
         this.loading = false
