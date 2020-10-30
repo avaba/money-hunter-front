@@ -230,7 +230,7 @@
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 86400000
+        const oneDayTime = 3600000
         if(dateString + oneDayTime >= now) {
           return true
         } else {
