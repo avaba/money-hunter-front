@@ -2,7 +2,9 @@ import {
   CHECK_SEARCH_ID_ACTION,
   FIND_SEARCH_ID_BY_NAME_ACTION,
   GET_NEW_SEARCH_ID_ACTION, SET_FILTERS_MUTATION,
-  SET_SEARCH_ID_MUTATION
+  SET_SEARCH_ID_MUTATION,
+  GET_AGREGATED_DATA,
+  SET_AGREGATED_MUTATION
 } from "@/store/modules/blackbox/constants";
 import {ActionContext} from "vuex";
 import {VuexBlackBoxStateInterface} from "@/store/modules/blackbox/index";
@@ -40,6 +42,17 @@ export default {
     if (response) {
       context.dispatch(`user/${GET_SUBSCRIPTION_ACTION}`, undefined, {root: true});
       context.commit(SET_SEARCH_ID_MUTATION, {searchID: response.searchID});
+
+      return response;
+    }
+
+    return false;
+  },
+  async [GET_AGREGATED_DATA](context: ActionContext<VuexBlackBoxStateInterface, any>) {
+    const service = new BlackboxService();
+    const response = await service.getAgregatedData(context.state.searchID);
+    if (response) {
+      context.commit(SET_AGREGATED_MUTATION, response);
 
       return response;
     }
