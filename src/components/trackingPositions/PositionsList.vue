@@ -46,7 +46,7 @@
           {
             name: 'articul',
             label: 'Артикул',
-            clazz: 'width23 tracking-table__header-item_align-center',
+            clazz: 'width23 tracking-table__header-item_align-right',
           },
           {
             name: 'categories',
@@ -57,7 +57,7 @@
 
         tablePositions: null,
 
-        orderType: 'articul',
+        orderType: '',
 
         progress: 0,
 
@@ -96,7 +96,7 @@
             image: ''
           },
           articul: {
-            clazz: "tracking-table__align-center width23",
+            clazz: "tracking-table__align-right width23",
             content: item.articul
           },
           categories: {
@@ -107,6 +107,11 @@
       })
       this.loadImages()
       this.loaded = true
+      // setTimeout(() => {
+      // }, 1);
+      this.$nextTick(() => {
+        this.orderType = '-articul'
+      })
     },
     watch: {
       orderType: function () {
@@ -130,7 +135,7 @@
                 image: ''
               },
               articul: {
-                clazz: "tracking-table__align-center width23",
+                clazz: "tracking-table__align-right width23",
                 content: item.articul
               },
               categories: {
