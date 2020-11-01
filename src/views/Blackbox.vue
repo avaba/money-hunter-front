@@ -82,6 +82,9 @@
       },
       searchID() {
         return this.$store.state.blackbox.searchID;
+      },
+      agregatedData() {
+        return this.$store.state.blackbox.agregated
       }
     },
     methods: {
@@ -121,17 +124,7 @@
             this.paginationData.page,
             this.paginationData.perPage
           );
-
-          const mainInfo = ['onPage', 'products', "countAll"]
-          const potentialHeaders = []
-          Object.keys(result).forEach(resultItem => {
-            if(!mainInfo.find(resultPotentialItem => resultPotentialItem === resultItem)) {
-              potentialHeaders.push({label: resultItem, value: result[resultItem]})
-            }
-          })
-          if(potentialHeaders.length > 0) {
-            this.insertHeaders(potentialHeaders)
-          }
+    
           this.paginationData.totalCount = result.countAll;
           this.list = [];
           this.$nextTick(() => {
@@ -226,6 +219,23 @@
       orderType: function () {
         AmplitudeService.blackBoxOrdering(this.orderType);
         this.debounceLoadGoods();
+      },
+      agregatedData: {
+        handler: function () {
+          console.log(this.agregatedData)
+          const result = this.agregatedData
+          const mainInfo = ['onPage', 'products', "countAll"]
+          const potentialHeaders = []
+          Object.keys(result).forEach(resultItem => {
+            if(!mainInfo.find(resultPotentialItem => resultPotentialItem === resultItem)) {
+              potentialHeaders.push({label: resultItem, value: result[resultItem]})
+            }
+          })
+          if(potentialHeaders.length > 0) {
+            this.insertHeaders(potentialHeaders)
+          }
+        },
+        deep: true
       }
     }
   }

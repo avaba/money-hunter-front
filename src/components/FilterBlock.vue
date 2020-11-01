@@ -93,7 +93,7 @@
   import {mapMutations} from "vuex";
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
-  import {CHECK_SEARCH_ID_ACTION} from "@/store/modules/blackbox/constants";
+  import {CHECK_SEARCH_ID_ACTION, GET_AGREGATED_DATA} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {BlackboxService} from "../services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
@@ -147,12 +147,16 @@
       async searchBtnHandler() {
         await this.checkSearchID();
         this.searchHandler();
+        this.getAgregatedData();
       }
       ,
       brandsFinding(brands) {
         this.foundedBrands = brands
       } 
       ,
+      getAgregatedData() {
+        this.$store.dispatch(`blackbox/${GET_AGREGATED_DATA}`);
+      },
       async checkSearchID() {
         const data = {...this.$data};
         delete data.searchIcon;

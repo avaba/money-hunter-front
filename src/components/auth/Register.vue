@@ -24,7 +24,7 @@
           </div>
           <div class="modal-form__input-item">
             <ValidationProvider :rules="{required: true, min: 6}" v-slot="{errors}" name="Подтверждение пароля">
-              <InputField label="Подтверждение пароль"
+              <InputField label="Подтверждение пароля"
                           clazz="input-field__input_password"
                           v-model="passwordConfirm"
                           type="password"

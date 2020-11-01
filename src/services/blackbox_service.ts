@@ -47,6 +47,14 @@ export class BlackboxService {
     }
   }
 
+  async getAgregatedData(searchID: any) {
+    try {
+      return (await this.service.refreshWrapper(this.repo.getAgregatedData.bind(this.repo, searchID))).data;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async findSearchIDByName(name: string) {
     try {
       return (await this.service.refreshWrapper(this.repo.findSearchIDByName.bind(this.repo, name))).data;
