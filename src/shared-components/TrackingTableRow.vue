@@ -140,13 +140,21 @@
     background: $gray3;
   }
 
+  .positive {
+    color:#0ad406;
+  }
+
+  .negative {
+    color: #ff0303;
+  }
+
   .tracking-table__cell {
     // border-top: 1px solid $drayDevider;
     // padding: 1.71rem .5rem 1.71rem 20px;
     // padding: 1.85rem 1.21rem;
     // padding: 15px 15px 15px 15px;
     // padding-left: 1.21rem;
-    padding: 15px 10px 15px 5px;
+    padding: 15px 15px 15px 5px;
     text-align: right;
     letter-spacing: .2px;
     box-sizing: border-box;
@@ -156,9 +164,11 @@
     &.tracking-table__align-center {
       text-align: center;
       padding-left: 0;
+      padding-right: 10px;
     }
     &.tracking-table__align-left {
       text-align: left;
+      padding-right: 10px;
       &.pl-35 {
         padding-left: 35px !important;
       }

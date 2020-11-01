@@ -122,6 +122,10 @@
 
   .tracking-table-wrapper {
     flex: 1;
+    box-sizing: border-box;
+    & * {
+      box-sizing: border-box;
+    }
     // width: 1500px !important;
   }
 
@@ -134,6 +138,8 @@
 
     &.tracking-table_sticky {
       position: sticky;
+      max-width: 100%;
+      width: 100%;
       top: 0px;
       z-index: 2;
     }

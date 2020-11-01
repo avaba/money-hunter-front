@@ -58,7 +58,7 @@
           {
             name: 'position',
             label: 'Позиция',
-            clazz: 'width23 tracking-table__header-item_align-center',
+            clazz: 'width23 tracking-table__header-item_align-right',
           },
           {
             name: 'change_position',
@@ -123,11 +123,11 @@
               content: row.category_name
             },
             position: {
-              clazz: "tracking-table__align-center width23",
+              clazz: "tracking-table__align-right width23",
               content: row.position
             },
             change_position: {
-              clazz: "tracking-table__align-center width23",
+              clazz: `tracking-table__align-center width23 ${row.position_change > 0 ? 'positive' : ''} ${row.position_change < 0 ? 'negative' : ''}`,
               content: row.position_change > 0 ? `+${row.position_change}` : row.position_change
             },
           })
