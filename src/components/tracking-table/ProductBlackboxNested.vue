@@ -10,6 +10,7 @@
     <LineChart v-show="currentType === 'qty'" v-if="chartData[`qty`]" :chart-data="chartData['qty']" :chart-options="options['qty']"/>
     <LineChart v-show="currentType === 'price'" v-if="chartData[`price`]" :chart-data="chartData['price']" :chart-options="options['price']"/>
     <LineChart v-show="currentType === 'rating'" v-if="chartData[`rating`]" :chart-data="chartData['rating']" :chart-options="options['rating']"/>
+    <LineChart v-show="currentType === 'feedBackCount'" v-if="chartData[`feedBackCount`]" :chart-data="chartData['feedBackCount']" :chart-options="options['feedBackCount']"/>
   </div>
 </template>
 
@@ -55,6 +56,11 @@
             label: "Рейтинг",
             icon: "rating-icon",
             class: "rating"
+          },
+          feedBackCount: {
+            label: "Отзывы",
+            icon: "feedback-icon",
+            class: "feedBackCount"
           },
         },
         options: {
@@ -166,6 +172,33 @@
               ]
             }
           },
+          feedBackCount: {
+            scales: {
+              xAxes: [{
+                ticks: {
+                  callback(value) {
+                    return value.substr(5);
+                  }
+                }
+              }],
+              yAxes: [
+              {
+                position: 'left',
+                id: 'y-axis-1',
+                ticks: {
+                  beginAtZero: true,
+                  callback: function(value, index, values) {
+                      return value % 1 ? '' : value + ''
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Количество отзывов'
+                }
+              }, 
+              ]
+            }
+          },
         }
       }
     },
@@ -196,6 +229,8 @@
       const qty = productData.map(item => item.qty);
       const price = productData.map(item => item.price);
       const rating = productData.map(item => item.rating);
+      const feedBackCount = productData.map(item => item.feedBackCount);
+      console.log(productData)
       this.chartData.orders = {
         labels,
         datasets: [
@@ -221,6 +256,12 @@
           {yAxisID: 'y-axis-1', data: rating, fill: false, borderColor: "#26A69A", lineTension: 0, label: 'Рейтинг'},
         ]
       }
+      this.chartData.feedBackCount = {
+        labels,
+        datasets: [
+          {yAxisID: 'y-axis-1', data: feedBackCount, fill: false, borderColor: "#D81B60", lineTension: 0, label: 'Отзывы'},
+        ]
+      }
     }
   }
 </script>
@@ -233,11 +274,11 @@
   .charts-labels {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    margin-top: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 10px;
     &-item {
       min-width: 150px;
-      margin: 0px 5px;
       cursor: pointer;
       border-radius: 50px;
       color: #fff;
@@ -248,6 +289,7 @@
       border: 2px solid transparent;
       transition-duration: .2s;
       user-select: none;
+      margin: 5px 5px;
       & img {
         // width: 12px;
         position: absolute;
@@ -287,6 +329,13 @@
         &.active {
           border: 2px solid #00796B;
           background: rgba(38, 166, 154, .8);
+        }
+      }
+      &.feedBackCount {
+        background: #D81B60;
+        &.active {
+          border: 2px solid #D81B60;
+          background: rgba(216, 27, 96, .8);
         }
       }
     }
