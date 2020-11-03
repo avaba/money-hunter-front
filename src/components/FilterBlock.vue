@@ -122,7 +122,7 @@
         feedbackRange: [],
         revenueRange: [],
         categories: [0],
-        brands: [-1],
+        brands: ['all'],
 
         allCategories: null,
 
@@ -160,18 +160,19 @@
         const data = {...this.$data};
         delete data.searchIcon;
         delete data.availableOptions;
-        delete data.brands;
+        // delete data.brands;
 
-        const brands = [...this.brands];
-        if(brands.length < 1 || brands[0] === -1) {
-          data.brands = ['all']
-        } else {
-          const brands = []
-          this.brands.forEach(id => {
-            brands.push(this.foundedBrands.find(item => item.id === id).name)
-          })
-          data.brands = brands
-        }
+        // const brands = [...this.brands];
+        // if(brands.length < 1 || brands[0] === -1) {
+        //   data.brands = ['all']
+        // } else {
+        //   const brands = []
+        //   this.brands.forEach(id => {
+        //     brands.push(this.foundedBrands.find(item => item.id === id).name)
+        //   })
+        //   data.brands = brands
+        // }
+        console.log(data)
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -182,7 +183,7 @@
         this.feedbackRange = [];
         this.revenueRange = [];
         this.categories = [0];
-        this.brands = [-1];
+        this.brands = ['all'];
         this.addWords = [];
         this.minusWords = [];
       }

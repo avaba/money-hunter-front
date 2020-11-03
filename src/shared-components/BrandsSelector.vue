@@ -10,7 +10,7 @@
     :limitText="count=>`и еще ${count}`"
     :load-options="loadBrands"
     :options="[{
-      id: -1,
+      id: 'all',
       name: 'Все',
       isDefaultExpanded: true,
       children: brandOptions
