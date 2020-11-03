@@ -121,7 +121,7 @@
         ratingRange: [],
         feedbackRange: [],
         revenueRange: [],
-        categories: [-1],
+        categories: [0],
         brands: [-1],
 
         allCategories: null,
@@ -160,33 +160,7 @@
         const data = {...this.$data};
         delete data.searchIcon;
         delete data.availableOptions;
-        delete data.categories;
         delete data.brands;
-
-        const cats = [...this.categories];
-        if(cats.length <= 0) {
-          cats.push(-1)
-        }
-        const categories = []
-        if (cats.length === 1 && cats[0] === -1) {
-          // data.categories = this.availableOptions[0].children.map(child => child.id);
-          data.categories = [0]
-        } else {
-          this.categories.forEach(category => {
-            const isIncluded = this.allCategories.find(item => item.id === category)
-            console.log(this.allCategories, category)
-            if(isIncluded) {
-              const childCategories = isIncluded.children_id
-              if(childCategories.length > 0) {
-                categories.push(...childCategories)
-              }
-            } else {
-              categories.push(category)
-            }
-          })
-          data.categories = categories
-        }
-        console.log(data.categories)
 
         const brands = [...this.brands];
         if(brands.length < 1 || brands[0] === -1) {
@@ -207,7 +181,7 @@
         this.ratingRange = [];
         this.feedbackRange = [];
         this.revenueRange = [];
-        this.categories = [-1];
+        this.categories = [0];
         this.brands = [-1];
         this.addWords = [];
         this.minusWords = [];
@@ -260,24 +234,15 @@
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
         this.allCategories = categories
-        this.availableOptions = [{
-          id: -1,
-          name: 'Все',
-          isDefaultExpanded: true,
-          children: categories
-        }];
+        this.availableOptions = categories;
+        this.availableOptions[0]['isDefaultExpanded'] = true
       }
       ,
-      // async loadBrands() {
-        
-      // }
-      // ,
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
-      // this.loadBrands();
     }
   }
 </script>

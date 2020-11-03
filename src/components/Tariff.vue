@@ -1,5 +1,5 @@
 <template>
-  <div class="tarif__item" :class="clazz">
+  <div v-if="isLoaded" class="tarif__item" :class="clazz">
     <div class="tarif__name">{{name}}</div>
     <div class="tarif-list">
       <div class="tarif-list__item"
@@ -48,12 +48,19 @@
       isBuyable: {
         type: Boolean,
         default: true
+      },
+      id: {
+        type: Number
+      },
+      isLoaded: {
+        type: Boolean
       }
     },
     methods: {
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
-        const results = await this[GET_PAYMENT_LINK_ACTION](this.name)
+        console.log(this.id)
+        const results = await this[GET_PAYMENT_LINK_ACTION](this.id)
         const response = results.response
         if(response.status === 400) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
