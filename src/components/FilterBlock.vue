@@ -160,18 +160,16 @@
         const data = {...this.$data};
         delete data.searchIcon;
         delete data.availableOptions;
-        // delete data.brands;
+        delete data.brands;
 
-        // const brands = [...this.brands];
-        // if(brands.length < 1 || brands[0] === -1) {
-        //   data.brands = ['all']
-        // } else {
-        //   const brands = []
-        //   this.brands.forEach(id => {
-        //     brands.push(this.foundedBrands.find(item => item.id === id).name)
-        //   })
-        //   data.brands = brands
-        // }
+        let brands = [...this.brands];
+        if (brands[0] !== 'all') {
+          brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
+        }
+        data.brands = brands
         console.log(data)
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
