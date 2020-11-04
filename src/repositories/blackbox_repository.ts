@@ -25,6 +25,7 @@ export class BlackboxRepository {
   private getProductImagePathAndNameUrl = 'wb/blackbox/product/information/{articul}/';
   private getChartDataUrl = 'wb/blackbox/product/charts/{articul}/';
   private getCategoriesUrl = 'wb/blackbox/categories/';
+  private deleteSearchUrl = 'wb/blackbox/user/searches/';
   private getAgregatedDataUrl = 'wb/blackbox/agregated/';
 
   getNewSearchID(data: GetSearchIDDataInterface) {
@@ -44,6 +45,10 @@ export class BlackboxRepository {
 
   getSavedSearches() {
     return this.client.sendGet(this.searchesUrl);
+  }
+
+  deleteSearch(name: any) {
+    return this.client.sendDelete(`${this.deleteSearchUrl}${name}/`)
   }
 
   saveSearch(name: string, data: GetSearchIDDataInterface) {

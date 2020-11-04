@@ -79,7 +79,15 @@ export class BlackboxService {
     try {
       return (await this.service.refreshWrapper(this.repo.getSavedSearches.bind(this.repo))).data;
     } catch (e) {
-      return {userSavedSearched: []};
+      return { userSavedSearched: [] };
+    }
+  }
+
+  async deleteSearch(name: any) {
+    try {
+      return (await this.service.refreshWrapper(this.repo.deleteSearch.bind(this.repo, name))).data;
+    } catch (e) {
+      return { userSavedSearched: [] };
     }
   }
 

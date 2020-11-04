@@ -7,7 +7,8 @@
                      :headers="tableHeaders"
                      :items="tablePositions"
                      :order="orderType"
-                     :order-handler="$orderHandler"/>
+                     :order-handler="$orderHandler"
+                     :subheaders="subheaders"/>
       <div v-else-if="isLoading" class="loading-table">
         <img ondragstart="return false" src="../assets/img/loading.svg" alt="">
       </div>
@@ -57,7 +58,7 @@
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true, subheader: null},
+          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true},
           {name: 'currentPrice', label: 'Цена', clazz: 'width5'},
           {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
           {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9'},
@@ -70,7 +71,9 @@
 
         debounceLoadGoods: debounce(this.loadGoods, 200),
 
-        isLoading: null
+        isLoading: null,
+
+        subheaders: {}
       }
     },
     computed: {
@@ -134,6 +137,7 @@
         }
       },
       insertHeaders(headers) {
+        console.log(headers)
         const renamedHeaders = {
           priceAvg: {
             label: "currentPrice",
@@ -144,6 +148,12 @@
           qtyAvg: {
             label: "currentQty",
             title: "Cреднее кол-во остатков",
+            value: null,
+            formatting: true
+          },
+          qtySum: {
+            label: "currentQtySum",
+            title: "Общая сумма остатков",
             value: null,
             formatting: true
           },
@@ -174,7 +184,9 @@
         }
         const tableHeaders = []
         Object.keys(renamedHeaders).forEach(header => {
-          this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
+          // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
+          this.subheaders[header] = {}
+          this.subheaders[header]["subheader"] = renamedHeaders[header].title
           let subHeaderValue = headers.find(item => item.label === header).value
           if(renamedHeaders[header].formatting) {
             subHeaderValue = subHeaderValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -185,7 +197,9 @@
           if(renamedHeaders[header].value) {
             subHeaderValue += renamedHeaders[header].value
           }
-          this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
+          this.subheaders[header]["subHeaderValue"] = subHeaderValue
+          console.log(this.subheaders)
+          // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
         })
       },
       map_goods(item) {

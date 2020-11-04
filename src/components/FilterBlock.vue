@@ -123,8 +123,8 @@
         ratingRange: [],
         feedbackRange: [],
         revenueRange: [],
-        categories: [-1],
-        brands: [-1],
+        categories: [0],
+        brands: ['all'],
 
         allCategories: null,
 
@@ -161,45 +161,17 @@
         const data = {...this.$data};
         delete data.searchIcon;
         delete data.availableOptions;
-        delete data.categories;
         delete data.brands;
 
-        const cats = [...this.categories];
-        if(cats.length <= 0) {
-          cats.push(-1)
-        }
-        const categories = []
-        if (cats.length === 1 && cats[0] === -1) {
-          data.categories = [0]
-        } else {
-          this.categories.forEach(category => {
-            const isIncluded = this.allCategories.find(item => item.id === category)
-            if(isIncluded) {
-              const childCategories = isIncluded.children_id
-              if(childCategories.length > 0) {
-                categories.push(...childCategories)
-              }
-            } else {
-              categories.push(category)
-            }
+        let brands = [...this.brands];
+        if (brands[0] !== 'all') {
+          brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
           })
-          data.categories = categories
         }
-
-        const brands = [...this.brands];
-        if(brands.length < 1 || brands[0] === -1) {
-          data.brands = ['all']
-        } else {
-          if(typeof brands[0] == 'string') {
-            data.brands = brands
-          } else {
-            const potentialBrands = []
-            brands.forEach(item => {
-              potentialBrands.push(this.foundedBrands.find(brand => brand.id === item).name)
-            })
-            data.brands = potentialBrands
-          }
-        }
+        data.brands = brands
+        console.log(data)
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -209,8 +181,10 @@
         this.ratingRange = [];
         this.feedbackRange = [];
         this.revenueRange = [];
-        this.categories = [-1];
-        this.brands = [-1];
+        this.categories = [0];
+        this.brands = ['all'];
+        this.addWords = [];
+        this.minusWords = [];
       }
       ,
       loadProject() {
@@ -222,18 +196,36 @@
           this.feedbackRange = data.feedbackRange;
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
+          let brands = [];
+          if (brands[0] !== 'all') {
+            data.brands.forEach(name => {
+              brands.push(this.foundedBrands.find(item => item.name === name).id)
+            })
+          } else {
+            brands = ['all']
+          }
+          data.brands = brands
           this.brands = data.brands;
           this.searchBtnHandler()
         })
       }
       ,
       saveProject() {
-        const data = {...this.$data}
-        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: data});
+        const _data = {...this.$data}
+        delete _data.brands
+        let brands = [...this.brands];
+        if (brands[0] !== 'all') {
+          brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
+        }
+        _data["brands"] = brands
+        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: _data});
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 86400000
+        const oneDayTime = 3600000
         if(dateString + oneDayTime >= now) {
           return true
         } else {
@@ -266,14 +258,10 @@
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
         this.allCategories = categories
-        this.categories = [-1]
-        this.availableOptions = [{
-          id: -1,
-          name: 'Все',
-          isDefaultExpanded: true,
-          children: categories
-        }];
+        this.categories = [0]
+        this.availableOptions = categories;
         this.isCategoriesLoading = false
+        this.availableOptions[0]['isDefaultExpanded'] = true
       }
       ,
       ...

@@ -11,7 +11,7 @@
     :load-options="loadBrands"
     :clear-on-select="true"
     :options="[{
-      id: -1,
+      id: 'all',
       name: 'Все',
       isDefaultExpanded: true,
       children: brandOptions
@@ -57,8 +57,27 @@
         brandsPortionPage: 1,
         brandsPortionSize: 30,
         brandsSearchQuery: '',
+        converting: false
       }
     },
+    // watch: {
+    //   value: {
+    //     handler: function () {
+    //       if(typeof this.value[0] === 'number' && !this.converting) {
+    //         this.value.forEach(id => {
+    //           if(!this.brandOptions.find(item => item.id === id)) {
+    //             this.converting = true
+    //             this.brandOptions.push(this.loadedBrands.find(item => item.id === id))
+    //             this.$nextTick(() => {
+    //               this.converting = false
+    //             })
+    //           }
+    //         })
+    //       }
+    //     },  
+    //     deep: true
+    //   }
+    // },
     watch: {
       updateValues: function () {
         this.value.forEach(val => {

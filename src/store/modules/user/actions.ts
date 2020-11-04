@@ -3,7 +3,8 @@ import {
   GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION,
   LOGOUT_ACTION, POST_USER_ACTION, SET_SUBSCRIPTION_MUTATION,
   SET_USER_MUTATION,
-  GET_PAYMENT_LINK_ACTION
+  GET_PAYMENT_LINK_ACTION,
+  GET_ALL_SUBSCRIBTIONS
 } from "@/store/modules/user/constants";
 import {ActionContext} from "vuex";
 import {UserService} from "@/services/user_service";
@@ -45,11 +46,14 @@ export default {
 
     context.commit(SET_SUBSCRIPTION_MUTATION, response);
   },
-  async [GET_PAYMENT_LINK_ACTION](context: ActionContext<VuexUserStateInterface, any>, subscriptionType: ActionContext<VuexUserStateInterface, any>) {
-    const data = { ...context.state.data } as VuexUserStateDataInterface;
-    (data as any).name = data.userName;
+  async [GET_PAYMENT_LINK_ACTION](context: ActionContext<VuexUserStateInterface, any>, subscriptionID: ActionContext<VuexUserStateInterface, any>) {
     const userService = new UserService();
-    const response = await userService.getPaymentLink({ user: data, subscriptionType: subscriptionType });
+    const response = await userService.getPaymentLink(subscriptionID);
+    return response
+  },
+  async [GET_ALL_SUBSCRIBTIONS](context: ActionContext<VuexUserStateInterface, any>) {
+    const userService = new UserService();
+    const response = await userService.getSubscriptions();
     return response
   }
 }

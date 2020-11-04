@@ -10,7 +10,7 @@
                  without-default-class
                  :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
           </div>
-          <span v-if="item.subheader && item.subheaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subheaderValue }}</span></span>
+          <span v-if="item.subheader && item.subHeaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subHeaderValue }}</span></span>
         </th>
       </tr>
     <table class="tracking-table tracking-table_sticky">
@@ -58,15 +58,19 @@
       orderHandler: {
         type: Function,
         required: false,
+      },
+      subheaders: {
+        type: Object,
+        required: false
       }
     },
     data() {
       return {}
     },
     computed: {
-      subheaders() {
-        return this.headers.filter(item => item.subheader)
-      }
+      // subheaders() {
+      //   return this.headers.filter(item => item.subheader)
+      // }
     },
     methods: {
       isSortable(item) {
@@ -118,6 +122,10 @@
 
   .tracking-table-wrapper {
     flex: 1;
+    box-sizing: border-box;
+    & * {
+      box-sizing: border-box;
+    }
     // width: 1500px !important;
   }
 
@@ -130,6 +138,8 @@
 
     &.tracking-table_sticky {
       position: sticky;
+      max-width: 100%;
+      width: 100%;
       top: 0px;
       z-index: 2;
     }
