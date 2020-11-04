@@ -195,6 +195,15 @@
           this.feedbackRange = data.feedbackRange;
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
+          let brands = [];
+          if (brands[0] !== 'all') {
+            data.brands.forEach(name => {
+              brands.push(this.foundedBrands.find(item => item.name === name).id)
+            })
+          } else {
+            brands = ['all']
+          }
+          data.brands = brands
           this.brands = data.brands;
           this.addWords = data.addWords;
           this.minusWords = data.minusWords;
@@ -203,7 +212,17 @@
       }
       ,
       saveProject() {
-        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: this.$data});
+        const _data = {...this.$data}
+        delete _data.brands
+        let brands = [...this.brands];
+        if (brands[0] !== 'all') {
+          brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
+        }
+        _data["brands"] = brands
+        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: _data});
       }
       ,
       compareTime(dateString, now) {
@@ -242,7 +261,22 @@
     },
     created() {
       this.loadCategories();
-    }
+    },
+    // watch: {
+    //   brands: {
+    //     handler: function () {
+    //       if(typeof this.brands[0] === 'string') {
+    //         const brands = []
+    //         console.log(this.foundedBrands)
+    //         this.brands.forEach(name => {
+    //           brands.push(this.foundedBrands.find(item => item.name === name).id)
+    //         })
+    //         this.brands = brands
+    //       }
+    //     },
+    //     deep: true
+    //   }
+    // }
   }
 </script>
 
