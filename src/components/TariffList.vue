@@ -49,7 +49,7 @@
             ]
           },
         ],
-        isLoaded: false
+        isLoaded: false,
       }
     },
     async created() {
@@ -60,7 +60,12 @@
         this.tariffs.find(item => item.name === tariff.type)['price'] = tariff.price
       });
       this.isLoaded = true
-    }
+    },
+    // methods: {
+    //   termsReaded() {
+    //     this.termsReadedInput = true
+    //   }
+    // }
   }
 </script>
 
