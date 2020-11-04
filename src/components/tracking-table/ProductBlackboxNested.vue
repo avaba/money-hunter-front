@@ -139,7 +139,7 @@
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: 'Заказы'
+                  labelString: 'Стоимость'
                 }
               }, 
               ]
@@ -277,6 +277,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 10px;
+    max-width: 672px;
     &-item {
       min-width: 150px;
       cursor: pointer;
