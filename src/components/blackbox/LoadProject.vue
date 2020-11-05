@@ -81,7 +81,7 @@
           this.positions = [...searches.userSavedSearches];
           
         } else {
-          this.$store.commit('notifications/ADD_NOTIFICATION', {text: `Произошла ошибка. Группа ${item.name} не была удалена`, status: 'success'})
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: `Произошла ошибка. Группа ${item.name} не была удалена`, status: 'error'})
         }
       },
       ...mapMutations('modal', [HIDE_MODAL_MUTATION]),

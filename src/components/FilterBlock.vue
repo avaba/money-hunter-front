@@ -163,6 +163,14 @@
         delete data.availableOptions;
         delete data.brands;
         delete data.categories;
+
+        if(this.brands.length === 0) {
+          this.brands = ['all']
+        }
+
+        if(this.categories.length === 0) {
+          this.categories = [0]
+        }
       
         const categories = []
         if(this.categories[0] !== 0) {
@@ -282,6 +290,7 @@
           localStorage.setItem("categoryUpdated0511", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
+        console.log(categories)
         this.allCategories = categories
         this.availableOptions = categories;
         this.categories = [0]
