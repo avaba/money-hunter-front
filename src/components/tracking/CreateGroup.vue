@@ -66,7 +66,7 @@
   import {ValidationProvider, ValidationObserver} from 'vee-validate';
   import {TrackingService} from "@/services/tracking_service";
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
-  import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION, HIDE_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {mapMutations} from "vuex";
 
   const ADD_BY_GOODS = 'byGoods';
@@ -126,15 +126,12 @@
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Группа создана', status: 'success'})
             await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
             await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});
-            await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
-            this.loading = false
           } else {
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
-            await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
-            this.loading = false
           }
         }
 
+        this.loading = false
       },
 
       selectedProducts(products) {

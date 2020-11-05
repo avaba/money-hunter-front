@@ -172,7 +172,6 @@
             formatting: true
           }
         }
-        const tableHeaders = []
         Object.keys(renamedHeaders).forEach(header => {
           this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
           let subHeaderValue = headers.find(item => item.label === header).value
@@ -223,7 +222,7 @@
       },
       agregatedData: {
         handler: function () {
-          this.isLoading = true
+          console.log(this.agregatedData)
           const result = this.agregatedData
           const mainInfo = ['onPage', 'products', "countAll"]
           const potentialHeaders = []
@@ -235,9 +234,6 @@
           if(potentialHeaders.length > 0) {
             this.insertHeaders(potentialHeaders)
           }
-          this.$nextTick(() => {
-            this.isLoading = false
-          })
         },
         deep: true
       }

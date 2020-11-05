@@ -1,6 +1,7 @@
 <template>
   <div class="tracking-table-wrapper">
-    <tr v-if="subheaders" class="tracking-table__header tracking-table__header-subheader">
+    
+    <tr class="tracking-table__header tracking-table__header-subheader">
         <th v-for="item in subheaders" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
           <div v-show="false">
             <span :class="{'tracking-table__header-label': isSortable(item)}"
