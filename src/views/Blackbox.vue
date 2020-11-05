@@ -148,7 +148,6 @@
         }
       },
       insertHeaders(headers) {
-        console.log(headers)
         const renamedHeaders = {
           priceAvg: {
             label: "currentPrice",

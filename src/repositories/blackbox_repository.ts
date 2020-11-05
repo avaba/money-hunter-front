@@ -54,7 +54,7 @@ export class BlackboxRepository {
   saveSearch(name: string, data: GetSearchIDDataInterface) {
     const _data = {...data} as any;
     _data.name = name;
-
+    console.log(_data)
     return this.client.sendPost(this.searchesUrl, _data);
   }
 

@@ -27,7 +27,7 @@
             <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
           </div>
           <div class="filter-form__column-item">
-            <FindWords label="Плюс слова" v-model="addWords"></FindWords>
+            <FindWords label="Плюс слова" :value="addWords" v-model="addWords"></FindWords>
           </div>
         </div>
         <div class="filter-form__column column-fields-rating">
@@ -166,10 +166,8 @@
       
         const categories = []
         if(this.categories[0] !== 0) {
-          console.log(this.categories)
           this.categories.forEach(category => {
             const isIncluded = this.allCategories[0].children.find(item => item.id === category)
-            console.log(this.allCategories, category)
             if(isIncluded) {
               const childCategories = isIncluded.children_id
               if(childCategories.length > 0) {
@@ -221,7 +219,6 @@
           this.categories = data.categories;
           let brands = [];
           if (data.brands[0] !== 'all') {
-            console.log(data.brands, this.foundedBrands)
             data.brands.forEach(name => {
               brands.push(this.foundedBrands.find(item => item.name === name).id)
             })
@@ -253,7 +250,6 @@
       ,
       compareTime(dateString, now) {
         const oneDayTime = 60000
-        console.log(dateString + oneDayTime >= now)
         if(dateString + oneDayTime >= now) {
           return true
         } else {
@@ -271,25 +267,20 @@
           isDefaultExpanded: true
         }];
         this.categories = [-2]
-        console.log(1)
         if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0511"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
-          console.log(2)
           if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
             categories = JSON.parse(localStorage.getItem("categories")).categories
-            console.log(3)
           } else {
             categories = await service.getCategories()
             localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
             localStorage.setItem("categoryUpdated0511", true) 
-            console.log(4)
           }
         } else {
           categories = await service.getCategories()
           localStorage.setItem("categoryUpdated0511", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
-          console.log(5)
         }
         this.allCategories = categories
         this.availableOptions = categories;

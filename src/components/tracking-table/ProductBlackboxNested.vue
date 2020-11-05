@@ -230,7 +230,6 @@
       const price = productData.map(item => item.price);
       const rating = productData.map(item => item.rating);
       const feedBackCount = productData.map(item => item.feedBackCount);
-      console.log(productData)
       this.chartData.orders = {
         labels,
         datasets: [

@@ -74,7 +74,6 @@
       async deleteFilter(item) {
         const blackboxService = new BlackboxService();
         const result = await blackboxService.deleteSearch(item.name);
-        console.log(result)
         if(result.details === `search ${item.name} deleted`) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: `Группа ${item.name} удалена`, status: 'success'})
 
