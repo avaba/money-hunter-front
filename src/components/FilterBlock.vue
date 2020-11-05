@@ -226,7 +226,7 @@
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 3600000
+        const oneDayTime = 0
         if(dateString + oneDayTime >= now) {
           return true
         } else {
@@ -237,7 +237,7 @@
       async loadCategories() {
         const service = new BlackboxService();
         let categories = null
-        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("isCategoriesUpdated"))) {
+        if(categories) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
           if(this.compareTime(timestamp, timeNow)) {
