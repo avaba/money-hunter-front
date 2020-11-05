@@ -163,8 +163,9 @@
         delete data.brands;
         delete data.categories;
 
+        console.log(this.categories.length, this.categories[0])
         const categories = []
-        if(this.categories.length !== 1 && this.categories[0] !== 0) {
+        if(this.categories[0] !== 0) {
           console.log(this.categories)
           this.categories.forEach(category => {
             const isIncluded = this.allCategories[0].children.find(item => item.id === category)
