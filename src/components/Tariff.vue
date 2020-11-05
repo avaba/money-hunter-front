@@ -12,7 +12,13 @@
     </div>
     <template v-if="isBuyable">
       <div class="tarif-price">{{price}} ₽</div>
-      <Btn label="Купить" :isDisabled="false" @click="handleBuyBtn"/>
+      <Btn label="Купить" :isDisabled="!termsReaded" @click="handleBuyBtn"/>
+    </template>
+    <template v-if="isBuyable">
+      <label class="tariff-list__item-label" :for="name">
+        <input v-model="termsReaded" :id="name" type="checkbox">
+        <span class="tariff-list__item-label-text">С условием <span @click="showOffer">оферты</span> ознакомлен</span>
+      </label>
     </template>
   </div>
 </template>
@@ -24,10 +30,14 @@
   import {mapActions, mapMutations} from "vuex";
   import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import Warning from "@/components/blackbox/Warning";
+  import OfferModal from "@/components/OfferModal";
 
   export default {
     name: "Tariff",
     components: {Btn},
+    data: () => ({
+      termsReaded: false
+    }),
     props: {
       clazz: {
         type: String,
@@ -53,15 +63,18 @@
     methods: {
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
+
         const results = await this[GET_PAYMENT_LINK_ACTION](this.name)
         const response = results.response
         if(response.status === 400) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
         } else if (response.status === 200) {
           window.open(response.data.detail)
-        } else if (JSON.parse(response.config.data).subscriptionType === this.name) {
-          this.$store.commit('notifications/ADD_NOTIFICATION', {text: `У вас уже подписка ${this.name}`, status: 'error'})
         }
+      },
+      showOffer() {
+        this.termsReaded = !this.termsReaded
+        this[SHOW_MODAL_MUTATION]({component: OfferModal});
       },
       ...mapActions('user', [GET_PAYMENT_LINK_ACTION]),
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
@@ -112,6 +125,27 @@
 
   .tarif-list {
     margin-top: 1.28rem;
+  }
+
+  .tariff-list__item-label {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    &-text {
+      margin-left: 5px;
+      cursor: pointer;
+      line-height: 1;
+      display: inline;
+      & span {
+        color: rgba(55, 81, 255, .8);
+        text-decoration: underline;
+        &:hover {
+          color: rgba(55, 81, 255, 1);
+        }
+      }
+    }
   }
 
   .tarif-list__item {

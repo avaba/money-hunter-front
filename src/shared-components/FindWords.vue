@@ -2,18 +2,27 @@
   <div class="input-field">
     <label for="" class="input-field__label">{{label}}</label>
 
+    <!-- <span class="input-field__error" v-if="!!error">{{error}}</span> -->
+
     <div ref="inputWordsWrapper" class="input-field-wrapper">
       <input 
            @keyup.enter="word.replace(/\s+/g, '').length > 0 ? addNewWord(word) : false"
            @blur="word.replace(/\s+/g, '').length > 0 ? addNewWord(word) : false"
            v-model="word"
            :class="`input-field__input`"
-           placeholder="В разработке"
            :style="`
            padding-left: ${paddingLeftInput}px;
            padding-top: ${paddingTopInput}px;
            padding-bottom: ${paddingBottomInput}px;
            `"/>
+        <div v-if="items.length > 0" ref="inputValues" class="input-field-wrapper-values">
+        <span @click="removeProduct(i)" v-for="i in items" :key="i" class="input-field-wrapper-values-item">
+          <p class="text">{{ i }}</p>
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 348.333 348.333"><path d="M336.559 68.611L231.016 174.165l105.543 105.549c15.699 15.705 15.699 41.145 0 56.85-7.844 7.844-18.128 11.769-28.407 11.769-10.296 0-20.581-3.919-28.419-11.769L174.167 231.003 68.609 336.563c-7.843 7.844-18.128 11.769-28.416 11.769-10.285 0-20.563-3.919-28.413-11.769-15.699-15.698-15.699-41.139 0-56.85l105.54-105.549L11.774 68.611c-15.699-15.699-15.699-41.145 0-56.844 15.696-15.687 41.127-15.687 56.829 0l105.563 105.554L279.721 11.767c15.705-15.687 41.139-15.687 56.832 0 15.705 15.699 15.705 41.145.006 56.844z"></path></svg>
+          </span>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -29,12 +38,14 @@
         items: [],
         
         word: '',
+
         paddingLeftInput: 10,
         paddingTopInput: 0,
         paddingBottomInput: 0
       }
     },
     computed: {
+
     },
     watch: {
       items: function () {
@@ -73,25 +84,27 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
+
   .input-field {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-content: center;
     flex-wrap: wrap;
-    pointer-events: none;
-    user-select: none;
   }
+
   .input-field__label {
     letter-spacing: .2px;
     color: $titleColor;
     font-weight: bold;
     display: block;
   }
+
   .input-field__error {
     color: $red;
     letter-spacing: .2px;
   }
+
   .input-field__input {
     flex: 1 0 100%;
     display: block;
@@ -105,18 +118,22 @@
     color: black;
     position: relative !important;
     margin-top: 5px;
+
     &.input-field__input_error {
       border-color: red;
       color: $red;
     }
   }
+
   .input-field__range {
     display: flex;
     align-items: center;
+
     span {
       margin: 0 .35rem;
     }
   }
+
   .input-field__input_range {
     border-bottom: 1px solid $drayDevider;
     background: none;
@@ -126,6 +143,7 @@
     height: 2.85rem;
     padding: 0 5px;
   }
+
   .input-field-wrapper {
     position: relative;
     width: 100%;
@@ -133,14 +151,11 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    pointer-events: none;
-    user-select: none;
     & .input-field__input {
       position: absolute;
-      pointer-events: none;
-      background: #F4F4F3;
     }
   }
+
   .input-field-wrapper-values {
     position: absolute;
     display: flex;

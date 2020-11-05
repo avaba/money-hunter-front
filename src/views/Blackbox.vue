@@ -3,15 +3,16 @@
     <FilterBlock :isLoading="isLoading" :searchHandler="searchHandler"/>
 
     <div class="blackbox">
-      <TrackingTable v-if="!isLoading && tablePositions.length > 0"
+      <TrackingTable v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated"
                      :headers="tableHeaders"
                      :items="tablePositions"
                      :order="orderType"
-                     :order-handler="$orderHandler"/>
-      <div v-else-if="isLoading" class="loading-table">
+                     :order-handler="$orderHandler"
+                     :subheaders="subheaders"/>
+      <div v-else-if="isLoading || isLoadingAgregated" class="loading-table">
         <img ondragstart="return false" src="../assets/img/loading.svg" alt="">
       </div>
-      <div v-else-if="isLoading === false && tablePositions.length <= 0" class="table-notFounded">
+      <div v-else-if="isLoading === false && tablePositions.length <= 0 && isLoadingAgregated === false" class="table-notFounded">
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
@@ -53,11 +54,20 @@
     mixins: [tableMixins, paginationMixin],
     data() {
       return {
-        list: [],
+        list: [
+          // {
+          //   articul: '12313',
+          //   currentQty: 123,
+          //   avOrdersSpeed: 123,
+          //   avRevenue: 1,
+          //   currentRating: 1,
+          //   currentFeedBackCount: 1
+          // }
+        ],
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true, subheader: null},
+          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true},
           {name: 'currentPrice', label: 'Цена', clazz: 'width5'},
           {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
           {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9'},
@@ -70,7 +80,11 @@
 
         debounceLoadGoods: debounce(this.loadGoods, 200),
 
-        isLoading: null
+        isLoading: null,
+
+        subheaders: {},
+
+        isLoadingAgregated: false
       }
     },
     computed: {
@@ -134,6 +148,7 @@
         }
       },
       insertHeaders(headers) {
+        console.log(headers)
         const renamedHeaders = {
           priceAvg: {
             label: "currentPrice",
@@ -144,6 +159,12 @@
           qtyAvg: {
             label: "currentQty",
             title: "Cреднее кол-во остатков",
+            value: null,
+            formatting: true
+          },
+          qtySum: {
+            label: "currentQtySum",
+            title: "Общая сумма остатков",
             value: null,
             formatting: true
           },
@@ -173,7 +194,9 @@
           }
         }
         Object.keys(renamedHeaders).forEach(header => {
-          this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
+          // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheader"] = renamedHeaders[header].title
+          this.subheaders[header] = {}
+          this.subheaders[header]["subheader"] = renamedHeaders[header].title
           let subHeaderValue = headers.find(item => item.label === header).value
           if(renamedHeaders[header].formatting) {
             subHeaderValue = subHeaderValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -184,7 +207,8 @@
           if(renamedHeaders[header].value) {
             subHeaderValue += renamedHeaders[header].value
           }
-          this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
+          this.subheaders[header]["subHeaderValue"] = subHeaderValue
+          // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
         })
       },
       map_goods(item) {
@@ -222,7 +246,7 @@
       },
       agregatedData: {
         handler: function () {
-          console.log(this.agregatedData)
+          this.isLoadingAgregated = true
           const result = this.agregatedData
           const mainInfo = ['onPage', 'products', "countAll"]
           const potentialHeaders = []
@@ -234,6 +258,9 @@
           if(potentialHeaders.length > 0) {
             this.insertHeaders(potentialHeaders)
           }
+          this.$nextTick(() => {
+            this.isLoadingAgregated = false
+          })
         },
         deep: true
       }
@@ -243,6 +270,7 @@
 
 <style scoped lang="scss">
   @import "../assets/scss/variables";
+
   .blackbox {
     margin: 1.42rem 2.28rem 0;
     background: white;

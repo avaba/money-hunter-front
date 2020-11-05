@@ -6,14 +6,17 @@
       :style="mappedList[0].linkTo === 'articul' ? 'cursor: pointer' : false" 
       @mousedown="mappedList[0].linkTo === 'articul' ? linkTo(mappedList[1].content) : false">
       <td class="tracking-table__cell"
-          :class="{[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
+          :class=" {[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
           :style="{cursor: item.onClick ? 'pointer' : 'inherit'}"
           v-for="(item, idx) in mappedList"
           @click.exact="item.onClick ? item.onClick(item) : ()=>{}"
           :key="idx">
         <component v-bind:is="item.content" v-if="typeof item.content==='object'" v-bind="item.component_data"/>
         <!-- <template v-else>{{item.content}}</template> -->
-        <template v-else>{{ formattingNum(item) }}</template>
+        <template v-else>
+           <div v-if="item.image" class="product-photo row-with-photo"><img :src="item.image" alt="">{{ formattingNum(item) }}</div>
+           <span v-else>{{ formattingNum(item) }}</span>
+        </template>
       </td>
     </tr>
     <tr class="tracking-table-dropdown tracking-table__row_open" v-if="rowData.nested && rowOpened">
@@ -137,13 +140,21 @@
     background: $gray3;
   }
 
+  .positive {
+    color:#0ad406;
+  }
+
+  .negative {
+    color: #ff0303;
+  }
+
   .tracking-table__cell {
     // border-top: 1px solid $drayDevider;
     // padding: 1.71rem .5rem 1.71rem 20px;
     // padding: 1.85rem 1.21rem;
     // padding: 15px 15px 15px 15px;
     // padding-left: 1.21rem;
-    padding: 15px 10px 15px 5px;
+    padding: 15px 15px 15px 5px;
     text-align: right;
     letter-spacing: .2px;
     box-sizing: border-box;
@@ -153,9 +164,11 @@
     &.tracking-table__align-center {
       text-align: center;
       padding-left: 0;
+      padding-right: 10px;
     }
     &.tracking-table__align-left {
       text-align: left;
+      padding-right: 10px;
       &.pl-35 {
         padding-left: 35px !important;
       }
@@ -215,6 +228,11 @@
     }
   }
 
-  .tracking-table-dropdown {
+  .row-with-photo {
+    display: flex;
+    align-items: center;
+    & img {
+      margin-right: 15px;
+    }
   }
 </style>

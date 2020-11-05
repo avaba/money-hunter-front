@@ -18,7 +18,6 @@
               <BrandsSelector
                 v-model="brands"
                 @brands="brandsFinding"
-                :value="brands"
               />
             </ValidationProvider>
           </div>
@@ -28,7 +27,7 @@
             <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
           </div>
           <div class="filter-form__column-item">
-            <FindWords label="Плюс слова"></FindWords>
+            <FindWords label="Плюс слова" v-model="addWords"></FindWords>
           </div>
         </div>
         <div class="filter-form__column column-fields-rating">
@@ -36,7 +35,7 @@
             <InputField label="Рейтинг" range v-model="ratingRange" :min="0" :max="5"/>
           </div>
           <div class="filter-form__column-item">
-            <FindWords label="Минус слова"></FindWords>
+            <FindWords label="Минус слова" v-model="minusWords"></FindWords>
           </div>
         </div>
         <div class="filter-form__column column-fields-custom">
@@ -75,7 +74,7 @@
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn :isDisabled="isCategoriesLoading" :loading="isLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn :loading="isCategoriesLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -123,14 +122,15 @@
         ratingRange: [],
         feedbackRange: [],
         revenueRange: [],
-        categories: [-1],
-        brands: [-1],
+        categories: [0],
+        brands: ['all'],
 
         allCategories: null,
 
-        foundedBrands: null,
+        addWords: [],
+        minusWords: [],
 
-        isSearching: false,
+        foundedBrands: null,
 
         isCategoriesLoading: false
       }
@@ -161,19 +161,15 @@
         const data = {...this.$data};
         delete data.searchIcon;
         delete data.availableOptions;
-        delete data.categories;
         delete data.brands;
-
-        const cats = [...this.categories];
-        if(cats.length <= 0) {
-          cats.push(-1)
-        }
+        delete data.categories;
+      
         const categories = []
-        if (cats.length === 1 && cats[0] === -1) {
-          data.categories = [0]
-        } else {
+        if(this.categories[0] !== 0) {
+          console.log(this.categories)
           this.categories.forEach(category => {
-            const isIncluded = this.allCategories.find(item => item.id === category)
+            const isIncluded = this.allCategories[0].children.find(item => item.id === category)
+            console.log(this.allCategories, category)
             if(isIncluded) {
               const childCategories = isIncluded.children_id
               if(childCategories.length > 0) {
@@ -184,22 +180,21 @@
             }
           })
           data.categories = categories
+        } else {
+          data.categories = [0]
         }
 
-        const brands = [...this.brands];
-        if(brands.length < 1 || brands[0] === -1) {
-          data.brands = ['all']
-        } else {
-          if(typeof brands[0] == 'string') {
-            data.brands = brands
-          } else {
-            const potentialBrands = []
-            brands.forEach(item => {
-              potentialBrands.push(this.foundedBrands.find(brand => brand.id === item).name)
-            })
-            data.brands = potentialBrands
-          }
+        let brands = [...this.brands];
+        if (brands[0] !== 'all') {
+          brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
         }
+        data.brands = brands
+
+        console.log(data)
+
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -209,8 +204,10 @@
         this.ratingRange = [];
         this.feedbackRange = [];
         this.revenueRange = [];
-        this.categories = [-1];
-        this.brands = [-1];
+        this.categories = [0];
+        this.brands = ['all'];
+        this.addWords = [];
+        this.minusWords = [];
       }
       ,
       loadProject() {
@@ -222,18 +219,41 @@
           this.feedbackRange = data.feedbackRange;
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
+          let brands = [];
+          if (data.brands[0] !== 'all') {
+            console.log(data.brands, this.foundedBrands)
+            data.brands.forEach(name => {
+              brands.push(this.foundedBrands.find(item => item.name === name).id)
+            })
+          } else {
+            brands = ['all']
+          }
+          data.brands = brands
           this.brands = data.brands;
+          this.addWords = data.addWords;
+          this.minusWords = data.minusWords;
           this.searchBtnHandler()
         })
       }
       ,
       saveProject() {
-        const data = {...this.$data}
-        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: data});
+        const _data = {...this.$data}
+        delete _data.brands
+        let brands = [...this.brands];
+        if (this.brands[0] !== 'all') {
+          brands = []
+          this.brands.forEach(id => {
+            brands.push(this.foundedBrands.find(item => item.id === id).name)
+          })
+        }
+        _data["brands"] = brands
+
+        this[SHOW_MODAL_MUTATION]({component: SaveProject, data: _data});
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 86400000
+        const oneDayTime = 60000
+        console.log(dateString + oneDayTime >= now)
         if(dateString + oneDayTime >= now) {
           return true
         } else {
@@ -251,28 +271,30 @@
           isDefaultExpanded: true
         }];
         this.categories = [-2]
-        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("isCategoriesUpdated"))) {
+        console.log(1)
+        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0511"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
-          if(this.compareTime(timestamp, timeNow)) {
+          console.log(2)
+          if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
             categories = JSON.parse(localStorage.getItem("categories")).categories
+            console.log(3)
           } else {
             categories = await service.getCategories()
             localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+            localStorage.setItem("categoryUpdated0511", true) 
+            console.log(4)
           }
         } else {
           categories = await service.getCategories()
-          localStorage.setItem("isCategoriesUpdated", true) 
+          localStorage.setItem("categoryUpdated0511", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+          console.log(5)
         }
         this.allCategories = categories
-        this.categories = [-1]
-        this.availableOptions = [{
-          id: -1,
-          name: 'Все',
-          isDefaultExpanded: true,
-          children: categories
-        }];
+        this.availableOptions = categories;
+        this.categories = [0]
+        this.availableOptions[0]['isDefaultExpanded'] = true
         this.isCategoriesLoading = false
       }
       ,
@@ -281,7 +303,7 @@
     },
     created() {
       this.loadCategories();
-    }
+    },
   }
 </script>
 
@@ -514,6 +536,36 @@
       }
     }
   }
+
+  // .filter-form__fields {
+  //   display: flex;
+  //   justify-content: space-between;
+  // }
+
+  // .filter-form__item {
+
+  //   &:first-child {
+  //     max-width: 240px;
+  //     min-width: 240px;
+  //   }
+  //   & .vue-treeselect__list {
+  //     // width: 300px !important;
+  //     // max-width: 300px !important;
+  //     // min-width: 300px !important;
+  //   }
+
+  //   &:not(:last-child) {
+  //     margin-right: 1.42rem;
+  //   }
+
+  //   &-brands {
+  //     // max-width: 180px;
+  //     & .brandsSelector {
+  //       display: block;
+  //       margin: 10px 0px;
+  //     }
+  //   }
+  // }
 
   .filter-form__actions {
     margin-top: 1.42rem;

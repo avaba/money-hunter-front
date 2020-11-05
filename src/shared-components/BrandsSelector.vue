@@ -2,16 +2,15 @@
   <TreeSelect
     :error="$getValidationError(errors)"
     :value="value"
-    @input="data => emitting(data)"
+    @input="data=>$emit('input', data)"
     ref="brandsSelector"
     label="Выберите бренд"
     :multiple="true"
     :limit="3"
     :limitText="count=>`и еще ${count}`"
     :load-options="loadBrands"
-    :clear-on-select="true"
     :options="[{
-      id: -1,
+      id: 'all',
       name: 'Все',
       isDefaultExpanded: true,
       children: brandOptions
@@ -44,9 +43,6 @@
       value: {
         type: Array,
         required: true
-      },
-      updateValues: {
-        type: Boolean
       }
     },
     data() {
@@ -57,23 +53,28 @@
         brandsPortionPage: 1,
         brandsPortionSize: 30,
         brandsSearchQuery: '',
+        converting: false
       }
     },
     watch: {
-      updateValues: function () {
-        this.value.forEach(val => {
-          this.brandOptions.push(this.loadedBrands.find(item => item.name === val))
-          this.$emit('input', [this.loadedBrands.find(item => item.name === val).id])
-        })
+      value: {
+        handler: function () {
+          if(typeof this.value[0] === 'number' && !this.converting) {
+            this.value.forEach(id => {
+              if(!this.brandOptions.find(item => item.id === id)) {
+                this.converting = true
+                this.brandOptions.push(this.loadedBrands.find(item => item.id === id))
+                this.$nextTick(() => {
+                  this.converting = false
+                })
+              }
+            })
+          }
+        },  
+        deep: true
       }
     },
     methods: {
-      emitting(data) {
-        if(data.length > 0) {
-          document.querySelector(".brandsSelector .vue-treeselect__input").value = ''
-        }
-        this.$emit('input', data)
-      },
       async loadBrands() {
         const service = new TrackingService();
         this.loadedBrands = await service.getBrands();

@@ -1,6 +1,17 @@
 <template>
   <Modal title="Создать группу" closable @next="onNext">
     <template v-slot:default>
+      <!-- <div class="modal-tabs">
+        <div class="modal-tabs__item" v-for="(item, idx) in addTypes" :class="{active: selectedType===item}"
+             :key="idx"
+             @click="selectedType=item"
+             style="display: block; cursor:pointer;">
+          <strong v-if="selectedType===item">
+            <span v-html="translatedType(item)"/>
+          </strong>
+          <span v-else v-html="translatedType(item)"/>
+        </div>
+      </div> -->
 
       <div class="modal-form-steps">
         <div class="modal-form-steps__line"/>
@@ -40,6 +51,14 @@
               <FindProductModal @selectedProducts="selectedProducts" v-model="foundedProduct" :validation-error="$getValidationError(errors)"/>
             </ValidationProvider>
 
+            <!-- <ValidationProvider v-else :rules="{required: true}" v-slot="{errors}" key="byBrandType">
+              <BrandsSelector
+                :errors="errors"
+                v-model="selectedBrands"
+              />
+
+            </ValidationProvider> -->
+
             <div class="modal-form__double-submit modal-form__double-submit_save-project">
               <div class="modal-form__double-submit-item">
                 <Btn label="Назад" clazz="button_gray" @click="firstDone=false"/>
@@ -68,6 +87,7 @@
   import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {SET_MODAL_RESPONSE_MUTATION, SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
   import {mapMutations} from "vuex";
+  // import BrandsSelector from "@/shared-components/BrandsSelector";
 
   const ADD_BY_GOODS = 'byGoods';
   const ADD_BY_BRAND = 'byBrand';
@@ -118,16 +138,20 @@
           const service = new TrackingService();
           const result = await service.createUpdateGroup(
             this.groupName,
+            // this.selectedType === ADD_BY_GOODS ? [this.foundedProduct.articul] : this.selectedBrands,
             this.selectedType === ADD_BY_GOODS ? this.products : this.selectedBrands,
             this.selectedType === ADD_BY_BRAND
           );
 
           if (result) {
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Группа создана', status: 'success'})
+            // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Группа создана'}});
             await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
+            // await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
             await this.$router.push({name: 'tracking.group', params: {name: this.groupName.toUpperCase()}});
           } else {
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+            // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Произошла ошибка'}});
           }
         }
 

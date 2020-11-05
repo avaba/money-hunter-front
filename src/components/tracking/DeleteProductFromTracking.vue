@@ -56,6 +56,8 @@
           this.callback();
           await this.$store.dispatch(`tracking/${LOAD_GROUPS_ACTION}`);
           this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
+        } else {
+          // alert(result);
         }
       },
       async cancelHandler() {

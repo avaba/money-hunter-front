@@ -11,6 +11,12 @@ export const orderHandler = {
       } else {
         that.orderType = `-${name}`;
       }
+      // console.log('sorting 2')
+      // if (that.orderType === name) {
+      //   that.orderType = `-${name}`;
+      // } else {
+      //   that.orderType = name;
+      // }
     }
   }
 };

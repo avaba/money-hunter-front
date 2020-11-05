@@ -55,9 +55,11 @@
         });
         if (res) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Группа переименована', status: 'success'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: 'Группа переименована'}});
           this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);
         } else {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: res, status: 'error'})
+          // this[SHOW_MODAL_MUTATION]({component: Warning, data: {title: res}});
         }
       },
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
