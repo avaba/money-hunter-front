@@ -161,6 +161,27 @@
         delete data.searchIcon;
         delete data.availableOptions;
         delete data.brands;
+        delete data.categories;
+
+        const categories = []
+        if(this.categories.length !== 1 && this.categories[0] !== 0) {
+          console.log(this.categories)
+          this.categories.forEach(category => {
+            const isIncluded = this.allCategories[0].children.find(item => item.id === category)
+            console.log(this.allCategories, category)
+            if(isIncluded) {
+              const childCategories = isIncluded.children_id
+              if(childCategories.length > 0) {
+                categories.push(...childCategories)
+              }
+            } else {
+              categories.push(category)
+            }
+          })
+          data.categories = categories
+        } else {
+          data.categories = [0]
+        }
 
         let brands = [...this.brands];
         if (brands[0] !== 'all') {
@@ -196,7 +217,8 @@
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           let brands = [];
-          if (brands[0] !== 'all') {
+          if (data.brands[0] !== 'all') {
+            console.log(data.brands, this.foundedBrands)
             data.brands.forEach(name => {
               brands.push(this.foundedBrands.find(item => item.name === name).id)
             })
@@ -222,6 +244,7 @@
           })
         }
         _data["brands"] = brands
+
         this[SHOW_MODAL_MUTATION]({component: SaveProject, data: _data});
       }
       ,
