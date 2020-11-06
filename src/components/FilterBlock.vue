@@ -219,10 +219,40 @@
       loadProject() {
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
         this.$eventBus.$once('find_search_id_data', ({data}) => {
+          if(data.priceRange[0] <= 1) {
+            data.priceRange[0] = ''
+          } 
+          if(data.priceRange[1] <= 900000) {
+            data.priceRange[1] = ''
+          } 
           this.priceRange = data.priceRange;
+          if(data.ordersRange[0] <= 0) {
+            data.ordersRange[0] = ''
+          } 
+          if(data.ordersRange[1] <= 900000) {
+            data.ordersRange[1] = ''
+          } 
           this.ordersRange = data.ordersRange;
+          if(data.ratingRange[0] <= 0) {
+            data.ratingRange[0] = ''
+          } 
+          if(data.ratingRange[1] <= 5) {
+            data.ratingRange[1] = ''
+          } 
           this.ratingRange = data.ratingRange;
+          if(data.feedbackRange[0] <= 0) {
+            data.feedbackRange[0] = ''
+          } 
+          if(data.feedbackRange[1] <= 900000) {
+            data.feedbackRange[1] = ''
+          } 
           this.feedbackRange = data.feedbackRange;
+          if(data.revenueRange[0] <= 0) {
+            data.revenueRange[0] = ''
+          } 
+          if(data.revenueRange[1] <= 900000) {
+            data.revenueRange[1] = ''
+          } 
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           let brands = [];
