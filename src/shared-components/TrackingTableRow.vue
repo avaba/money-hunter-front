@@ -94,145 +94,265 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
+  // .width5 {
+  //   width: 5%;
+  // }
+
+  // .width9 {
+  //   width: 9%;
+  //   white-space: nowrap;
+  // }
+
+  // .width23 {
+  //   width: 23%;
+  // }
+
+  // .width30 {
+  //   width: 30%;
+  // }
+
+  // .width10 {
+  //   width: 10%;
+  // }
+
+  // .width25 {
+  //   width: 25%;
+  // }
+
+  // .tracking-table {
+  //   width: 100%;
+  // }
+
+  // .tracking-table__row {
+  //   width: 100%;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: space-between;
+  //   border-top: 1px solid $drayDevider;
+  //   @media screen and (max-width: 1400px) {
+  //     & .tracking-table__cell {
+  //       font-size: 12px;
+  //     }
+  //   }
+  // }
+
+  // .tracking-table__row_open {
+  //   background: $gray3;
+  // }
+
+  // .positive {
+  //   color:#0ad406;
+  // }
+
+  // .negative {
+  //   color: #ff0303;
+  // }
+
+  // .tracking-table__cell {
+  //   // border-top: 1px solid $drayDevider;
+  //   // padding: 1.71rem .5rem 1.71rem 20px;
+  //   // padding: 1.85rem 1.21rem;
+  //   // padding: 15px 15px 15px 15px;
+  //   // padding-left: 1.21rem;
+  //   padding: 15px 15px 15px 5px;
+  //   text-align: right;
+  //   letter-spacing: .2px;
+  //   box-sizing: border-box;
+  //   &.width5 {
+  //     white-space: nowrap;
+  //   }
+  //   &.tracking-table__align-center {
+  //     text-align: center;
+  //     padding-left: 0;
+  //     padding-right: 10px;
+  //   }
+  //   &.tracking-table__align-left {
+  //     text-align: left;
+  //     padding-right: 10px;
+  //     &.pl-35 {
+  //       padding-left: 35px !important;
+  //     }
+  //     &.pr-35 {
+  //       padding-left: 35px !important;
+  //     }
+  //   }
+
+  //   &.tracking-table__cell_dropdown {
+  //     background: url("../assets/img/ikons/tracking-open.svg") no-repeat .71rem center;
+  //   }
+
+  //   &.tracking-table__cell_open {
+  //     background: url("../assets/img/ikons/tracking-close.svg") no-repeat .71rem center;
+  //   }
+
+  //   // &:first-child {
+  //   //   padding-left: 1.64rem;
+  //   // }
+
+  //   // &:last-child {
+  //   //   padding-right: .78rem;
+  //   // }
+  //   &:first-child {
+  //     padding-left: 35px;
+  //   }
+
+  //   &:last-child {
+  //     padding-right: 35px;
+  //   }
+  // }
+
+  // .tracking-table-dropdown__item {
+  //   padding-bottom: 1.28rem;
+
+  //   &:first-child {
+  //     padding-left: 1.64rem;
+  //   }
+
+  //   div {
+  //     display: flex;
+
+  //     &.tracking-table-dropdown__item-chart {
+  //       justify-content: center;
+  //     }
+
+  //     /* для charts js - либа генерит div*/
+  //     /deep/ & .chartjs-render-monitor {
+  //       background-color: white;
+  //     }
+
+  //     /deep/ & .chartjs-render-monitor {
+  //       width: 650px !important;
+  //       height: 240px !important;
+  //       margin: 0px auto !important;
+  //     }
+  //   }
+  // }
+
+  // .row-with-photo {
+  //   display: flex;
+  //   align-items: center;
+  //   & img {
+  //     margin-right: 15px;
+  //   }
+  // }
   .width5 {
     width: 5%;
   }
-
   .width9 {
     width: 9%;
     white-space: nowrap;
   }
-
   .width23 {
     width: 23%;
   }
-
   .width30 {
     width: 30%;
   }
-
   .width10 {
     width: 10%;
   }
-
   .width25 {
     width: 25%;
   }
-
   .tracking-table {
     width: 100%;
   }
-
   .tracking-table__row {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     border-top: 1px solid $drayDevider;
-    @media screen and (max-width: 1400px) {
-      & .tracking-table__cell {
-        font-size: 12px;
-      }
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  @media screen and (max-width: 1400px) {
+    .tracking-table__row .tracking-table__cell {
+      font-size: 12px;
     }
   }
-
-  .tracking-table__row_open {
-    background: $gray3;
-  }
-
   .positive {
-    color:#0ad406;
+    color: #0ad406;
   }
-
   .negative {
     color: #ff0303;
   }
-
   .tracking-table__cell {
-    // border-top: 1px solid $drayDevider;
-    // padding: 1.71rem .5rem 1.71rem 20px;
-    // padding: 1.85rem 1.21rem;
-    // padding: 15px 15px 15px 15px;
-    // padding-left: 1.21rem;
-    padding: 15px 15px 15px 5px;
+    padding: 15px 10px 15px 5px;
     text-align: right;
-    letter-spacing: .2px;
-    box-sizing: border-box;
-    &.width5 {
-      white-space: nowrap;
-    }
-    &.tracking-table__align-center {
-      text-align: center;
-      padding-left: 0;
-      padding-right: 10px;
-    }
-    &.tracking-table__align-left {
-      text-align: left;
-      padding-right: 10px;
-      &.pl-35 {
-        padding-left: 35px !important;
-      }
-      &.pr-35 {
-        padding-left: 35px !important;
-      }
-    }
-
-    &.tracking-table__cell_dropdown {
-      background: url("../assets/img/ikons/tracking-open.svg") no-repeat .71rem center;
-    }
-
-    &.tracking-table__cell_open {
-      background: url("../assets/img/ikons/tracking-close.svg") no-repeat .71rem center;
-    }
-
-    // &:first-child {
-    //   padding-left: 1.64rem;
-    // }
-
-    // &:last-child {
-    //   padding-right: .78rem;
-    // }
-    &:first-child {
-      padding-left: 35px;
-    }
-
-    &:last-child {
-      padding-right: 35px;
-    }
+    letter-spacing: 0.2px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
   }
-
+  .tracking-table__cell.width5 {
+    white-space: nowrap;
+  }
+  .tracking-table__cell.tracking-table__align-center {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 10px;
+  }
+  .tracking-table__cell.tracking-table__align-left {
+    text-align: left;
+    padding-right: 10px;
+  }
+  .tracking-table__cell.tracking-table__align-left.pl-35 {
+    padding-left: 35px !important;
+  }
+  .tracking-table__cell.tracking-table__align-left.pr-35 {
+    padding-left: 35px !important;
+  }
+  .tracking-table__cell.tracking-table__cell_dropdown {
+    background: url("../assets/img/ikons/tracking-open.svg") no-repeat 0.71rem center;
+  }
+  .tracking-table__cell.tracking-table__cell_open {
+    background: url("../assets/img/ikons/tracking-close.svg") no-repeat 0.71rem center;
+    background: $gray3;
+  }
+  .tracking-table__cell:first-child {
+    padding-left: 35px;
+  }
+  .tracking-table__cell:last-child {
+    padding-right: 35px;
+  }
   .tracking-table-dropdown__item {
     padding-bottom: 1.28rem;
-
-    &:first-child {
-      padding-left: 1.64rem;
-    }
-
-    div {
-      display: flex;
-
-      &.tracking-table-dropdown__item-chart {
-        justify-content: center;
-      }
-
-      /* для charts js - либа генерит div*/
-      /deep/ & .chartjs-render-monitor {
-        background-color: white;
-      }
-
-      /deep/ & .chartjs-render-monitor {
-        width: 650px !important;
-        height: 240px !important;
-        margin: 0px auto !important;
-      }
-    }
   }
-
-  .row-with-photo {
+  .tracking-table-dropdown__item:first-child {
+    padding-left: 1.64rem;
+  }
+  .tracking-table-dropdown__item div {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    & img {
-      margin-right: 15px;
-    }
+    /* для charts js - либа генерит div*/
+  }
+  .tracking-table-dropdown__item div.tracking-table-dropdown__item-chart {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  /deep/ .tracking-table-dropdown__item div .chartjs-render-monitor {
+    background-color: white;
+  }
+  /deep/ .tracking-table-dropdown__item div .chartjs-render-monitor {
+    width: 650px !important;
+    height: 240px !important;
+    margin: 0px auto !important;
+  }
+  .row-with-photo {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .row-with-photo img {
+    margin-right: 15px;
   }
 </style>
