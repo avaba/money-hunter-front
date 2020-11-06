@@ -305,7 +305,7 @@
           isDefaultExpanded: true
         }];
         this.categories = [-2]
-        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0511"))) {
+        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
           if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
@@ -313,11 +313,11 @@
           } else {
             categories = await service.getCategories()
             localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
-            localStorage.setItem("categoryUpdated0511", true) 
+            localStorage.setItem("categoryUpdated0611", true) 
           }
         } else {
           categories = await service.getCategories()
-          localStorage.setItem("categoryUpdated0511", true) 
+          localStorage.setItem("categoryUpdated0611", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
         console.log(categories)
