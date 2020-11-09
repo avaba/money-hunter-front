@@ -89,9 +89,6 @@
         if (this.isSortable(item)) {
           this.orderHandler(item.name);
         }
-      },
-      routerTo(item) {
-        console.log(item)
       }
     },
   }
@@ -166,6 +163,7 @@
     display: flex;
     justify-content: center;
     // border-bottom: 1px solid #DFE0EB;
+    min-width: 1140px;
     & .tracking-table__header-item {
       min-width: 120px;
       border-bottom: 1px solid #DFE0EB;

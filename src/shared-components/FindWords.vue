@@ -31,7 +31,8 @@
   export default {
     name: "InputWords",
     props: {
-      label: String
+      label: String,
+      value: Array
     },
     data() {
       return {
@@ -66,6 +67,12 @@
             }
           }
         })
+      },
+      value: {
+        handler: function () {
+          this.items = [...this.value]
+        },
+        deep: true
       }
     },
     methods: {
@@ -78,7 +85,7 @@
         this.items.splice(this.items.findIndex(item => item === word), 1)
         this.$emit('input', this.items)
       }
-    }
+    },
   }
 </script>
 
@@ -176,7 +183,7 @@
     color: #039be5;
     cursor: pointer;
     user-select: none;
-    margin: 1px 1px;
+    margin: 3px 1px 1px 1px;
     display: flex;
     background: #e3f2fd;
   }

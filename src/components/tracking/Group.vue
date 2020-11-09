@@ -17,7 +17,7 @@
       </div>
       <TrackingTable v-if="loaded && tablePositions" :headers="tableHeaders" :items="tablePositions" :order="orderType" :order-handler="$orderHandler"/>
       <div v-else class="loading-table">
-        <img ondragstart="return false" src="../../assets/img/loading.gif" alt="">
+        <img ondragstart="return false" src="../../assets/img/loading.svg" alt="">
       </div>
     </div>
   </Fragment>
@@ -75,7 +75,6 @@
         ],
         list: [],
         trackingActionList: [
-          // {label: "Добавить оповещения для групп", img: AlertImg},
           {
             label: "Автоподсорт", img: AutosortImg, onClick: () => {
               this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {

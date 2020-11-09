@@ -10,7 +10,8 @@
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
-                      :multiple="true"/>
+                      :multiple="true"
+                      :disabled="isCategoriesLoading"/>
           </div>
           <div class="filter-form__column-item">
             <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
@@ -26,7 +27,7 @@
             <InputField label="Цена" range v-model="priceRange" :min="1" :max="900000"/>
           </div>
           <div class="filter-form__column-item">
-            <FindWords label="Плюс слова" v-model="addWords"></FindWords>
+            <FindWords label="Плюс слова" :value="addWords" v-model="addWords"></FindWords>
           </div>
         </div>
         <div class="filter-form__column column-fields-rating">
@@ -73,7 +74,7 @@
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn :loading="isLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn :loading="isCategoriesLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -131,7 +132,7 @@
 
         foundedBrands: null,
 
-        isSearching: false
+        isCategoriesLoading: false
       }
     },
     computed: {
@@ -163,13 +164,18 @@
         delete data.brands;
         delete data.categories;
 
-        console.log(this.categories.length, this.categories[0])
+        if(this.brands.length === 0) {
+          this.brands = ['all']
+        }
+
+        if(this.categories.length === 0) {
+          this.categories = [0]
+        }
+      
         const categories = []
         if(this.categories[0] !== 0) {
-          console.log(this.categories)
           this.categories.forEach(category => {
             const isIncluded = this.allCategories[0].children.find(item => item.id === category)
-            console.log(this.allCategories, category)
             if(isIncluded) {
               const childCategories = isIncluded.children_id
               if(childCategories.length > 0) {
@@ -192,7 +198,9 @@
           })
         }
         data.brands = brands
+
         console.log(data)
+
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -211,15 +219,44 @@
       loadProject() {
         this[SHOW_MODAL_MUTATION]({component: LoadProject});
         this.$eventBus.$once('find_search_id_data', ({data}) => {
+          if(data.priceRange[0] <= 1) {
+            data.priceRange[0] = ''
+          } 
+          if(data.priceRange[1] >= 900000) {
+            data.priceRange[1] = ''
+          } 
           this.priceRange = data.priceRange;
+          if(data.ordersRange[0] <= 0) {
+            data.ordersRange[0] = ''
+          } 
+          if(data.ordersRange[1] >= 900000) {
+            data.ordersRange[1] = ''
+          } 
           this.ordersRange = data.ordersRange;
+          if(data.ratingRange[0] <= 0) {
+            data.ratingRange[0] = ''
+          } 
+          if(data.ratingRange[1] >= 5) {
+            data.ratingRange[1] = ''
+          } 
           this.ratingRange = data.ratingRange;
+          if(data.feedbackRange[0] <= 0) {
+            data.feedbackRange[0] = ''
+          } 
+          if(data.feedbackRange[1] >= 900000) {
+            data.feedbackRange[1] = ''
+          } 
           this.feedbackRange = data.feedbackRange;
+          if(data.revenueRange[0] <= 0) {
+            data.revenueRange[0] = ''
+          } 
+          if(data.revenueRange[1] >= 900000) {
+            data.revenueRange[1] = ''
+          } 
           this.revenueRange = data.revenueRange;
           this.categories = data.categories;
           let brands = [];
           if (data.brands[0] !== 'all') {
-            console.log(data.brands, this.foundedBrands)
             data.brands.forEach(name => {
               brands.push(this.foundedBrands.find(item => item.name === name).id)
             })
@@ -238,7 +275,7 @@
         const _data = {...this.$data}
         delete _data.brands
         let brands = [...this.brands];
-        if (brands[0] !== 'all') {
+        if (this.brands[0] !== 'all') {
           brands = []
           this.brands.forEach(id => {
             brands.push(this.foundedBrands.find(item => item.id === id).name)
@@ -261,23 +298,34 @@
       async loadCategories() {
         const service = new BlackboxService();
         let categories = null
-        if(categories) {
+        this.isCategoriesLoading = true
+        this.availableOptions = [{
+          id: -2,
+          name: 'Загрузка...',
+          isDefaultExpanded: true
+        }];
+        this.categories = [-2]
+        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
-          if(this.compareTime(timestamp, timeNow)) {
+          if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
             categories = JSON.parse(localStorage.getItem("categories")).categories
           } else {
             categories = await service.getCategories()
             localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+            localStorage.setItem("categoryUpdated0611", true) 
           }
         } else {
           categories = await service.getCategories()
-          localStorage.setItem("isCategoriesUpdated", true) 
+          localStorage.setItem("categoryUpdated0611", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
+        console.log(categories)
         this.allCategories = categories
         this.availableOptions = categories;
+        this.categories = [0]
         this.availableOptions[0]['isDefaultExpanded'] = true
+        this.isCategoriesLoading = false
       }
       ,
       ...
@@ -286,21 +334,6 @@
     created() {
       this.loadCategories();
     },
-    // watch: {
-    //   brands: {
-    //     handler: function () {
-    //       if(typeof this.brands[0] === 'string') {
-    //         const brands = []
-    //         console.log(this.foundedBrands)
-    //         this.brands.forEach(name => {
-    //           brands.push(this.foundedBrands.find(item => item.name === name).id)
-    //         })
-    //         this.brands = brands
-    //       }
-    //     },
-    //     deep: true
-    //   }
-    // }
   }
 </script>
 

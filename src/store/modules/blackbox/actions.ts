@@ -20,11 +20,12 @@ export default {
   async [CHECK_SEARCH_ID_ACTION](context: ActionContext<VuexBlackBoxStateInterface, any>, filters: Record<string, any>) {
     const service = new BlackboxService();
     AmplitudeService.blackBoxSearch(service.normalizeFilterData(filters as GetSearchIDDataInterface));
-    if (!context.state.searchID || !isFiltersEquals(context.state.filters, filters)) {
+
+    // if (!context.state.searchID || !isFiltersEquals(context.state.filters, filters)) {
       // searchID нету или фильтры изменились, просто получаем новый
       await context.dispatch(GET_NEW_SEARCH_ID_ACTION, filters);
       context.commit(SET_FILTERS_MUTATION, filters);
-    }
+    // }
   },
   async [GET_NEW_SEARCH_ID_ACTION](context: ActionContext<VuexBlackBoxStateInterface, any>, payload: Record<string, any>) {
     const service = new BlackboxService();

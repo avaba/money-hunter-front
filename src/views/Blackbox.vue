@@ -3,16 +3,16 @@
     <FilterBlock :isLoading="isLoading" :searchHandler="searchHandler"/>
 
     <div class="blackbox">
-      <TrackingTable v-if="!isLoading && tablePositions.length > 0"
+      <TrackingTable v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated"
                      :headers="tableHeaders"
                      :items="tablePositions"
                      :order="orderType"
                      :order-handler="$orderHandler"
                      :subheaders="subheaders"/>
-      <div v-else-if="isLoading" class="loading-table">
-        <img ondragstart="return false" src="../assets/img/loading.gif" alt="">
+      <div v-else-if="isLoading || isLoadingAgregated" class="loading-table">
+        <img ondragstart="return false" src="../assets/img/loading.svg" alt="">
       </div>
-      <div v-else-if="isLoading === false && tablePositions.length <= 0" class="table-notFounded">
+      <div v-else-if="isLoading === false && tablePositions.length <= 0 && isLoadingAgregated === false" class="table-notFounded">
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
@@ -82,7 +82,9 @@
 
         isLoading: null,
 
-        subheaders: {}
+        subheaders: {},
+
+        isLoadingAgregated: false
       }
     },
     computed: {
@@ -206,7 +208,6 @@
             subHeaderValue += renamedHeaders[header].value
           }
           this.subheaders[header]["subHeaderValue"] = subHeaderValue
-          console.log(this.subheaders)
           // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
         })
       },

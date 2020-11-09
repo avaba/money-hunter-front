@@ -1,14 +1,16 @@
 <template>
   <div id="app" class="root">
-    <template v-if="isLoggedIn">
+    <template v-if="isLoggedIn && notPaymentRoute">
       <Sidebar/>
       <main>
         <Header :header="getTitle()"/>
         <router-view/>
+        <div v-if="isTechnicalWorks" class="error-working">
+          <p class="error-working-message">{{ technicalMessage }}</p>
+        </div>
       </main>
       <component v-bind:is="component" v-if="isShow" v-bind="nested"/>
     </template>
-
     <!--    login/register and other similar windows-->
     <router-view v-else/>
   </div>
@@ -20,18 +22,24 @@
   import {GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION} from "@/store/modules/user/constants";
   import {mapActions, mapState} from "vuex";
   import {TokenService} from "@/services/token_service";
-  import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {LOAD_POSITIONS_ACTION} from "@/store/modules/trackingPositions/constants";
+  import {LOAD_GROUPS_ACTION} from "@/store/modules/tracking/constants";
   import {TrackingService} from "@/services/tracking_service";
 
   export default {
     components: {Sidebar, Header},
     data() {
-      return {}
+      return {
+        isTechnicalWorks: false,
+        technicalMessage: 'Ведутся технические работы'
+      }
     },
     computed: {
       ...mapState('auth', ['isLoggedIn']),
       ...mapState('modal', ['isShow', 'component', 'nested']),
+      notPaymentRoute() {
+        return this.$route.name !== 'payment-results' 
+      }
     },
     created() {
       const tokenService = new TokenService();
@@ -41,7 +49,6 @@
         this[GET_SUBSCRIPTION_ACTION]();
         this[LOAD_GROUPS_ACTION]();
         this[LOAD_POSITIONS_ACTION]();
-
         trackingService.getBrands();
       }
     },
@@ -188,6 +195,29 @@
     .input-field__input {
       flex: 0 0 100%;
       margin-left: .78rem;
+    }
+  }
+  .error-working {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    pointer-events: none;
+    z-index: 98;
+  }
+  .error-working-message {
+    color: #fff;
+    font-weight: 500;
+    font-size: 32px;
+  }
+  @media screen and (max-width: 770px) {
+    .error-working-message {
+      font-size: 16px;
     }
   }
 </style>

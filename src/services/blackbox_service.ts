@@ -8,11 +8,11 @@ export class BlackboxService {
 
   public normalizeFilterData(data: GetSearchIDDataInterface): GetSearchIDDataInterface {
     const _data = {} as GetSearchIDDataInterface;
-    _data.feedbackRange = this.normalizeRangeData(data.feedbackRange);
-    _data.ordersRange = this.normalizeRangeData(data.ordersRange);
-    _data.priceRange = this.normalizeRangeData(data.priceRange);
-    _data.ratingRange = this.normalizeRangeData(data.ratingRange);
-    _data.revenueRange = this.normalizeRangeData(data.revenueRange);
+    _data.feedbackRange = this.normalizeRangeData({data: data.feedbackRange, min: 0, max: 900000});
+    _data.ordersRange = this.normalizeRangeData({ data: data.ordersRange, min: 0, max: 900000 });
+    _data.priceRange = this.normalizeRangeData({ data: data.priceRange, min: 1, max: 900000 });
+    _data.ratingRange = this.normalizeRangeData({ data: data.ratingRange, min: 0, max: 5 });
+    _data.revenueRange = this.normalizeRangeData({ data: data.revenueRange, min: 0, max: 900000 });
     _data.brands = [...data.brands];
     _data.categories = [...data.categories];
     _data.addWords = [...data.addWords];
@@ -23,10 +23,19 @@ export class BlackboxService {
 
   private normalizeRangeData = (data: any): RangeOfIntegersType => {
     const _data = Array<number>(2);
-
     // если данных нет или ни не соответствуют условию
-    _data[0] = (!data[0] || data[0] < 0) ? 0 : data[0];
-    _data[1] = (!data[1] || data[1] > 900000) ? 900000 : data[1];
+    // _data[0] = (!data[0] || data[0] < 0) ? 0 : data[0];
+    // _data[1] = (!data[1] || data[1] > 900000) ? 900000 : data[1];
+    if (!data.data[0] || data.data[0] < data.min) {
+      _data[0] = data.min
+    } else {
+      _data[0] = data.data[0]
+    }
+    if (!data.data[1] || data.data[1] > data.max) {
+      _data[1] = data.max
+    } else {
+      _data[1] = data.data[1]
+    }
 
     return _data as RangeOfIntegersType;
   };

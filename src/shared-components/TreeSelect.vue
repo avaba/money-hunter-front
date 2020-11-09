@@ -1,5 +1,5 @@
 <template>
-  <div class="select-field">
+  <div @click="chekingWidth" class="select-field">
     <label for="" class="select-field__label">{{label}}</label>
     <span class="select-field__error" v-if="!!error">{{error}}</span>
     <VendorTreeSelect ref="treeselect"
@@ -70,20 +70,20 @@
       getMenu() {
         return this.$refs.treeselect.getMenu();
       },
-      // chekingWidth() {
-      //   const amountOfNodes = 10
-      //   const defaultWidth = document.querySelector(".select-field").offsetWidth
-      //   const extraWidthSize = 75
-      //   let extraWidth = 0
-      //   for(let i = 2; i < amountOfNodes; i++) {
-      //     if(document.querySelector(`.vue-treeselect__indent-level-${i}`)) {
-      //       extraWidth += extraWidthSize
-      //     }
-      //   }
-      //   if(document.querySelector(".vue-treeselect__menu")) {
-      //     document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
-      //   }
-      // },
+      chekingWidth() {
+        const amountOfNodes = 10
+        const defaultWidth = document.querySelector(".select-field").offsetWidth
+        const extraWidthSize = 75
+        let extraWidth = 0
+        for(let i = 2; i < amountOfNodes; i++) {
+          if(document.querySelector(`.vue-treeselect__indent-level-${i}`)) {
+            extraWidth += extraWidthSize
+          }
+        }
+        if(document.querySelector(".vue-treeselect__menu")) {
+          document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+        }
+      },
       handleLocalSearch() {
         const origFunc = this.$refs.treeselect.handleLocalSearch;
 

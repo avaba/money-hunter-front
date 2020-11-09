@@ -24,7 +24,7 @@
           </div>
           <div class="modal-form__input-item">
             <ValidationProvider :rules="{required: true, min: 6}" v-slot="{errors}" name="Подтверждение пароля">
-              <InputField label="Подтверждение пароль"
+              <InputField label="Подтверждение пароля"
                           clazz="input-field__input_password"
                           v-model="passwordConfirm"
                           type="password"
@@ -123,12 +123,7 @@
     computed: {
       successText() {
         const text = `Мы отправили сообщение на адрес ${this.login}.
-             Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
-        // let text = `Сервис работает в тестовом режиме, вы были добавлены в лист ожидания. В ближайшее время с вами свяжется наш менеджер`
-        // if(this.confirmMessage && this.codeStatus === 'valid') {
-        //   text = `Мы отправили сообщение на адрес ${this.login}.
-        //     Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
-        // }
+            Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.`
         return text
       },
       isDisabled() {

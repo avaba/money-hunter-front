@@ -34,6 +34,13 @@
     align-items: center;
     padding-top: 100px;
     padding-bottom: 65px;
+    min-height: 100vh;
+  }
+
+  @media screen and(max-height: 870px) {
+    .promo {
+      padding: 20px;
+    }
   }
 
   .promo-info {
@@ -66,6 +73,11 @@
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.04);
     margin-left: 88px;
     width: 385px;
+  }
+  @media screen and(max-height: 710px) {
+    .promo-right {
+      padding: 30px 25px;
+    }
   }
   @media screen and (max-width: 800px) {
     .promo__logo {
