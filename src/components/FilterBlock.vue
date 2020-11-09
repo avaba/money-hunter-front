@@ -72,6 +72,14 @@
                label="Очистить фильтры"
                type="reset"
                clazz="filter-form__action-button filter-form__action-button_clear"/>
+          <Btn without-default-class
+               label="Скачать поиск"
+               :clazz="`filter-form__action-button 
+               filter-form__action-button_saveSearchResult
+               ${downloadBtnStatus}`"
+               :loading="downloadBtnStatus === 'loading'"
+               v-if="downloadBtnStatus !== 'hidden'"
+               @click="downloadSearchResults"/>
         </div>
         <div class="filter-form__send">
           <Btn :loading="isCategoriesLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
@@ -92,7 +100,7 @@
   import {mapMutations} from "vuex";
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
-  import {CHECK_SEARCH_ID_ACTION, GET_AGREGATED_DATA} from "@/store/modules/blackbox/constants";
+  import {CHECK_SEARCH_ID_ACTION, GET_AGREGATED_DATA, DOWNLOAD_SEARCH_RESULT} from "@/store/modules/blackbox/constants";
   import TreeSelect from "@/shared-components/TreeSelect";
   import {BlackboxService} from "../services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
@@ -109,6 +117,10 @@
       },
       isLoading: {
         type: Boolean,
+        required: false
+      },
+      downloadBtnStatus: {
+        type: [String, Boolean],
         required: false
       }
     },
@@ -287,7 +299,7 @@
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 0
+        const oneDayTime = 10000000
         if(dateString + oneDayTime >= now) {
           return true
         } else {
@@ -328,6 +340,10 @@
         this.isCategoriesLoading = false
       }
       ,
+      downloadSearchResults() {
+        this.$emit('downloadSearchResults')
+      }
+      ,
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
@@ -364,6 +380,17 @@
 
     &.filter-form__action-button_clear {
       background: url("../assets/img/ikons/clear.svg") no-repeat .78rem center, white;
+    }
+
+    &.filter-form__action-button_saveSearchResult {
+      width: 140px;
+      background: url("../assets/img/ikons/save.svg") no-repeat .85rem center, white;
+      &.loading {
+        background: #fff;
+        padding-left: 0px;
+        padding-right: 0px;
+        cursor: default;
+      }
     }
   }
 

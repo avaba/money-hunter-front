@@ -1,5 +1,6 @@
 import {BlackboxRepository, GetSearchIDDataInterface, RangeOfIntegersType} from "@/repositories/blackbox_repository";
-import {AuthService} from "@/services/auth_service";
+import { AuthService } from "@/services/auth_service";
+import FileSaver from "file-saver";
 import {AmplitudeService} from "@/services/amplitude_service";
 
 export class BlackboxService {
@@ -74,6 +75,20 @@ export class BlackboxService {
         countAll: 0,
         products: [],
       }
+    }
+  }
+
+  async downloadSearchResults(searchID: string, orderType: string) {
+    try {
+      const closure = this.repo.downloadSearchResults.bind(this.repo, searchID, orderType);
+      const response = await this.service.refreshWrapper(closure);
+
+      const headers = response.headers;
+      const blob = new Blob([`\uFEFF ${response.data}`], { type: headers['content-type'] });
+      FileSaver.saveAs(blob, `Moneyhunter_search.csv`);
+      return true
+    } catch (e) {
+      return false
     }
   }
 
