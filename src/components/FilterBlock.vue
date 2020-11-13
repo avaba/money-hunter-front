@@ -4,14 +4,23 @@
       <div class="filter-form__columns">
         <div class="filter-form__column selectors">
           <div class="filter-form__column-item">
-            <TreeSelect label="Выберите категории"
+            <!-- <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="availableOptions"
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"
-                      :disabled="isCategoriesLoading"/>
+                      :disabled="isCategoriesLoading"/> -->
+            <v-treeview
+              selectable
+              :expand-icon="`mdi-menu-right`"
+              :indeterminate-icon="`mdi-checkbox-marked`"
+              :on-icon="`mdi-checkbox-marked`"
+              :off-icon="`mdi-checkbox-blank-outline`"
+              :items="availableOptions"
+              v-model="categories"
+            ></v-treeview>
           </div>
           <div class="filter-form__column-item">
             <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
@@ -101,7 +110,7 @@
   import SaveProject from "@/components/blackbox/SaveProject";
   import LoadProject from "@/components/blackbox/LoadProject";
   import {CHECK_SEARCH_ID_ACTION, GET_AGREGATED_DATA, DOWNLOAD_SEARCH_RESULT} from "@/store/modules/blackbox/constants";
-  import TreeSelect from "@/shared-components/TreeSelect";
+  // import TreeSelect from "@/shared-components/TreeSelect";
   import {BlackboxService} from "../services/blackbox_service";
   import {ValidationProvider} from 'vee-validate';
   import BrandsSelector from "@/shared-components/BrandsSelector";
@@ -109,7 +118,9 @@
 
   export default {
     name: "FilterBlock",
-    components: {BrandsSelector, ValidationProvider, TreeSelect, Btn, InputField, RowWithIcon, FindWords},
+    components: {BrandsSelector, ValidationProvider, 
+    // TreeSelect, 
+    Btn, InputField, RowWithIcon, FindWords},
     props: {
       searchHandler: {
         type: Function,
@@ -144,7 +155,80 @@
 
         foundedBrands: null,
 
-        isCategoriesLoading: false
+        isCategoriesLoading: false,
+
+        itemstest: [
+        {
+          id: 1,
+          name: 'Applications :',
+          children: [
+            { id: 2, name: 'Calendar : app' },
+            { id: 3, name: 'Chrome : app' },
+            { id: 4, name: 'Webstorm : app' },
+          ],
+        },
+        {
+          id: 5,
+          name: 'Documents :',
+          children: [
+            {
+              id: 6,
+              name: 'vuetify :',
+              children: [
+                {
+                  id: 7,
+                  name: 'src :',
+                  children: [
+                    { id: 8, name: 'index : ts' },
+                    { id: 9, name: 'bootstrap : ts' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 10,
+              name: 'material2 :',
+              children: [
+                {
+                  id: 11,
+                  name: 'src :',
+                  children: [
+                    { id: 12, name: 'v-btn : ts' },
+                    { id: 13, name: 'v-card : ts' },
+                    { id: 14, name: 'v-window : ts' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 15,
+          name: 'Downloads :',
+          children: [
+            { id: 16, name: 'October : pdf' },
+            { id: 17, name: 'November : pdf' },
+            { id: 18, name: 'Tutorial : html' },
+          ],
+        },
+        {
+          id: 19,
+          name: 'Videos :',
+          children: [
+            {
+              id: 20,
+              name: 'Tutorials :',
+              children: [
+                { id: 21, name: 'Basic layouts : mp4' },
+                { id: 22, name: 'Advanced techniques : mp4' },
+                { id: 23, name: 'All about app : dir' },
+              ],
+            },
+            { id: 24, name: 'Intro : mov' },
+            { id: 25, name: 'Conference introduction : avi' },
+          ],
+        },
+      ],
       }
     },
     computed: {

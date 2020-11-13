@@ -220,4 +220,8 @@
       font-size: 16px;
     }
   }
+  
+.v-treeview-node__toggle--open {
+  transform: rotate(90deg);
+}
 </style>
