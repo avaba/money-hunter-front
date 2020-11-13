@@ -74,7 +74,7 @@
                clazz="filter-form__action-button filter-form__action-button_clear"/>
         </div>
         <div class="filter-form__send">
-          <Btn :loading="isCategoriesLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -300,11 +300,11 @@
         let categories = null
         this.isCategoriesLoading = true
         this.availableOptions = [{
-          id: -2,
-          name: 'Загрузка...',
+          id: 0,
+          name: 'Все',
           isDefaultExpanded: true
         }];
-        this.categories = [-2]
+        this.categories = [0]
         if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
@@ -321,11 +321,13 @@
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
         console.log(categories)
-        this.allCategories = categories
-        this.availableOptions = categories;
-        this.categories = [0]
-        this.availableOptions[0]['isDefaultExpanded'] = true
-        this.isCategoriesLoading = false
+        if(categories.length > 0) {
+          this.allCategories = categories
+          this.availableOptions = categories;
+          this.categories = [0]
+          this.availableOptions[0]['isDefaultExpanded'] = true
+          this.isCategoriesLoading = false
+        }
       }
       ,
       ...
