@@ -12,7 +12,7 @@
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"
                       :disabled="isCategoriesLoading"/> -->
-            <!-- <v-treeview
+            <v-treeview
               selectable
               :expand-icon="`mdi-menu-right`"
               :indeterminate-icon="`mdi-checkbox-marked`"
@@ -20,8 +20,7 @@
               :off-icon="`mdi-checkbox-blank-outline`"
               :items="availableOptions"
               v-model="categories"
-            ></v-treeview> -->
-            <CategoriesSelector/>
+            ></v-treeview>
           </div>
           <div class="filter-form__column-item">
             <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
@@ -116,13 +115,12 @@
   import {ValidationProvider} from 'vee-validate';
   import BrandsSelector from "@/shared-components/BrandsSelector";
   import FindWords from "@/shared-components/FindWords";
-  import CategoriesSelector from "@/shared-components/CategoriesSelector"
 
   export default {
     name: "FilterBlock",
     components: {BrandsSelector, ValidationProvider, 
     // TreeSelect, 
-    Btn, InputField, RowWithIcon, FindWords, CategoriesSelector},
+    Btn, InputField, RowWithIcon, FindWords},
     props: {
       searchHandler: {
         type: Function,
