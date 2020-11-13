@@ -470,7 +470,7 @@
 
     &.filter-form__action-button_saveSearchResult {
       width: 140px;
-      background: url("../assets/img/ikons/cloud-download.svg") no-repeat .7rem 60%, white;
+      background: url("../assets/img/ikons/save.svg") no-repeat .85rem center, white;
       &.loading {
         background: #fff;
         padding-left: 0px;
