@@ -202,17 +202,14 @@
       ,
       searchChange(searchQuery, instanceId) {
         if(searchQuery.length > 0) {
-          // console.log(this.categories_list)
-          // const potentialItems = this.categories_list.filter(item => item.name.toLowerCase() === searchQuery.toLowerCase())
           const potentialItems = this.categories_list.filter(function(val) {
-            return val.name.toLowerCase() == searchQuery.toLowerCase();
+            return val.name.toLowerCase().match(searchQuery.toLowerCase())
           });
-          console.log(potentialItems)
           this.categoryOptions = [{
               id: 0,
               name: "Все",
               isDefaultExpanded: true,
-              children: potentialItems
+              children: potentialItems.slice(0, 150)
             }]
         } else {
           this.revertCategories()
