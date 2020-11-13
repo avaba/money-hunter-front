@@ -85,7 +85,7 @@
         this.items.splice(this.items.findIndex(item => item === word), 1)
         this.$emit('input', this.items)
       }
-    },
+    }
   }
 </script>
 
