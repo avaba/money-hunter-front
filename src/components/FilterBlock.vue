@@ -6,12 +6,15 @@
           <div class="filter-form__column-item">
             <TreeSelect label="Выберите категории"
                       v-model="categories"
-                      :options="availableOptions"
+                      :options="categoryOptions"
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"
-                      :disabled="isCategoriesLoading"/>
+                      :disabled="isCategoriesLoading"
+                      :load-options="loadOptions"
+                      @search-change="searchChange"
+                      :dont-use-local-search="true"/>
           </div>
           <div class="filter-form__column-item">
             <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
@@ -106,6 +109,7 @@
   import {ValidationProvider} from 'vee-validate';
   import BrandsSelector from "@/shared-components/BrandsSelector";
   import FindWords from "@/shared-components/FindWords";
+  import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 
   export default {
     name: "FilterBlock",
@@ -127,8 +131,6 @@
     data() {
       return {
         searchIcon: SearchImage,
-        availableOptions: [],
-
         priceRange: [],
         ordersRange: [],
         ratingRange: [],
@@ -144,7 +146,15 @@
 
         foundedBrands: null,
 
-        isCategoriesLoading: false
+        isCategoriesLoading: false,
+        
+        categories_list: null,
+
+        categoryOptions: [{
+          id: -2,
+          name: 'Загрузка...',
+          isDefaultExpanded: true
+        }]
       }
     },
     computed: {
@@ -154,6 +164,30 @@
       userSubscription() {
         return this.$store.state.user.subscription?.subscriptionType;
       },
+      // availableOptions() {
+      //   if(this.allCategories) {
+      //     const categories = this.allCategories.slice(0)
+      //     const newCats = []
+      //     categories[0].children.forEach(item => {
+      //       newCats.push({
+      //         children: null,
+      //         children_id: item.children_id,
+      //         id: item.id,
+      //         name: item.name
+      //       })
+      //     })
+      //     return [{
+      //       id: 0,
+      //       name: "Все",
+      //       isDefaultExpanded466: true,
+      //       children: newCats
+      //     }]
+      //   } else return [{
+      //     id: -2,
+      //     name: 'Загрузка...',
+      //     isDefaultExpanded: true
+      //   }]
+      // }
     },
     methods: {
       async searchBtnHandler() {
@@ -166,6 +200,24 @@
         this.foundedBrands = brands
       } 
       ,
+      searchChange(searchQuery, instanceId) {
+        if(searchQuery.length > 0) {
+          // console.log(this.categories_list)
+          // const potentialItems = this.categories_list.filter(item => item.name.toLowerCase() === searchQuery.toLowerCase())
+          const potentialItems = this.categories_list.filter(function(val) {
+            return val.name.toLowerCase() == searchQuery.toLowerCase();
+          });
+          console.log(potentialItems)
+          this.categoryOptions = [{
+              id: 0,
+              name: "Все",
+              isDefaultExpanded: true,
+              children: potentialItems
+            }]
+        } else {
+          this.revertCategories()
+        }
+      },
       getAgregatedData() {
         this.$store.dispatch(`blackbox/${GET_AGREGATED_DATA}`);
       },
@@ -311,17 +363,12 @@
         const service = new BlackboxService();
         let categories = null
         this.isCategoriesLoading = true
-        this.availableOptions = [{
-          id: -2,
-          name: 'Загрузка...',
-          isDefaultExpanded: true
-        }];
         this.categories = [-2]
         if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
           if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
-            categories = JSON.parse(localStorage.getItem("categories")).categories
+            categories = JSON.parse(localStorage.getItem("categories"))
           } else {
             categories = await service.getCategories()
             localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
@@ -332,24 +379,64 @@
           localStorage.setItem("categoryUpdated0611", true) 
           localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
         }
-        console.log(categories)
-        this.allCategories = categories
-        this.availableOptions = categories;
         this.categories = [0]
-        this.availableOptions[0]['isDefaultExpanded'] = true
+        this.allCategories = categories.categories.categories
+        this.categories_list = categories.categories.categories_list
+        console.log(this.allCategories, this.categories_list)
         this.isCategoriesLoading = false
       }
       ,
+      loadOptions({ action, parentNode, callback }) {
+        if (action === LOAD_CHILDREN_OPTIONS) {
+          if(parentNode.children_id.length > 0) {
+            const parentChildrens = this.allCategories[0].children.find(item => item.id === parentNode.id).children
+            parentNode.children = parentChildrens
+            callback()
+          }
+        }
+      },
       downloadSearchResults() {
         this.$emit('downloadSearchResults')
       }
       ,
+      revertCategories() {
+        if(this.allCategories) {
+            const categories = this.allCategories
+            const newCats = []
+            categories[0].children.forEach(item => {
+              newCats.push({
+                children: null,
+                children_id: item.children_id,
+                id: item.id,
+                name: item.name
+              })
+            })
+            this.categoryOptions = [{
+              id: 0,
+              name: "Все",
+              isDefaultExpanded: true,
+              children: newCats
+            }]
+          } else this.categoryOptions = [{
+            id: -2,
+            name: 'Загрузка...',
+            isDefaultExpanded: true
+          }]
+      },
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
       this.loadCategories();
     },
+    watch: {
+      allCategories: {
+        handler: function () {
+          this.revertCategories()
+        },
+        deep: true
+      }
+    }
   }
 </script>
 
