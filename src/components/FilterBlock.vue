@@ -312,8 +312,12 @@
             categories = JSON.parse(localStorage.getItem("categories")).categories
           } else {
             categories = await service.getCategories()
-            localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
-            localStorage.setItem("categoryUpdated1311", true) 
+            if(categories.length <= 0) {
+              categories = JSON.parse(localStorage.getItem("categories")).categories
+            } else {
+              localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+              localStorage.setItem("categoryUpdated1311", true) 
+            }
           }
         } else {
           categories = await service.getCategories()
