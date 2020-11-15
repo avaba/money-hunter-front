@@ -85,7 +85,7 @@
                @click="downloadSearchResults"/>
         </div>
         <div class="filter-form__send">
-          <Btn :loading="isCategoriesLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn :loading="isLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -151,8 +151,8 @@
         categories_list: null,
 
         categoryOptions: [{
-          id: -2,
-          name: 'Загрузка...',
+          id: 0,
+          name: 'Все',
           isDefaultExpanded: true
         }]
       }
@@ -164,30 +164,9 @@
       userSubscription() {
         return this.$store.state.user.subscription?.subscriptionType;
       },
-      // availableOptions() {
-      //   if(this.allCategories) {
-      //     const categories = this.allCategories.slice(0)
-      //     const newCats = []
-      //     categories[0].children.forEach(item => {
-      //       newCats.push({
-      //         children: null,
-      //         children_id: item.children_id,
-      //         id: item.id,
-      //         name: item.name
-      //       })
-      //     })
-      //     return [{
-      //       id: 0,
-      //       name: "Все",
-      //       isDefaultExpanded466: true,
-      //       children: newCats
-      //     }]
-      //   } else return [{
-      //     id: -2,
-      //     name: 'Загрузка...',
-      //     isDefaultExpanded: true
-      //   }]
-      // }
+    },
+    beforeDestroy() {
+      this.$store.commit('blackbox/saveFiltersLocal', this.$data)
     },
     methods: {
       async searchBtnHandler() {
@@ -348,8 +327,8 @@
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 10000000
-        if(dateString + oneDayTime >= now) {
+        const differentTime = 600000
+        if(dateString + differentTime >= now) {
           return true
         } else {
           return false
@@ -360,7 +339,7 @@
         const service = new BlackboxService();
         let categories = null
         this.isCategoriesLoading = true
-        this.categories = [-2]
+        this.categories = [0]
         if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
           const timeNow = new Date().getTime()
@@ -368,18 +347,18 @@
             categories = JSON.parse(localStorage.getItem("categories"))
           } else {
             categories = await service.getCategories()
-            localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+            localStorage.setItem("categories", JSON.stringify({categories: categories.categories, categories_list: categories.categories_list, timestamp: new Date().getTime().toString()}))
             localStorage.setItem("categoryUpdated0611", true) 
           }
         } else {
           categories = await service.getCategories()
           localStorage.setItem("categoryUpdated0611", true) 
-          localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+          localStorage.setItem("categories", JSON.stringify({categories: categories.categories, categories_list: categories.categories_list, timestamp: new Date().getTime().toString()}))
         }
         this.categories = [0]
-        this.allCategories = categories.categories.categories
-        this.categories_list = categories.categories.categories_list
-        console.log(this.allCategories, this.categories_list)
+        this.allCategories = categories.categories
+        this.categories_list = categories.categories_list
+
         this.isCategoriesLoading = false
       }
       ,
@@ -415,8 +394,8 @@
               children: newCats
             }]
           } else this.categoryOptions = [{
-            id: -2,
-            name: 'Загрузка...',
+            id: 0,
+            name: 'Все',
             isDefaultExpanded: true
           }]
       },
@@ -424,6 +403,15 @@
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
+      const myLocalFilters = this.$store.getters['blackbox/myLocalFilters']
+      if(myLocalFilters) {
+        this.brands = []
+        this.$nextTick(() => {
+          Object.keys(this.$data).forEach(key => {
+            this.$data[key] = myLocalFilters[key]
+          })
+        })
+      }
       this.loadCategories();
     },
     watch: {

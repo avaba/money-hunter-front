@@ -249,6 +249,17 @@
     async mounted() {
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
     },
+    beforeDestroy() {
+      this.$store.commit('blackbox/saveSearchResultsLocal', this.$data)
+    },
+    created() {
+      const myLocalSearchResults = this.$store.getters['blackbox/myLocalSearchResults']
+      if(myLocalSearchResults) {
+        Object.keys(this.$data).forEach(key => {
+          this.$data[key] = myLocalSearchResults[key]
+        })
+      }
+    },
     watch: {
       searchID: function () {
         console.log(this.searchID)

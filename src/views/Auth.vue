@@ -32,7 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 100px;
+    padding-top: 20px;
     padding-bottom: 65px;
     min-height: 100vh;
   }
