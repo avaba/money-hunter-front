@@ -223,7 +223,7 @@
       //   {"date": "2020-07-25", "orders": 22},
       //   {"date": "2020-07-26", "orders": 17},
       // ];
-
+      console.log(productData)
       const labels = productData.map(item => item.date);
       const orders = productData.map(item => item.orders);
       const qty = productData.map(item => item.qty);

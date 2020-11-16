@@ -62,6 +62,8 @@
           {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
           {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9'},
           {name: 'avRevenue', label: 'Сумма заказов в неделю', clazz: 'width9'},
+          // {name: 'avRevenue', label: 'Продажи', clazz: 'width9'},
+          // {name: 'avRevenue', label: 'Сумма продаж', clazz: 'width9'},
           {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-right width9'},
           {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width9'},
           {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9'},
@@ -95,10 +97,15 @@
     },
     methods: {
       async searchHandler() {
+        this.isLoading = true
+
         this.paginationData.page = 1;
         this.orderType = DEFAULT_ORDER_TYPE;
-
         this.debounceLoadGoods();
+
+        this.$nextTick(() => {
+          this.isLoading = false
+        })
       },
       perPageHandler(value) {
         this.paginationData.page = 1;
@@ -121,6 +128,10 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
+          this.$nextTick(() => {
+            this.list = [];
+            this.isLoading = true
+          })
           this.isLoading = true;
           const service = new BlackboxService();
 
@@ -143,6 +154,7 @@
         this.downloadBtnStatus = 'loading'
         if (this.$store.state.blackbox.searchID) {
           const service = new BlackboxService();
+          console.log(this.searchID)
           const result = await service.downloadSearchResults(
             this.searchID,
             this.orderType
@@ -256,7 +268,9 @@
       const myLocalSearchResults = this.$store.getters['blackbox/myLocalSearchResults']
       if(myLocalSearchResults) {
         Object.keys(this.$data).forEach(key => {
-          this.$data[key] = myLocalSearchResults[key]
+          this.$nextTick(() => {
+            this.$data[key] = myLocalSearchResults[key]
+          })
         })
       }
     },

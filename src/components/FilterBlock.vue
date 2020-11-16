@@ -14,6 +14,8 @@
                       :disabled="isCategoriesLoading"
                       :load-options="loadOptions"
                       @search-change="searchChange"
+                      @open="handleMenuOpen"
+                      ref="CategoriesTreeselect"
                       :dont-use-local-search="true"/>
           </div>
           <div class="filter-form__column-item">
@@ -154,7 +156,15 @@
           id: 0,
           name: 'Все',
           isDefaultExpanded: true
-        }]
+        }],
+
+        isCategoriesSearching: false,
+
+        categoriesPortionPage: 1,
+        categoriesPortionSize: 30,
+        categoriesSearchQuery: "",
+
+        dataLoaded: false
       }
     },
     computed: {
@@ -166,6 +176,9 @@
       },
     },
     beforeDestroy() {
+      if(this.categories.find(item => item === 0) === 0) {
+        this.categories = [0]
+      }
       this.$store.commit('blackbox/saveFiltersLocal', this.$data)
     },
     methods: {
@@ -181,18 +194,45 @@
       ,
       searchChange(searchQuery, instanceId) {
         if(searchQuery.length > 0) {
+          this.isCategoriesSearching = true
+          this.categoriesSearchQuery = searchQuery
           const potentialItems = this.categories_list.filter(function(val) {
             return val.name.toLowerCase().match(searchQuery.toLowerCase())
           });
           this.categoryOptions = [{
-              id: 0,
-              name: "Все",
-              isDefaultExpanded: true,
-              children: potentialItems.slice(0, 150)
-            }]
+            id: 0,
+            name: "Все",
+            isDefaultExpanded: true,
+            children: potentialItems.slice(0, this.categoriesPortionSize)
+          }]
         } else {
+          this.isCategoriesSearching = false
+          this.categoriesPortionPage = 1
+          this.categoriesPortionSize = 30
           this.revertCategories()
         }
+      },
+      handleMenuOpen() {
+        this.$nextTick(() => {
+          const menu = this.$refs.CategoriesTreeselect.getMenu();
+          menu.addEventListener('scroll', () => {
+            if(this.isCategoriesSearching) {
+              const hasReachedEnd = menu.scrollHeight - menu.scrollTop <= menu.clientHeight * 1.25;
+              if (hasReachedEnd) {
+                this.categoriesPortionPage += 1;
+                const fromIndex = (this.categoriesPortionPage - 1) * this.categoriesPortionSize + 1;
+                const toIndex = this.categoriesPortionPage * this.categoriesPortionSize;
+                this.loadCategoriesFromSearch(fromIndex, toIndex)
+              }
+            }
+          })
+        })
+      },
+      loadCategoriesFromSearch(fromIndex, toIndex) {
+        const potentialItems = this.categories_list.filter((val) => {
+          return val.name.toLowerCase().match(this.categoriesSearchQuery.toLowerCase())
+        });
+        this.categoryOptions[0].children = potentialItems.splice(0, toIndex)
       },
       getAgregatedData() {
         this.$store.dispatch(`blackbox/${GET_AGREGATED_DATA}`);
@@ -213,6 +253,9 @@
         }
       
         const categories = []
+        if(this.categories.find(item => item === 0)) {
+          this.categories = [0]
+        }
         if(this.categories[0] !== 0) {
           this.categories.forEach(category => {
             const isIncluded = this.allCategories[0].children.find(item => item.id === category)
@@ -376,7 +419,8 @@
       }
       ,
       revertCategories() {
-        if(this.allCategories) {
+        if(!this.dataLoaded) {
+          if(this.allCategories) {
             const categories = this.allCategories
             const newCats = []
             categories[0].children.forEach(item => {
@@ -398,6 +442,7 @@
             name: 'Все',
             isDefaultExpanded: true
           }]
+        }
       },
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
@@ -406,10 +451,19 @@
       const myLocalFilters = this.$store.getters['blackbox/myLocalFilters']
       if(myLocalFilters) {
         this.brands = []
+        this.dataLoaded = true
         this.$nextTick(() => {
+
           Object.keys(this.$data).forEach(key => {
             this.$data[key] = myLocalFilters[key]
           })
+
+          if(this.categories.find(item => item === 0) !== 0) {
+            this.$nextTick(() => {
+              this.categoryOptions[0].children = this.allCategories[0].children
+            })
+          }
+
         })
       }
       this.loadCategories();
