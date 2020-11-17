@@ -305,15 +305,16 @@
           isDefaultExpanded: true
         }];
         this.categories = [0]
-        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated1311"))) {
-          const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
+        const localCategories = JSON.parse(localStorage.getItem("categories"))
+        if(localCategories && localCategories.categories && JSON.parse(localStorage.getItem("categoryUpdated1311"))) {
+          const timestamp = localCategories.timestamp
           const timeNow = new Date().getTime()
           if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
-            categories = JSON.parse(localStorage.getItem("categories")).categories
+            categories = localCategories.categories
           } else {
             categories = await service.getCategories()
             if(categories.length <= 0) {
-              categories = JSON.parse(localStorage.getItem("categories")).categories
+              categories = localCategories.categories
             } else {
               localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
               localStorage.setItem("categoryUpdated1311", true) 
