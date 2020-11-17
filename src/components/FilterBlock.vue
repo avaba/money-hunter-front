@@ -176,7 +176,7 @@
       },
     },
     beforeDestroy() {
-      if(this.categories.find(item => item === 0) === 0) {
+      if(this.categories.find(item => item === 0) === 0 || this.categories.length === 0) {
         this.categories = [0]
       }
       this.$store.commit('blackbox/saveFiltersLocal', this.$data)
@@ -452,6 +452,7 @@
       if(myLocalFilters) {
         this.brands = []
         this.dataLoaded = true
+        this.allCategories = []
         this.$nextTick(() => {
 
           Object.keys(this.$data).forEach(key => {
@@ -472,6 +473,9 @@
       allCategories: {
         handler: function () {
           this.revertCategories()
+          if(this.allCategories) {
+            this.isCategoriesLoading = false
+          }
         },
         deep: true
       }

@@ -49,18 +49,18 @@
             ]
           },
         ],
-        isLoaded: false,
+        isLoaded: true,
       }
     },
-    async created() {
-      this.isLoaded = false
-      const result = await this.$store.dispatch(`user/${GET_ALL_SUBSCRIBTIONS}`)
-      result.data.forEach(tariff => {
-        this.tariffs.find(item => item.name === tariff.type)['id'] = tariff.id
-        this.tariffs.find(item => item.name === tariff.type)['price'] = tariff.price
-      });
-      this.isLoaded = true
-    },
+    // async created() {
+    //   this.isLoaded = false
+    //   const result = await this.$store.dispatch(`user/${GET_ALL_SUBSCRIBTIONS}`)
+    //   result.data.forEach(tariff => {
+    //     this.tariffs.find(item => item.name === tariff.type)['id'] = tariff.id
+    //     this.tariffs.find(item => item.name === tariff.type)['price'] = tariff.price
+    //   });
+    //   this.isLoaded = true
+    // },
     // methods: {
     //   termsReaded() {
     //     this.termsReadedInput = true

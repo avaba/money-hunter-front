@@ -62,9 +62,9 @@
           {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
           {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9'},
           {name: 'avRevenue', label: 'Сумма заказов в неделю', clazz: 'width9'},
-          // {name: 'avRevenue', label: 'Продажи', clazz: 'width9'},
-          // {name: 'avRevenue', label: 'Сумма продаж', clazz: 'width9'},
-          {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-right width9'},
+          {name: 'selesCount', label: 'Продажи', clazz: 'width5'},
+          {name: 'salesRevenue', label: 'Сумма продаж', clazz: 'width9'},
+          {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-right width23'},
           {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width9'},
           {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9'},
         ],
@@ -97,15 +97,9 @@
     },
     methods: {
       async searchHandler() {
-        this.isLoading = true
-
         this.paginationData.page = 1;
         this.orderType = DEFAULT_ORDER_TYPE;
         this.debounceLoadGoods();
-
-        this.$nextTick(() => {
-          this.isLoading = false
-        })
       },
       perPageHandler(value) {
         this.paginationData.page = 1;
@@ -128,11 +122,8 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
-          this.$nextTick(() => {
-            this.list = [];
-            this.isLoading = true
-          })
-          this.isLoading = true;
+          this.list = [];
+          this.isLoading = true
           const service = new BlackboxService();
 
           const result = await service.getGoodsBySearchID(
@@ -143,11 +134,12 @@
           );
     
           this.paginationData.totalCount = result.countAll;
-          this.list = [];
+          this.list = result.products;
+
           this.$nextTick(() => {
-            this.list = result.products;
             this.isLoading = false
           })
+
         }
       },
       async downloadSearchResults() {

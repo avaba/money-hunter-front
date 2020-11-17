@@ -22,7 +22,7 @@
           </ValidationProvider>
         </div>
         <div class="user-data__item">
-          <InputField label="Ваш тариф" :value="subscriptionType" disabled/>
+          <InputField :buttonLabel="'Отменить подписку'" @buttonEvent="cancelSubscription" label="Ваш тариф" :value="subscriptionType" disabled/>
         </div>
         <div class="user-data__item">
           <template>
@@ -33,7 +33,7 @@
       </form>
 
       <div class="user-data-change">
-        <Btn label="Изменить" clazz="button__change" @click="handleSubmit(postUser)"/>
+        <Btn label="Изменить" disabled clazz="button__change" @click="handleSubmit(postUser)"/>
       </div>
     </ValidationObserver>
   </div>
@@ -118,6 +118,9 @@
         } else if(promocodeStatus && promocodeStatus === 'promocode is not valid') {
           this.codeStatus = 'notValid'
         }
+      },
+      cancelSubscription() {
+        alert('Отменить подписку')
       },
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
