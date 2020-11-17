@@ -11,7 +11,7 @@
       </div>
     </div>
     <template v-if="isBuyable">
-      <div class="tarif-price">{{price}} ₽</div>
+      <div class="tarif-price">{{price}} ₽ / мес</div>
       <Btn label="Купить" :isDisabled="!termsReaded" @click="handleBuyBtn"/>
     </template>
     <template v-if="isBuyable">
@@ -64,8 +64,9 @@
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
 
-        const results = await this[GET_PAYMENT_LINK_ACTION](this.name)
-        const response = results.response
+        const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
+        // const response = results.response
+        
         if(response.status === 400) {
           this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
         } else if (response.status === 200) {
