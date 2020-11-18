@@ -1,6 +1,6 @@
 <template>
   <Fragment>
-    <FilterBlock :isLoading="isLoading" :searchHandler="searchHandler"/>
+    <FilterBlock :downloadBtnStatus="downloadBtnStatus" @downloadSearchResults="downloadSearchResults" :isLoading="isLoading" :searchHandler="searchHandler"/>
 
     <div class="blackbox">
       <TrackingTable v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated"
@@ -54,16 +54,7 @@
     mixins: [tableMixins, paginationMixin],
     data() {
       return {
-        list: [
-          // {
-          //   articul: '12313',
-          //   currentQty: 123,
-          //   avOrdersSpeed: 123,
-          //   avRevenue: 1,
-          //   currentRating: 1,
-          //   currentFeedBackCount: 1
-          // }
-        ],
+        list: [],
 
         tableHeaders: [
           {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
@@ -84,7 +75,9 @@
 
         subheaders: {},
 
-        isLoadingAgregated: false
+        isLoadingAgregated: false,
+
+        downloadBtnStatus: 'hidden'
       }
     },
     computed: {
@@ -145,6 +138,24 @@
             this.list = result.products;
             this.isLoading = false
           })
+        }
+      },
+      async downloadSearchResults() {
+        this.downloadBtnStatus = 'loading'
+        if (this.$store.state.blackbox.searchID) {
+          const service = new BlackboxService();
+          const result = await service.downloadSearchResults(
+            this.searchID,
+            this.orderType
+          );
+          if(result) {
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Поиск был скачен', status: 'success'})
+          } else {
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+          }
+          this.downloadBtnStatus = false
+        } else {
+          this.downloadBtnStatus = 'hidden'
         }
       },
       insertHeaders(headers) {
@@ -239,6 +250,12 @@
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
     },
     watch: {
+      searchID: function () {
+        console.log(this.searchID)
+        if(this.searchID) {
+          this.downloadBtnStatus = false
+        }
+      },
       orderType: function () {
         AmplitudeService.blackBoxOrdering(this.orderType);
         this.debounceLoadGoods();

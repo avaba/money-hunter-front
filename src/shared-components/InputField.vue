@@ -32,6 +32,13 @@
            :placeholder="placeholder"
            v-mask="mask"
            @input="$emit('input', $event.target.value)"/>
+    <button
+      v-if="buttonLabel"
+      class="input-button"
+      disabled
+    >
+      {{ buttonLabel }}
+    </button>
     <button class="vision-password vision-password_error"
             :class="{'vision-password_visible': !showPassword}"
             @click="showPassword=!showPassword"
@@ -87,6 +94,10 @@
       max: {
         type: Number,
         default: Infinity,
+      },
+      buttonLabel: {
+        type: [String, Boolean],
+        default: false
       }
     },
     data() {
@@ -188,5 +199,31 @@
     height: 2.85rem;
     padding: 0 5px;
     min-width: 60px;
+  }
+
+  .input-button {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    transform: translate(0, 0);
+    flex: 1 0 100%;
+    display: inline-block;
+    margin-top: 3px;
+    border: 1px solid #DFE0EB;
+    border-radius: 4px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    padding: 0 .92rem;
+    height: calc(2.85rem - 2px);
+    letter-spacing: .2px;
+    color: black;
+    background: #FFC700;
+    font-weight: bold;
+    cursor: pointer;
+    &:disabled {
+      background: #DFE0EB;
+      cursor: default;
+      pointer-events: none;
+    }
   }
 </style>

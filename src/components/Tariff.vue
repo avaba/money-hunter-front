@@ -65,12 +65,11 @@
         AmplitudeService.subscription(this.name);
 
         const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
-        // const response = results.response
-        
-        if(response.status === 400) {
-          this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
-        } else if (response.status === 200) {
-          window.open(response.data.detail)
+
+        if(response.response.status === 400) {
+          this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.response.data.detail, status: 'error'})
+        } else if (response.response.status === 200) {
+          window.open(response.response.data.detail)
         }
       },
       showOffer() {

@@ -4,7 +4,8 @@ import {
   GET_NEW_SEARCH_ID_ACTION, SET_FILTERS_MUTATION,
   SET_SEARCH_ID_MUTATION,
   GET_AGREGATED_DATA,
-  SET_AGREGATED_MUTATION
+  SET_AGREGATED_MUTATION,
+  DOWNLOAD_SEARCH_RESULT
 } from "@/store/modules/blackbox/constants";
 import {ActionContext} from "vuex";
 import {VuexBlackBoxStateInterface} from "@/store/modules/blackbox/index";
@@ -60,5 +61,8 @@ export default {
     }
 
     return false;
+  },
+  async [DOWNLOAD_SEARCH_RESULT](context: ActionContext<VuexBlackBoxStateInterface, any>) {
+    console.log(context.state)
   }
 }

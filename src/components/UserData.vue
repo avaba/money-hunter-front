@@ -22,7 +22,7 @@
           </ValidationProvider>
         </div>
         <div class="user-data__item">
-          <InputField label="Ваш тариф" :value="subscriptionType" disabled/>
+          <InputField :buttonLabel="'Отменить подписку'" @buttonEvent="cancelSubscription" label="Ваш тариф" :value="subscriptionType" disabled/>
         </div>
         <div class="user-data__item">
           <template>

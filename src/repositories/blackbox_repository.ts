@@ -27,6 +27,7 @@ export class BlackboxRepository {
   private getCategoriesUrl = 'wb/blackbox/categories/';
   private deleteSearchUrl = 'wb/blackbox/user/searches/';
   private getAgregatedDataUrl = 'wb/blackbox/agregated/';
+  private downloadSearchResultsUrl = 'wb/blackbox/download/'
 
   getNewSearchID(data: GetSearchIDDataInterface) {
     return this.client.sendPost(this.getNewSearchIDUrl, data);
@@ -41,6 +42,15 @@ export class BlackboxRepository {
     const paramsString = queryParamsBuilder(params);
 
     return this.client.sendGet(`${this.getGoodsBySearchIDUrl}?${paramsString}`);
+  }
+
+  downloadSearchResults(searchID: string, orderType: string) {
+    const params = { searchID, orderType } as any;
+
+    return this.client.sendGet(
+      queryStringBuilder(this.downloadSearchResultsUrl, params),
+      { responseType: 'blob' }
+    );
   }
 
   getSavedSearches() {
