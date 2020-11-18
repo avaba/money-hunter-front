@@ -119,6 +119,9 @@
           this.codeStatus = 'notValid'
         }
       },
+      cancelSubscription() {
+        console.log("Отмена подписки")
+      },
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
       ...mapMutations('modal', [SHOW_MODAL_MUTATION])
     }
