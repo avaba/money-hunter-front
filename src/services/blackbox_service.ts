@@ -18,6 +18,7 @@ export class BlackboxService {
     _data.categories = [...data.categories];
     _data.addWords = [...data.addWords];
     _data.minusWords = [...data.minusWords];
+    _data.days = data.days[0];
 
     return _data;
   }

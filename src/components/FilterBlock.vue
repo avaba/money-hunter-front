@@ -43,19 +43,34 @@
             <FindWords label="Минус слова" v-model="minusWords"></FindWords>
           </div>
         </div>
-        <div class="filter-form__column column-fields-custom">
+        <div class="filter-form__column column-fields-last">
           <div class="filter-form__column-item">
             <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
+          </div>
+          <div class="filter-form__column-item">
+            <TreeSelect label="Кол-во дней"
+                      :normalizer="node=>({...node, label: node.name})"
+                      v-model="days"
+                      :clearable="false"
+                      :options="daysOptions"/>
+          </div>
+        </div>
+        <div class="filter-form__column column-fields-custom">
+          <div class="filter-form__column-item">
+            <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
           </div>
           <div class="filter-form__column-item">
             <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
           </div>
         </div>
-        <div class="filter-form__column column-fields-last">
+        <!-- <div class="filter-form__column">
           <div class="filter-form__column-item">
-            <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
+            <TreeSelect label="Кол-во дней"
+                      :normalizer="node=>({...node, label: node.name})"
+                      v-model="daysAmount"
+                      :options="daysAmountOptions"/>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="filter-form__actions">
         <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
@@ -164,7 +179,23 @@
         categoriesPortionSize: 30,
         categoriesSearchQuery: "",
 
-        dataLoaded: false
+        dataLoaded: false,
+
+        days: [7],
+        daysOptions: [
+          {
+            name: "7 дней",
+            id: 7
+          },
+          {
+            name: "14 дней",
+            id: 14
+          },
+          {
+            name: "30 дней",
+            id: 30
+          },
+        ]
       }
     },
     computed: {
@@ -652,6 +683,18 @@
             max-width: 100%;
             width: 100%;
           }
+          &.column-fields-last {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 100%;
+            margin: 0px;
+            & .filter-form__column-item {
+              width: calc((100% / 2) - 20px);
+              margin: 10px 10px;
+            }
+          }
           &.column-fields-custom {
             flex-direction: row;
             min-width: 300px;
@@ -707,6 +750,17 @@
           }
           &.column-fields-last {
             order: 5;
+          }
+          &.column-fields-last {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            margin: 0px;
+            & .filter-form__column-item {
+              width: 100%;
+              margin: 10px 0px;
+            }
           }
           &.column-fields-custom {
             flex-direction: column;
