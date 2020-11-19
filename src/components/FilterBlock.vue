@@ -181,7 +181,7 @@
 
         dataLoaded: false,
 
-        days: [7],
+        days: 7,
         daysOptions: [
           {
             name: "7 дней",

@@ -13,7 +13,7 @@ export interface GetSearchIDDataInterface {
   addWords: Array<string>;
   minusWords: Array<string>;
   brands: Array<string>;
-  days: any;
+  days: number;
 }
 
 export class BlackboxRepository {
