@@ -68,6 +68,7 @@ export class BlackboxService {
   }
 
   async getGoodsBySearchID(searchID: string, orderType: string, pageNum = 1, onPage = 25) {
+    console.log(searchID)
     try {
       const closure = this.repo.getGoodsBySearchID.bind(this.repo, searchID, orderType, pageNum, onPage);
       return (await this.service.refreshWrapper(closure)).data;
@@ -134,9 +135,9 @@ export class BlackboxService {
     }
   }
 
-  async getChartData(articul: string) {
+  async getChartData(articul: string, days: number) {
     try {
-      return (await this.service.refreshWrapper(this.repo.getChartData.bind(this.repo, articul))).data.product;
+      return (await this.service.refreshWrapper(this.repo.getChartData.bind(this.repo, articul, days))).data.product;
     } catch (e) {
       return null;
     }

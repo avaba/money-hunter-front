@@ -313,8 +313,6 @@
         }
         data.brands = brands
 
-        console.log(data)
-
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -328,6 +326,7 @@
         this.brands = ['all'];
         this.addWords = [];
         this.minusWords = [];
+        this.days = 7
       }
       ,
       loadProject() {
@@ -381,6 +380,7 @@
           this.brands = data.brands;
           this.addWords = data.addWords;
           this.minusWords = data.minusWords;
+          this.days = data.days
           this.searchBtnHandler()
         })
       }
@@ -401,7 +401,8 @@
       }
       ,
       compareTime(dateString, now) {
-        const differentTime = 600000
+        // const differentTime = 600000
+        const differentTime = 0
         if(dateString + differentTime >= now) {
           return true
         } else {
@@ -419,8 +420,10 @@
           const timeNow = new Date().getTime()
           if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
             categories = JSON.parse(localStorage.getItem("categories"))
+            console.log(categories)
           } else {
             categories = await service.getCategories()
+            console.log(categories)
             localStorage.setItem("categories", JSON.stringify({categories: categories.categories, categories_list: categories.categories_list, timestamp: new Date().getTime().toString()}))
             localStorage.setItem("categoryUpdated0611", true) 
           }
@@ -509,6 +512,9 @@
           }
         },
         deep: true
+      },
+      days: function () {
+        this.$emit('daysChange', this.days)
       }
     }
   }

@@ -69,16 +69,14 @@
         const rightConerOfFilter = document.querySelector(".filter-form__columns").getBoundingClientRect().right - 10
         
         const differentBetweenConers = rightConerOfFilter - rightConerOfField
-
-
         const extraWidth = '100%'
-        const defaultWidth = document.querySelector(".select-field").offsetWidth
-        if(value.length > 0 && document.querySelector(".vue-treeselect__menu")) {
+        const defaultWidth = document.querySelector(".filter .select-field").offsetWidth
+        if(value.length > 0 && document.querySelector(".filter .vue-treeselect__menu")) {
           this.searchWidthActivated = true
-          document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + differentBetweenConers}px`
-        } else if (document.querySelector(".vue-treeselect__menu") && value.length <= 0){
+          document.querySelector(".filter .vue-treeselect__menu").style.width = `${defaultWidth + differentBetweenConers}px`
+        } else if (document.querySelector(".filter .vue-treeselect__menu") && value.length <= 0){
           this.searchWidthActivated = false
-          document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth}px`
+          document.querySelector(".filter .vue-treeselect__menu").style.width = `${defaultWidth}px`
         }
       },
       chekingWidth() {
@@ -92,8 +90,8 @@
               extraWidth += extraWidthSize
             }
           }
-          if(document.querySelector(".vue-treeselect__menu")) {
-            document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+          if(document.querySelector(".filter .vue-treeselect__menu")) {
+            document.querySelector(".filter .vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
           }
         }
       },

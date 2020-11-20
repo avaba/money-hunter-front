@@ -73,8 +73,8 @@ export class BlackboxRepository {
     return this.client.sendGet(queryStringBuilder(this.getProductImagePathAndNameUrl, {articul}))
   }
 
-  getChartData(articul: string) {
-    return this.client.sendGet(queryStringBuilder(this.getChartDataUrl, {articul}))
+  getChartData(articul: string, days: number) {
+    return this.client.sendGet(queryStringBuilder(this.getChartDataUrl, { articul, days }))
   }
 
   getCategories() {
