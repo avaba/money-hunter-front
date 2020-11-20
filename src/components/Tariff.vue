@@ -19,6 +19,9 @@
         <input v-model="termsReaded" :id="name" type="checkbox">
         <span class="tariff-list__item-label-text">С условием <span @click="showOffer">оферты</span> ознакомлен</span>
       </label>
+      <span class="warning-text">
+        Оплата будет взиматься раз в месяц. По вопросам отмены и возврата пишите на почту info@moneyhunter.pro или в онлайн чат поддержки. Мы ответим вам в течении одного рабочего дня. 
+      </span>
     </template>
   </div>
 </template>
@@ -168,6 +171,15 @@
       background: url("../assets/img/ikons/error.svg") no-repeat 100% center;
       padding-right: 2.14rem;
     }
+  }
+
+  .warning-text {
+    line-height: 1;
+    display: block;
+    margin-top: 15px;
+    font-size: .8rem;
+    color: #9FA2B4;
+    text-align: center;
   }
 
   .tarif-list__text {
