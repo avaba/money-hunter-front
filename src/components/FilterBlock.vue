@@ -3,7 +3,7 @@
     <form action="" class="filter-form">
       <div class="filter-form__columns">
         <div class="filter-form__column selectors">
-          <div class="filter-form__column-item">
+          <div class="filter-form__column-item customWidthSelector">
             <TreeSelect label="Выберите категории"
                       v-model="categories"
                       :options="categoryOptions"

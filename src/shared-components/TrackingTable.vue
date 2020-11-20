@@ -15,7 +15,7 @@
         </th>
       </tr>
     <table class="tracking-table tracking-table_sticky">
-      <tbody>
+      <tbody class="tracking-table-tbody">
         <tr class="tracking-table__header">
           <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="{[item.clazz]: item.clazz, [item.status]: item.status }|| ''">
             <div>
@@ -171,6 +171,11 @@
     border-spacing: 0;
     & * {
       box-sizing: border-box;
+    }
+
+    &-tbody {
+      display: flex;
+      flex-direction: column;
     }
 
     &.tracking-table_sticky {

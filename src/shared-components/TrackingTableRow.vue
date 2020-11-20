@@ -168,6 +168,7 @@
   .tracking-table__row {
     // width: 100%;
     min-width: 910px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
