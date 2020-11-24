@@ -35,7 +35,8 @@
     <button
       v-if="buttonLabel"
       class="input-button"
-      disabled
+      type="button"
+      @click="$emit('button-event')"
     >
       {{ buttonLabel }}
     </button>
@@ -179,6 +180,10 @@
       border-color: red;
       color: $red;
     }
+
+    &.input-field__input_success {
+      border-color: rgba(36, 241, 6, 0.46);
+    }
   }
 
   .input-field__range {
@@ -203,8 +208,8 @@
 
   .input-button {
     position: absolute;
-    bottom: 1px;
-    right: 1px;
+    bottom: 0px;
+    right: 0px;
     transform: translate(0, 0);
     flex: 1 0 100%;
     display: inline-block;
@@ -214,7 +219,7 @@
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     padding: 0 .92rem;
-    height: calc(2.85rem - 2px);
+    height: 2.85rem;
     letter-spacing: .2px;
     color: black;
     background: #FFC700;

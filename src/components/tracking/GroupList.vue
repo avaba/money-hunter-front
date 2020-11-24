@@ -1,6 +1,6 @@
 <template>
   <div class="tracking-body">
-    <div class="tracking-info">
+    <div class="tracking-info" :style="progress > 0 ? 'border-bottom: 1px solid #DFE0EB;' : ''">
       <div class="tracking-add-product">
         <AddGoodsBtn/>
       </div>
@@ -11,11 +11,11 @@
         v-if="progress || progress === 0 && isLoaded"
         :progress="progress"
         :fontSize="'12px'"
-        :text="`Товаров в отслеживании: ${defaultMaxGoods[mySubscription] - maxTrackingProducts} / ${defaultMaxGoods[mySubscription]}`"
+        :text="`Товаров в отслеживании: ${progress} / ${maxTrackingProducts}`"
       />
     </div>
 
-    <TrackingTable v-if="tablePositions && loaded"
+    <TrackingTable v-if="tablePositions && loaded && progress > 0"
                    :headers="tableHeaders"
                    :items="tablePositions"
                    :order="orderType"
@@ -61,14 +61,7 @@
 
         orderType: 'count',
 
-        defaultMaxGoods: {
-          FREE: 10,
-          PRO: 150
-        },
-
         progress: 0,
-        
-        maxTrackingProducts: 0,
 
         isLoaded: false,
 
@@ -108,7 +101,7 @@
       const userService = new UserService();
       userService.getSubscription().then(res => {
         this.maxTrackingProducts = res.maxTrackingProducts
-        const progressValue = (this.defaultMaxGoods[this.mySubscription] - this.maxTrackingProducts) * (100 / this.defaultMaxGoods[this.mySubscription])
+        const progressValue = res.trackingProductsCount
         if(progressValue <= 100 && progressValue >= 0) {
           this.progress = progressValue
         } else {
@@ -141,7 +134,7 @@
     padding: 1.14rem;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid $drayDevider;
+    // border-bottom: 1px solid $drayDevider;
   }
 
   .tracking-add-product {

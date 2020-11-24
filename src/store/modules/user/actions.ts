@@ -4,7 +4,8 @@ import {
   LOGOUT_ACTION, POST_USER_ACTION, SET_SUBSCRIPTION_MUTATION,
   SET_USER_MUTATION,
   GET_PAYMENT_LINK_ACTION,
-  GET_ALL_SUBSCRIBTIONS
+  GET_ALL_SUBSCRIBTIONS,
+  POST_CANCEL_SUBSCRIPTION
 } from "@/store/modules/user/constants";
 import {ActionContext} from "vuex";
 import {UserService} from "@/services/user_service";
@@ -54,6 +55,12 @@ export default {
   async [GET_ALL_SUBSCRIBTIONS](context: ActionContext<VuexUserStateInterface, any>) {
     const userService = new UserService();
     const response = await userService.getSubscriptions();
+    return response
+  },
+  async [POST_CANCEL_SUBSCRIPTION](conetext: ActionContext<VuexUserStateInterface, any>) {
+    const userService = new UserService();
+    const response = await userService.cancelSubscription();
+    console.log(response)
     return response
   }
 }

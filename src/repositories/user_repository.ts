@@ -5,6 +5,7 @@ export class UserRepository {
   private subscriptionUrl = 'user/subscription/';
   private subscriptionsUrl = 'user/subscriptions/';
   private paymentLink = 'user/payment/';
+  private cancelSubscriptionUrl = 'user/payment/cancel/'
   private client = new ApiClient();
 
   getProfile() {
@@ -25,5 +26,9 @@ export class UserRepository {
 
   getSubscriptions() {
     return this.client.sendGet(this.subscriptionsUrl);
+  }
+
+  cancelSubscription() {
+    return this.client.sendPost(this.cancelSubscriptionUrl, {});
   }
 }

@@ -2,7 +2,7 @@
   <TreeSelect
     :error="$getValidationError(errors)"
     :value="value"
-    @input="data=>$emit('input', data)"
+    @input="data => emitting(data)"
     ref="brandsSelector"
     label="Выберите бренд"
     :multiple="true"
@@ -15,11 +15,13 @@
       isDefaultExpanded: true,
       children: brandOptions
     }]"
+    :clear-on-select="true"
     :normalizer="brandsNormalizer"
     :dont-use-local-search="true"
     @open="handleMenuOpen"
     @close="handleMenuClose"
     @search-change="handleSearchChange"
+    :loadingText="'Загрузка брендов'"
   >
     <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
       {{ node.label }}1
@@ -76,6 +78,12 @@
       }
     },
     methods: {
+      emitting(data) {
+        if(data.length > 0) {
+          document.querySelector(".brandsSelector .vue-treeselect__input").value = ''
+        }
+        this.$emit('input', data)
+      },
       async loadBrands() {
         const service = new TrackingService();
         this.loadedBrands = await service.getBrands();

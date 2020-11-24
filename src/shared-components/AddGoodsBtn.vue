@@ -30,7 +30,8 @@
         return this.$store.getters['user/getSubscription']
       },
       isDisabled() {
-        return this.getSubscription.maxTrackingProducts <= 0
+        // return this.getSubscription.maxTrackingProducts <= 0
+        return false
       }
     }
   }

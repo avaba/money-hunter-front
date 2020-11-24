@@ -4,6 +4,7 @@ export const POST_USER_ACTION = 'postUser';
 export const GET_SUBSCRIPTION_ACTION = 'getSubscription';
 export const GET_PAYMENT_LINK_ACTION = 'getPaymentLink';
 export const GET_ALL_SUBSCRIBTIONS = 'getSubscriptions'
+export const POST_CANCEL_SUBSCRIPTION = 'cancelSubscription'
 
 export const SET_USER_MUTATION = 'setUserDetail';
 export const CLEAR_USER_MUTATION = 'clearUser';

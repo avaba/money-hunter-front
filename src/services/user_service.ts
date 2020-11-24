@@ -46,4 +46,12 @@ export class UserService {
       return e
     }
   }
+
+  async cancelSubscription() {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.cancelSubscription.bind(this.repo)));
+    } catch (e) {
+      return e
+    }
+  }
 }

@@ -5,17 +5,18 @@
         <div class="filter-form__column selectors">
           <div class="filter-form__column-item customWidthSelector">
             <TreeSelect label="Выберите категории"
+                      v-if="!isCategoriesLoading"
                       v-model="categories"
                       :options="categoryOptions"
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"
-                      :disabled="isCategoriesLoading"
                       :load-options="loadOptions"
                       @search-change="searchChange"
                       @open="handleMenuOpen"
                       ref="CategoriesTreeselect"
+                      :loadingText="'Загрузка категорий'"
                       :dont-use-local-search="true"/>
           </div>
           <div class="filter-form__column-item">
@@ -170,7 +171,8 @@
         categoryOptions: [{
           id: 0,
           name: 'Все',
-          isDefaultExpanded: true
+          isDefaultExpanded: true,
+          children: null
         }],
 
         isCategoriesSearching: false,
@@ -401,8 +403,8 @@
       }
       ,
       compareTime(dateString, now) {
-        // const differentTime = 600000
-        const differentTime = 0
+        const differentTime = 600000
+        // const differentTime = 0
         if(dateString + differentTime >= now) {
           return true
         } else {
@@ -413,7 +415,6 @@
       async loadCategories() {
         const service = new BlackboxService();
         let categories = null
-        this.isCategoriesLoading = true
         this.categories = [0]
         if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
           const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
@@ -436,15 +437,21 @@
         this.allCategories = categories.categories
         this.categories_list = categories.categories_list
 
-        this.isCategoriesLoading = false
+        
+        this.isCategoriesLoading = true
+        this.$nextTick(() => {
+          this.isCategoriesLoading = false
+        })
       }
       ,
       loadOptions({ action, parentNode, callback }) {
-        if (action === LOAD_CHILDREN_OPTIONS) {
-          if(parentNode.children_id.length > 0) {
-            const parentChildrens = this.allCategories[0].children.find(item => item.id === parentNode.id).children
-            parentNode.children = parentChildrens
-            callback()
+        if(parentNode.id !== 0) {
+          if (action === LOAD_CHILDREN_OPTIONS) {
+            if(parentNode.children_id.length > 0) {
+              const parentChildrens = this.allCategories[0].children.find(item => item.id === parentNode.id).children
+              parentNode.children = parentChildrens
+              callback()
+            }
           }
         }
       },
@@ -474,7 +481,8 @@
           } else this.categoryOptions = [{
             id: 0,
             name: 'Все',
-            isDefaultExpanded: true
+            isDefaultExpanded: true,
+            children: null
           }]
         }
       },
@@ -507,8 +515,16 @@
       allCategories: {
         handler: function () {
           this.revertCategories()
-          if(this.allCategories) {
-            this.isCategoriesLoading = false
+          // if(this.allCategories) {
+          //   this.isCategoriesLoading = false
+          // }
+        },
+        deep: true
+      },
+      categories: {
+        handler: function () {
+          if(document.querySelector(".customWidthSelector .vue-treeselect__input") && document.querySelector(".customWidthSelector .vue-treeselect__input").value.length > 0) {
+            document.querySelector(".customWidthSelector .vue-treeselect__input").value = ''
           }
         },
         deep: true
