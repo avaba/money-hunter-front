@@ -34,6 +34,9 @@ export default {
     },
     getSubscription(state: VuexUserStateInterface) {
       return state.subscription
+    },
+    getExpDate(state: VuexUserStateInterface) {
+      return state.subscription?.expDate
     }
   }
 }

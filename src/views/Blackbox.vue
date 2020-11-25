@@ -66,14 +66,14 @@
         list: [],
 
         tableHeaders: [
-          {name: 'goods', label: 'Товар', clazz: 'width30 mw300', sortable: false},
+          {name: 'name', label: 'Товар', clazz: 'width30 mw300', sortable: false},
           {name: 'articul', label: 'Артикул', clazz: 'width9 mw100', isOnlyAscSorting: true},
           {name: 'currentPrice', label: 'Цена', clazz: 'width5 mw100'},
           {name: 'currentQty', label: 'Остаток', clazz: 'width9 mw100'},
           {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9 mw100'},
           {name: 'avRevenue', label: 'Сумма заказов в неделю', clazz: 'width9 mw150'},
-          {name: 'selesCount', label: 'Продажи', clazz: 'width5 mw100'},
-          {name: 'salesRevenue', label: 'Сумма продаж', clazz: 'width9 mw100'},
+          // {name: 'selesCount', label: 'Продажи', clazz: 'width5 mw100'},
+          // {name: 'salesRevenue', label: 'Сумма продаж', clazz: 'width9 mw100'},
           {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-right width23 mw150'},
           {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width9 mw100'},
           {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9 mw150'},
@@ -97,6 +97,7 @@
     },
     computed: {
       tablePositions() {
+        console.log(this.list[0])
         return this.list.map(item => ({
           ...this.$mapItemListToTableItem(item),
           nested: {content: ProductBlackboxNested, articul: item.articul, clazz: 'tracking-table-dropdown__item-chart', days: this.days}
@@ -255,11 +256,12 @@
           // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
         })
       },
-      map_goods(item) {
+      map_name(item) {
+        console.log(item)
         return {
           content: ProductContent,
           clazz: 'width30',
-          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link}
+          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link, imagePath: item.image_link}
         };
       },
       map_currentPrice(item) {

@@ -125,7 +125,8 @@
       }
     },
     methods: {
-      map_goods(item) {
+      map_name(item) {
+        console.log(item)
         return {
           content: ProductContent,
           clazz: 'width23',

@@ -25,6 +25,9 @@
           <InputField :buttonLabel="'Отменить подписку'" @button-event="cancelSubscription" label="Ваш тариф" :value="subscriptionType" disabled/>
         </div>
         <div class="user-data__item">
+          <InputField label="Дата следующего списания средств" :value="expDate" disabled/>
+        </div>
+        <div class="user-data__item">
           <template>
             <InputField :label="`Промокод${codeText ? '. ' + codeText : ''}`" type="text" :clazz="`input-field__input ${codeStatus}`" placeholder="Введите промокод" v-model="promocode"/>
             <button @click="setPromocode" class="modal-form__promocod-done" :class="codeStatus" type="button"/>
@@ -83,6 +86,9 @@
       subscriptionType() {
         return this.$store.state.user.subscription?.subscriptionType;
       },
+      expDate() {
+        return this.$store.getters['user/getExpDate']
+      },
     },
     methods: {
       async postUser() {
@@ -103,10 +109,15 @@
         const promocodeStatus = await service.getPromocode(this.promocode)
         console.log(promocodeStatus)
         if(promocodeStatus.status === 200) {
-          this.codeStatus = 'input-field__input_success'
-          this.codeText = promocodeStatus.data.detail
-          await service.setPromocode(this.promocode, this.user.email);
-          this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Промокод активирован', status: 'success'})
+          const setPromocodeResult = await service.setPromocode(this.promocode, this.user.email);
+          if(setPromocodeResult && setPromocodeResult.non_field_errors) {
+            this.codeStatus = 'input-field__input_error'
+            this.codeText = setPromocodeResult.non_field_errors[0]
+          } else {
+            this.codeStatus = 'input-field__input_success'
+            this.codeText = promocodeStatus.data.detail
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Промокод активирован', status: 'success'})
+          }
         } else {
           this.codeStatus = 'input-field__input_error'
           this.codeText = promocodeStatus.data.detail
@@ -128,14 +139,25 @@
 
   .user-data-form {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-wrap: wrap;
   }
 
   .user-data__item {
     flex-basis: calc((100% - (2.28rem * 3)) / 4);
-    margin: .3rem 0px;
+    margin: .3rem .85rem;
     position: relative;
+  }
+
+  @media screen and (max-width: 1356px) {
+    .user-data-form {
+      justify-content: space-between;
+    }
+    .user-data__item {
+      flex-basis: calc((100% - 1rem) / 3);
+      margin: .5rem 0px;
+      position: relative;
+    }
   }
 
   @media screen and (max-width: 1120px) {
@@ -145,7 +167,7 @@
       position: relative;
     }
   }
-  @media screen and (max-width: 580px) {
+  @media screen and (max-width: 750px) {
     .user-data__item {
       flex-basis: 100%;
       margin: .5rem 0px;
@@ -168,7 +190,7 @@
     border-left-color: transparent
   }
   .modal-form__promocod-done.input-field__input_success {
-    border: 1px solid rgba(36, 241, 6, 0.46);
+    border: 1px solid rgba(93, 107, 91, 0.46);
     border-left-color: transparent;
   }
   .subscriptionColumn {

@@ -15,7 +15,7 @@ export class TrackingService {
       const cached = localStorage.getItem('brands');
       const cached_moment = moment.utc(localStorage.getItem('brands_ts'));
       const now = moment.utc();
-      if (cached && cached_moment.isValid() && now.diff(cached_moment, 'hours') < 20) {
+      if (cached && cached_moment.isValid() && now.diff(cached_moment, 'hours') < 24) {
         return JSON.parse(cached);
       } else {
         const data = (await this.authService.refreshWrapper(this.repo.getBrands.bind(this.repo))).data.brands;

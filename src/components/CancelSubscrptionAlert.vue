@@ -6,7 +6,7 @@
         <Btn label="Назад" clazz="button_gray" @click="hideModal"/>
       </div>
       <div class="modal-form__double-submit-item">
-        <Btn :loading="loading" label="Подтвердить" @click="cancelSubscription"/>
+        <Btn label="Подтвердить" @click="cancelSubscription"/>
       </div>
     </div>
   </Modal>

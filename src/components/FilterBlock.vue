@@ -226,24 +226,26 @@
       } 
       ,
       searchChange(searchQuery, instanceId) {
-        if(searchQuery.length > 0) {
-          this.isCategoriesSearching = true
-          this.categoriesSearchQuery = searchQuery
-          const potentialItems = this.categories_list.filter(function(val) {
-            return val.name.toLowerCase().match(searchQuery.toLowerCase())
-          });
-          this.categoryOptions = [{
-            id: 0,
-            name: "Все",
-            isDefaultExpanded: true,
-            children: potentialItems.slice(0, this.categoriesPortionSize)
-          }]
-        } else {
-          this.isCategoriesSearching = false
-          this.categoriesPortionPage = 1
-          this.categoriesPortionSize = 30
-          this.revertCategories()
-        }
+        this.categories.forEach((item, idx) => {
+          if(item === 0) {
+            this.categories.splice(idx, 1)
+          }
+        })
+        this.$nextTick(() => {
+          if(searchQuery.length > 0) {
+            this.isCategoriesSearching = true
+            this.categoriesSearchQuery = searchQuery
+            const potentialItems = this.categories_list.filter(function(val) {
+              return val.name.toLowerCase().match(searchQuery.toLowerCase())
+            });
+            this.categoryOptions = [...potentialItems.slice(0, this.categoriesPortionSize)]
+          } else {
+            this.isCategoriesSearching = false
+            this.categoriesPortionPage = 1
+            this.categoriesPortionSize = 30
+            this.revertCategories()
+          }
+        })
       },
       handleMenuOpen() {
         this.$nextTick(() => {
@@ -265,7 +267,7 @@
         const potentialItems = this.categories_list.filter((val) => {
           return val.name.toLowerCase().match(this.categoriesSearchQuery.toLowerCase())
         });
-        this.categoryOptions[0].children = potentialItems.splice(0, toIndex)
+        this.categoryOptions = potentialItems.splice(0, toIndex)
       },
       getAgregatedData() {
         this.$store.dispatch(`blackbox/${GET_AGREGATED_DATA}`);
@@ -403,9 +405,8 @@
       }
       ,
       compareTime(dateString, now) {
-        const differentTime = 600000
-        // const differentTime = 0
-        if(dateString + differentTime >= now) {
+        const differentTime = 0
+        if(dateString + differentTime <= now) {
           return true
         } else {
           return false
@@ -413,35 +414,33 @@
       }
       ,
       async loadCategories() {
-        const service = new BlackboxService();
         let categories = null
-        this.categories = [0]
-        if(JSON.parse(localStorage.getItem("categories")) && JSON.parse(localStorage.getItem("categoryUpdated0611"))) {
-          const timestamp = JSON.parse(localStorage.getItem("categories")).timestamp
-          const timeNow = new Date().getTime()
-          if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
-            categories = JSON.parse(localStorage.getItem("categories"))
-            console.log(categories)
-          } else {
-            categories = await service.getCategories()
-            console.log(categories)
-            localStorage.setItem("categories", JSON.stringify({categories: categories.categories, categories_list: categories.categories_list, timestamp: new Date().getTime().toString()}))
-            localStorage.setItem("categoryUpdated0611", true) 
-          }
+        const cachedCategories = JSON.parse(localStorage.getItem("categories"))
+        if(cachedCategories) {
+          categories = cachedCategories
         } else {
-          categories = await service.getCategories()
-          localStorage.setItem("categoryUpdated0611", true) 
-          localStorage.setItem("categories", JSON.stringify({categories: categories.categories, categories_list: categories.categories_list, timestamp: new Date().getTime().toString()}))
+          categories = await this.loadUpdatedCategories()
         }
         this.categories = [0]
         this.allCategories = categories.categories
         this.categories_list = categories.categories_list
-
         
         this.isCategoriesLoading = true
         this.$nextTick(() => {
           this.isCategoriesLoading = false
+          this.loadUpdatedCategories()
         })
+      }
+      ,
+      async loadUpdatedCategories () {
+        const service = new BlackboxService();
+
+        const loadedCategories = await service.getCategories()
+
+        this.allCategories = loadedCategories.categories
+        this.categories_list = loadedCategories.categories_list
+
+        localStorage.setItem("categories", JSON.stringify({categories: loadedCategories.categories, categories_list: loadedCategories.categories_list, timestamp: new Date().getTime().toString()}))
       }
       ,
       loadOptions({ action, parentNode, callback }) {
