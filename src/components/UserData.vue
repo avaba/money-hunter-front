@@ -48,10 +48,11 @@
   import {ValidationObserver, ValidationProvider} from 'vee-validate';
   import {POST_USER_ACTION, SET_USER_MUTATION} from "@/store/modules/user/constants";
   import {SHOW_MODAL_MUTATION, SET_MODAL_RESPONSE_MUTATION} from "@/store/modules/modal/constants";
-  import {mapMutations} from "vuex";
+  import {mapMutations, mapActions} from "vuex";
   import Warning from "@/components/blackbox/Warning";
   import {AuthService} from "@/services/auth_service";
   import CancelSubscrptionAlert from "@/components/CancelSubscrptionAlert";
+  import {GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION} from "@/store/modules/user/constants";
 
   export default {
     name: "UserData",
@@ -120,6 +121,8 @@
             this.codeStatus = 'input-field__input_success'
             this.codeText = promocodeStatus.data.detail
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Промокод активирован', status: 'success'})
+            this[GET_PROFILE_ACTION]();
+            this[GET_SUBSCRIPTION_ACTION]();
           }
         } else {
           this.codeStatus = 'input-field__input_error'
@@ -130,7 +133,8 @@
         this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: CancelSubscrptionAlert});
       },
       ...mapMutations('modal', [SET_MODAL_RESPONSE_MUTATION]),
-      ...mapMutations('modal', [SHOW_MODAL_MUTATION])
+      ...mapMutations('modal', [SHOW_MODAL_MUTATION]),
+      ...mapActions('user', [GET_PROFILE_ACTION, GET_SUBSCRIPTION_ACTION]),
     }
   }
 </script>

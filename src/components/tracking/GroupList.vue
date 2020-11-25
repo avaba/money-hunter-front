@@ -9,7 +9,7 @@
       </div>
       <progressBar
         v-if="progress || progress === 0 && isLoaded"
-        :progress="progress"
+        :progress="progress * 100 / maxTrackingProducts"
         :fontSize="'12px'"
         :text="`Товаров в отслеживании: ${progress} / ${maxTrackingProducts}`"
       />

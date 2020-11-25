@@ -405,7 +405,7 @@
       }
       ,
       compareTime(dateString, now) {
-        const differentTime = 0
+        const differentTime = 60000
         if(dateString + differentTime <= now) {
           return true
         } else {
