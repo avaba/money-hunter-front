@@ -1,7 +1,7 @@
 <template>
   <Modal title="Отмена подписки" closable>
-    <h2 class="CancelSubscrptionAlert-subtitle">Вы уверены, что хотите отменить действующую подписку?</h2>
-    <div class="modal-form__double-submit modal-form__double-submit_save-project">
+    <h2 class="CancelSubscrptionAlert-subtitle">{{ subtitleText }}</h2>
+    <div v-if="!isCanceled" class="modal-form__double-submit modal-form__double-submit_save-project">
       <div class="modal-form__double-submit-item">
         <Btn label="Назад" clazz="button_gray" @click="hideModal"/>
       </div>
@@ -21,12 +21,22 @@
   export default {
     name: "CancelSubscrptionAlert",
     components: {Modal, Btn},
+    data: () => ({
+      isCanceled: false,
+      subtitleText: 'Вы уверены, что хотите отменить действующую подписку?'
+    }),
     methods: {
       hideModal() {
         this[HIDE_MODAL_MUTATION]();
       },
-      cancelSubscription() {
-        this.$store.dispatch('user/cancelSubscription')
+      async cancelSubscription() {
+        const result = await this.$store.dispatch('user/cancelSubscription')
+        if(result.status === 200) {
+          this.isCanceled = true
+        }
+        if(result.data.detail && result.data.detail.length > 0) {
+          this.subtitleText = result.data.detail
+        }
       },
       ...mapMutations('modal', [HIDE_MODAL_MUTATION]),
     }

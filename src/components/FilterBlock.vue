@@ -405,7 +405,7 @@
       }
       ,
       compareTime(dateString, now) {
-        const differentTime = 60000
+        const differentTime = 86400000
         if(dateString + differentTime <= now) {
           return true
         } else {
@@ -418,18 +418,22 @@
         const cachedCategories = JSON.parse(localStorage.getItem("categories"))
         if(cachedCategories) {
           categories = cachedCategories
+
+          this.isCategoriesLoading = true
+          this.$nextTick(() => {
+            this.isCategoriesLoading = false
+            const timestamp = cachedCategories.timestamp
+            const timeNow = new Date().getTime()
+            if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
+              this.loadUpdatedCategories()
+            }
+          })
         } else {
           categories = await this.loadUpdatedCategories()
         }
         this.categories = [0]
         this.allCategories = categories.categories
         this.categories_list = categories.categories_list
-        
-        this.isCategoriesLoading = true
-        this.$nextTick(() => {
-          this.isCategoriesLoading = false
-          this.loadUpdatedCategories()
-        })
       }
       ,
       async loadUpdatedCategories () {
@@ -441,6 +445,11 @@
         this.categories_list = loadedCategories.categories_list
 
         localStorage.setItem("categories", JSON.stringify({categories: loadedCategories.categories, categories_list: loadedCategories.categories_list, timestamp: new Date().getTime().toString()}))
+
+        this.isCategoriesLoading = true
+        this.$nextTick(() => {
+          this.isCategoriesLoading = false
+        })
       }
       ,
       loadOptions({ action, parentNode, callback }) {

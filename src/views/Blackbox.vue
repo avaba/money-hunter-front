@@ -158,7 +158,7 @@
           const service = new BlackboxService();
 
           const result = await service.getGoodsBySearchID(
-            this.searchID,
+            this.$store.state.blackbox.searchID,
             this.orderType,
             this.paginationData.page,
             this.paginationData.perPage
