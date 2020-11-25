@@ -25,7 +25,7 @@
           <InputField :buttonLabel="'Отменить подписку'" @button-event="cancelSubscription" label="Ваш тариф" :value="subscriptionType" disabled/>
         </div>
         <div class="user-data__item">
-          <InputField label="Дата следующего списания средств" :value="expDate" disabled/>
+          <InputField :label="isReccurent ? `Дата следующего списания средств` : `Дата окончания действия подписки`" :value="expDate" disabled/>
         </div>
         <div class="user-data__item">
           <template>
@@ -88,6 +88,9 @@
       },
       expDate() {
         return this.$store.getters['user/getExpDate']
+      },
+      isReccurent() {
+        return this.$store.getters['user/isReccurent']
       },
     },
     methods: {

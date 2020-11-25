@@ -448,7 +448,7 @@
           if (action === LOAD_CHILDREN_OPTIONS) {
             if(parentNode.children_id.length > 0) {
               const parentChildrens = this.allCategories[0].children.find(item => item.id === parentNode.id).children
-              parentNode.children = parentChildrens
+              parentNode.children = parentChildrens ? parentChildrens : false
               callback()
             }
           }
@@ -464,12 +464,15 @@
             const categories = this.allCategories
             const newCats = []
             categories[0].children.forEach(item => {
-              newCats.push({
-                children: null,
+              const cat = {
                 children_id: item.children_id,
                 id: item.id,
                 name: item.name
-              })
+              }
+              if(item.children_id.length > 0) {
+                cat['children'] = null
+              }
+              newCats.push(cat)
             })
             this.categoryOptions = [{
               id: 0,

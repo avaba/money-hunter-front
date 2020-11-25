@@ -3,7 +3,6 @@
     <Tariff
       v-for="item in tariffs"
       :key="item.name"
-      :id="item.id"
       :price="item.price"
       :clazz="item.clazz"
       :name="item.name"
@@ -55,6 +54,7 @@
     // async created() {
     //   this.isLoaded = false
     //   const result = await this.$store.dispatch(`user/${GET_ALL_SUBSCRIBTIONS}`)
+    //   console.log(result)
     //   result.data.forEach(tariff => {
     //     this.tariffs.find(item => item.name === tariff.type)['id'] = tariff.id
     //     this.tariffs.find(item => item.name === tariff.type)['price'] = tariff.price
