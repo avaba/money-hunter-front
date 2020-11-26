@@ -9,7 +9,8 @@
                     v-model="columns"
                     :multiple="true"
                     :options="columnsItems"
-                    class="column-selector"/>
+                    class="column-selector"
+                    v-if="false"/>
     <div class="blackbox">
       <TrackingTable v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated"
                      :headers="tableHeaders"
@@ -261,7 +262,7 @@
         return {
           content: ProductContent,
           clazz: 'width30',
-          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link, imagePath: item.image_link}
+          component_data: {articul: item.articul, brand: item.brand, link: item.link}
         };
       },
       map_currentPrice(item) {
