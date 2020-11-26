@@ -101,7 +101,6 @@
       userService.getSubscription().then(res => {
         this.maxTrackingProducts = res.maxTrackingProducts
         const progressValue = res.trackingProductsCount
-        console.log(progressValue)
         if(progressValue <= 100 && progressValue >= 0) {
           this.progress = progressValue
         } else {

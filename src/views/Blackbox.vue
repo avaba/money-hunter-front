@@ -156,6 +156,7 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
+          this.isLoading = true
           this.list = [];
           const service = new BlackboxService();
 

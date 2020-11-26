@@ -15,7 +15,6 @@ export const mapItemListToTableItem = {
 
       const keys = that.$tableHeaderKeys;
       for (const key of keys) {
-        console.log(item, key)
         result[key] = that[`map_${key}`]
           ? that[`map_${key}`](item)
           : {
