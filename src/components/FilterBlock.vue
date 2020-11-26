@@ -434,6 +434,16 @@
         this.categories = [0]
         this.allCategories = categories.categories
         this.categories_list = categories.categories_list
+        
+        const isCategoriesUpdated = JSON.parse(localStorage.getItem('isCategoriesUpdated'))
+        if(!isCategoriesUpdated) {
+          this.isCategoriesLoading = true
+          await this.loadUpdatedCategories()
+          this.$nextTick(() => {
+            this.isCategoriesLoading = false
+            JSON.parse(localStorage.setItem('isCategoriesUpdated', true))
+          })
+        }
       }
       ,
       async loadUpdatedCategories () {
