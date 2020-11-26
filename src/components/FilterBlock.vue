@@ -48,7 +48,7 @@
           <div class="filter-form__column-item">
             <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
           </div>
-          <div class="filter-form__column-item">
+          <div v-if="false" class="filter-form__column-item">
             <TreeSelect label="Кол-во дней"
                       :normalizer="node=>({...node, label: node.name})"
                       v-model="days"
