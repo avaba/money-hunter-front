@@ -3,15 +3,21 @@
     <form action="" class="filter-form">
       <div class="filter-form__columns">
         <div class="filter-form__column selectors">
-          <div class="filter-form__column-item">
+          <div class="filter-form__column-item customWidthSelector">
             <TreeSelect label="Выберите категории"
+                      v-if="!isCategoriesLoading"
                       v-model="categories"
-                      :options="availableOptions"
+                      :options="categoryOptions"
                       :normalizer="node=>({...node, label: node.name})"
                       :limit="3"
                       :limitText="count=>`и еще ${count}`"
                       :multiple="true"
-                      :disabled="isCategoriesLoading"/>
+                      :load-options="loadOptions"
+                      @search-change="searchChange"
+                      @open="handleMenuOpen"
+                      ref="CategoriesTreeselect"
+                      :loadingText="'Загрузка категорий'"
+                      :dont-use-local-search="true"/>
           </div>
           <div class="filter-form__column-item">
             <ValidationProvider class="brandsSelector" :rules="{required: true}" key="byBrandType">
@@ -38,19 +44,34 @@
             <FindWords label="Минус слова" v-model="minusWords"></FindWords>
           </div>
         </div>
-        <div class="filter-form__column column-fields-custom">
+        <div class="filter-form__column column-fields-last">
           <div class="filter-form__column-item">
             <InputField label="Отзывы" range v-model="feedbackRange" :min="0" :max="900000"/>
+          </div>
+          <div class="filter-form__column-item">
+            <TreeSelect label="Кол-во дней"
+                      :normalizer="node=>({...node, label: node.name})"
+                      v-model="days"
+                      :clearable="false"
+                      :options="daysOptions"/>
+          </div>
+        </div>
+        <div class="filter-form__column column-fields-custom">
+          <div class="filter-form__column-item">
+            <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
           </div>
           <div class="filter-form__column-item">
             <InputField label="Заказы в неделю" range v-model="ordersRange" :min="0" :max="900000"/>
           </div>
         </div>
-        <div class="filter-form__column column-fields-last">
+        <!-- <div class="filter-form__column">
           <div class="filter-form__column-item">
-            <InputField label="Сумма заказов в неделю" range v-model="revenueRange" :min="0" :max="900000"/>
+            <TreeSelect label="Кол-во дней"
+                      :normalizer="node=>({...node, label: node.name})"
+                      v-model="daysAmount"
+                      :options="daysAmountOptions"/>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="filter-form__actions">
         <div class="filter-form__searchs" v-if="userSubscription==='FREE'">
@@ -82,7 +103,7 @@
                @click="downloadSearchResults"/>
         </div>
         <div class="filter-form__send">
-          <Btn label="Найти" clazz="button_save" @click="searchBtnHandler"/>
+          <Btn :loading="isLoading" label="Найти" clazz="button_save" @click="searchBtnHandler"/>
         </div>
       </div>
     </form>
@@ -106,6 +127,7 @@
   import {ValidationProvider} from 'vee-validate';
   import BrandsSelector from "@/shared-components/BrandsSelector";
   import FindWords from "@/shared-components/FindWords";
+  import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 
   export default {
     name: "FilterBlock",
@@ -127,8 +149,6 @@
     data() {
       return {
         searchIcon: SearchImage,
-        availableOptions: [],
-
         priceRange: [],
         ordersRange: [],
         ratingRange: [],
@@ -144,7 +164,40 @@
 
         foundedBrands: null,
 
-        isCategoriesLoading: false
+        isCategoriesLoading: false,
+        
+        categories_list: null,
+
+        categoryOptions: [{
+          id: 0,
+          name: 'Все',
+          isDefaultExpanded: true,
+          children: null
+        }],
+
+        isCategoriesSearching: false,
+
+        categoriesPortionPage: 1,
+        categoriesPortionSize: 30,
+        categoriesSearchQuery: "",
+
+        dataLoaded: false,
+
+        days: 7,
+        daysOptions: [
+          {
+            name: "7 дней",
+            id: 7
+          },
+          {
+            name: "14 дней",
+            id: 14
+          },
+          {
+            name: "30 дней",
+            id: 30
+          },
+        ]
       }
     },
     computed: {
@@ -154,6 +207,12 @@
       userSubscription() {
         return this.$store.state.user.subscription?.subscriptionType;
       },
+    },
+    beforeDestroy() {
+      if(this.categories.find(item => item === 0) === 0 || this.categories.length === 0) {
+        this.categories = [0]
+      }
+      this.$store.commit('blackbox/saveFiltersLocal', this.$data)
     },
     methods: {
       async searchBtnHandler() {
@@ -166,6 +225,50 @@
         this.foundedBrands = brands
       } 
       ,
+      searchChange(searchQuery, instanceId) {
+        this.categories.forEach((item, idx) => {
+          if(item === 0) {
+            this.categories.splice(idx, 1)
+          }
+        })
+        this.$nextTick(() => {
+          if(searchQuery.length > 0) {
+            this.isCategoriesSearching = true
+            this.categoriesSearchQuery = searchQuery
+            const potentialItems = this.categories_list.filter(function(val) {
+              return val.name.toLowerCase().match(searchQuery.toLowerCase())
+            });
+            this.categoryOptions = [...potentialItems.slice(0, this.categoriesPortionSize)]
+          } else {
+            this.isCategoriesSearching = false
+            this.categoriesPortionPage = 1
+            this.categoriesPortionSize = 30
+            this.revertCategories()
+          }
+        })
+      },
+      handleMenuOpen() {
+        this.$nextTick(() => {
+          const menu = this.$refs.CategoriesTreeselect.getMenu();
+          menu.addEventListener('scroll', () => {
+            if(this.isCategoriesSearching) {
+              const hasReachedEnd = menu.scrollHeight - menu.scrollTop <= menu.clientHeight * 1.25;
+              if (hasReachedEnd) {
+                this.categoriesPortionPage += 1;
+                const fromIndex = (this.categoriesPortionPage - 1) * this.categoriesPortionSize + 1;
+                const toIndex = this.categoriesPortionPage * this.categoriesPortionSize;
+                this.loadCategoriesFromSearch(fromIndex, toIndex)
+              }
+            }
+          })
+        })
+      },
+      loadCategoriesFromSearch(fromIndex, toIndex) {
+        const potentialItems = this.categories_list.filter((val) => {
+          return val.name.toLowerCase().match(this.categoriesSearchQuery.toLowerCase())
+        });
+        this.categoryOptions = potentialItems.splice(0, toIndex)
+      },
       getAgregatedData() {
         this.$store.dispatch(`blackbox/${GET_AGREGATED_DATA}`);
       },
@@ -185,6 +288,9 @@
         }
       
         const categories = []
+        if(this.categories.find(item => item === 0)) {
+          this.categories = [0]
+        }
         if(this.categories[0] !== 0) {
           this.categories.forEach(category => {
             const isIncluded = this.allCategories[0].children.find(item => item.id === category)
@@ -211,8 +317,6 @@
         }
         data.brands = brands
 
-        console.log(data)
-
         await this.$store.dispatch(`blackbox/${CHECK_SEARCH_ID_ACTION}`, data);
       }
       ,
@@ -226,6 +330,7 @@
         this.brands = ['all'];
         this.addWords = [];
         this.minusWords = [];
+        this.days = 7
       }
       ,
       loadProject() {
@@ -279,6 +384,7 @@
           this.brands = data.brands;
           this.addWords = data.addWords;
           this.minusWords = data.minusWords;
+          this.days = data.days
           this.searchBtnHandler()
         })
       }
@@ -299,8 +405,8 @@
       }
       ,
       compareTime(dateString, now) {
-        const oneDayTime = 86400000
-        if(dateString + oneDayTime >= now) {
+        const differentTime = 86400000
+        if(dateString + differentTime <= now) {
           return true
         } else {
           return false
@@ -308,55 +414,136 @@
       }
       ,
       async loadCategories() {
-        const service = new BlackboxService();
         let categories = null
-        this.isCategoriesLoading = true
-        this.availableOptions = [{
-          id: 0,
-          name: 'Все',
-          isDefaultExpanded: true
-        }];
-        this.categories = [0]
-        const localCategories = JSON.parse(localStorage.getItem("categories"))
-        if(localCategories && localCategories.categories && JSON.parse(localStorage.getItem("categoryUpdated1311"))) {
-          const timestamp = localCategories.timestamp
-          const timeNow = new Date().getTime()
-          if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
-            categories = localCategories.categories
-          } else {
-            categories = await service.getCategories()
-            if(categories.length <= 0) {
-              categories = localCategories.categories
-            } else {
-              localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
-              localStorage.setItem("categoryUpdated1311", true) 
+        const cachedCategories = JSON.parse(localStorage.getItem("categories"))
+        if(cachedCategories) {
+          categories = cachedCategories
+
+          this.isCategoriesLoading = true
+          this.$nextTick(() => {
+            this.isCategoriesLoading = false
+            const timestamp = cachedCategories.timestamp
+            const timeNow = new Date().getTime()
+            if(this.compareTime(Number.parseInt(timestamp), timeNow)) {
+              this.loadUpdatedCategories()
             }
-          }
+          })
         } else {
-          categories = await service.getCategories()
-          localStorage.setItem("categoryUpdated1311", true) 
-          localStorage.setItem("categories", JSON.stringify({categories: categories, timestamp: new Date().getTime().toString()}))
+          categories = await this.loadUpdatedCategories()
         }
-        console.log(categories)
-        if(categories.length > 0) {
-          this.allCategories = categories
-          this.availableOptions = categories;
-          this.categories = [0]
-          this.availableOptions[0]['isDefaultExpanded'] = true
-          this.isCategoriesLoading = false
-        }
+        this.categories = [0]
+        this.allCategories = categories.categories
+        this.categories_list = categories.categories_list
       }
       ,
+      async loadUpdatedCategories () {
+        const service = new BlackboxService();
+
+        const loadedCategories = await service.getCategories()
+
+        this.allCategories = loadedCategories.categories
+        this.categories_list = loadedCategories.categories_list
+
+        localStorage.setItem("categories", JSON.stringify({categories: loadedCategories.categories, categories_list: loadedCategories.categories_list, timestamp: new Date().getTime().toString()}))
+
+        this.isCategoriesLoading = true
+        this.$nextTick(() => {
+          this.isCategoriesLoading = false
+        })
+      }
+      ,
+      loadOptions({ action, parentNode, callback }) {
+        if(parentNode.id !== 0) {
+          if (action === LOAD_CHILDREN_OPTIONS) {
+            if(parentNode.children_id.length > 0) {
+              const parentChildrens = this.allCategories[0].children.find(item => item.id === parentNode.id).children
+              parentNode.children = parentChildrens ? parentChildrens : false
+              callback()
+            }
+          }
+        }
+      },
       downloadSearchResults() {
         this.$emit('downloadSearchResults')
       }
       ,
+      revertCategories() {
+        if(!this.dataLoaded) {
+          if(this.allCategories) {
+            const categories = this.allCategories
+            const newCats = []
+            categories[0].children.forEach(item => {
+              const cat = {
+                children_id: item.children_id,
+                id: item.id,
+                name: item.name
+              }
+              if(item.children_id.length > 0) {
+                cat['children'] = null
+              }
+              newCats.push(cat)
+            })
+            this.categoryOptions = [{
+              id: 0,
+              name: "Все",
+              isDefaultExpanded: true,
+              children: newCats
+            }]
+          } else this.categoryOptions = [{
+            id: 0,
+            name: 'Все',
+            isDefaultExpanded: true,
+            children: null
+          }]
+        }
+      },
       ...
         mapMutations('modal', [SHOW_MODAL_MUTATION])
     },
     created() {
+      const myLocalFilters = this.$store.getters['blackbox/myLocalFilters']
+      if(myLocalFilters) {
+        this.brands = []
+        this.dataLoaded = true
+        this.allCategories = []
+        this.$nextTick(() => {
+
+          Object.keys(this.$data).forEach(key => {
+            this.$data[key] = myLocalFilters[key]
+          })
+
+          if(this.categories.find(item => item === 0) !== 0) {
+            this.$nextTick(() => {
+              this.categoryOptions[0].children = this.allCategories[0].children
+            })
+          }
+
+        })
+      }
       this.loadCategories();
     },
+    watch: {
+      allCategories: {
+        handler: function () {
+          this.revertCategories()
+          // if(this.allCategories) {
+          //   this.isCategoriesLoading = false
+          // }
+        },
+        deep: true
+      },
+      categories: {
+        handler: function () {
+          if(document.querySelector(".customWidthSelector .vue-treeselect__input") && document.querySelector(".customWidthSelector .vue-treeselect__input").value.length > 0) {
+            document.querySelector(".customWidthSelector .vue-treeselect__input").value = ''
+          }
+        },
+        deep: true
+      },
+      days: function () {
+        this.$emit('daysChange', this.days)
+      }
+    }
   }
 </script>
 
@@ -529,6 +716,18 @@
             max-width: 100%;
             width: 100%;
           }
+          &.column-fields-last {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 100%;
+            margin: 0px;
+            & .filter-form__column-item {
+              width: calc((100% / 2) - 20px);
+              margin: 10px 10px;
+            }
+          }
           &.column-fields-custom {
             flex-direction: row;
             min-width: 300px;
@@ -584,6 +783,17 @@
           }
           &.column-fields-last {
             order: 5;
+          }
+          &.column-fields-last {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            margin: 0px;
+            & .filter-form__column-item {
+              width: 100%;
+              margin: 10px 0px;
+            }
           }
           &.column-fields-custom {
             flex-direction: column;

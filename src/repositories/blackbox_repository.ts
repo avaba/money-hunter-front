@@ -13,6 +13,7 @@ export interface GetSearchIDDataInterface {
   addWords: Array<string>;
   minusWords: Array<string>;
   brands: Array<string>;
+  days: number;
 }
 
 export class BlackboxRepository {
@@ -38,7 +39,7 @@ export class BlackboxRepository {
   }
 
   getGoodsBySearchID(searchID: string, orderType: string, pageNum: number, onPage: number) {
-    const params = {searchID, orderType, pageNum, onPage} as any;
+    const params = { searchID, orderType, pageNum, onPage } as any;
     const paramsString = queryParamsBuilder(params);
 
     return this.client.sendGet(`${this.getGoodsBySearchIDUrl}?${paramsString}`);
@@ -64,7 +65,6 @@ export class BlackboxRepository {
   saveSearch(name: string, data: GetSearchIDDataInterface) {
     const _data = {...data} as any;
     _data.name = name;
-    console.log(_data)
     return this.client.sendPost(this.searchesUrl, _data);
   }
 
@@ -72,8 +72,8 @@ export class BlackboxRepository {
     return this.client.sendGet(queryStringBuilder(this.getProductImagePathAndNameUrl, {articul}))
   }
 
-  getChartData(articul: string) {
-    return this.client.sendGet(queryStringBuilder(this.getChartDataUrl, {articul}))
+  getChartData(articul: string, days: number) {
+    return this.client.sendGet(queryStringBuilder(this.getChartDataUrl, { articul, days }))
   }
 
   getCategories() {

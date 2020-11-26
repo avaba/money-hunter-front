@@ -1,24 +1,15 @@
 <template>
-  <div @click="chekingWidth" class="select-field">
+  <div @click="!searchWidthActivated ? chekingWidth() : false" class="select-field">
     <label for="" class="select-field__label">{{label}}</label>
     <span class="select-field__error" v-if="!!error">{{error}}</span>
     <VendorTreeSelect ref="treeselect"
                       v-bind="$attrs"
                       :value="value"
                       v-on="listeners"
+                      @open="searchChange"
+                      @search-change="searchChange"
                       class="select-field__select">
       <div slot="value-label" slot-scope="{ node }">{{ getValue(node) }}</div>
-      <!--            <template v-slot:option-label="{ node, labelClassName }">-->
-      <!--              <label :class="{-->
-      <!--                'categories__item': node.isRootNode,-->
-      <!--                [labelClassName]: true,-->
-      <!--                'categories__sub-categories-item': node.isLeaf}-->
-      <!--              ">-->
-      <!--                <a href="#" :class="{'categories__link': node.isBranch, 'categories__link_open': node.isExpanded}">-->
-      <!--                  {{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}-->
-      <!--                </a>-->
-      <!--              </label>-->
-      <!--            </template>-->
 
     </VendorTreeSelect>
   </div>
@@ -48,6 +39,9 @@
         default: null
       }
     },
+    data: () => ({
+      searchWidthActivated: false
+    }),
     computed: {
       listeners() {
         const data = {...this.$listeners};
@@ -70,18 +64,35 @@
       getMenu() {
         return this.$refs.treeselect.getMenu();
       },
-      chekingWidth() {
-        const amountOfNodes = 10
-        const defaultWidth = document.querySelector(".select-field").offsetWidth
-        const extraWidthSize = 75
-        let extraWidth = 0
-        for(let i = 2; i < amountOfNodes; i++) {
-          if(document.querySelector(`.vue-treeselect__indent-level-${i}`)) {
-            extraWidth += extraWidthSize
-          }
+      searchChange(value) {
+        const rightConerOfField = document.querySelector(".select-field").getBoundingClientRect().right
+        const rightConerOfFilter = document.querySelector(".filter-form__columns").getBoundingClientRect().right - 10
+        
+        const differentBetweenConers = rightConerOfFilter - rightConerOfField
+        const extraWidth = '100%'
+        const defaultWidth = document.querySelector(".filter .customWidthSelector .select-field").offsetWidth
+        if(value.length > 0 && document.querySelector(".filter .customWidthSelector .vue-treeselect__menu")) {
+          this.searchWidthActivated = true
+          document.querySelector(".filter .customWidthSelector .vue-treeselect__menu").style.width = `${defaultWidth + differentBetweenConers}px`
+        } else if (document.querySelector(".filter .customWidthSelector .vue-treeselect__menu") && value.length <= 0){
+          this.searchWidthActivated = false
+          document.querySelector(".filter .customWidthSelector .vue-treeselect__menu").style.width = `${defaultWidth}px`
         }
-        if(document.querySelector(".vue-treeselect__menu")) {
-          document.querySelector(".vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+      },
+      chekingWidth() {
+        if(document.documentElement.offsetWidth > 768) {
+          const amountOfNodes = 10
+          const defaultWidth = document.querySelector(".select-field").offsetWidth
+          const extraWidthSize = 75
+          let extraWidth = 0
+          for(let i = 2; i < amountOfNodes; i++) {
+            if(document.querySelector(`.vue-treeselect__indent-level-${i}`)) {
+              extraWidth += extraWidthSize
+            }
+          }
+          if(document.querySelector(".filter .customWidthSelector .vue-treeselect__menu")) {
+            document.querySelector(".filter .customWidthSelector .vue-treeselect__menu").style.width = `${defaultWidth + extraWidth}px`
+          }
         }
       },
       handleLocalSearch() {

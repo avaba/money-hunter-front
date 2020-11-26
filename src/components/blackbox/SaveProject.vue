@@ -58,7 +58,6 @@
           const _nested = {...this.nested};
 
           const result = await blackboxService.saveSearch(this.name, _nested);
-          
           if (typeof result === 'boolean' && result) {
             this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Проект сохранен', status: 'success'})
             await this.$store.commit(`modal/${HIDE_MODAL_MUTATION}`);

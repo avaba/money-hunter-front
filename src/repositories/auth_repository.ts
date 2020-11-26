@@ -34,10 +34,10 @@ export class AuthRepository {
   }
 
   async getPromocode(code: string) {
-    return await this.client.sendGet(this.promocodeUrl + `?promocode=${code}`)
+    return await this.client.sendGet(this.promocodeUrl + `?name=${code}`)
   }
 
   async setPromocode(code: string, email: string) {
-    return await this.client.sendPost(this.promocodeUrl, {promocode: code, email: email})
+    return await this.client.sendPost(this.promocodeUrl, {name: code, email: email})
   }
 }

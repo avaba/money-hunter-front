@@ -1,7 +1,15 @@
 <template>
   <Fragment>
-    <FilterBlock :downloadBtnStatus="downloadBtnStatus" @downloadSearchResults="downloadSearchResults" :isLoading="isLoading" :searchHandler="searchHandler"/>
-
+    <FilterBlock :downloadBtnStatus="downloadBtnStatus" 
+                 @downloadSearchResults="downloadSearchResults" 
+                 :isLoading="isLoading" 
+                 :searchHandler="searchHandler"
+                 @daysChange="daysChange"/>
+    <TreeSelect label="Отображаемые колонки"
+                    v-model="columns"
+                    :multiple="true"
+                    :options="columnsItems"
+                    class="column-selector"/>
     <div class="blackbox">
       <TrackingTable v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated"
                      :headers="tableHeaders"
@@ -45,27 +53,30 @@
   import {AmplitudeService} from "../services/amplitude_service";
   import PlusImage from '../assets/img/ikons/plus3.svg';
   import ImgBtn from "../shared-components/ImgBtn";
+  import TreeSelect from "@/shared-components/TreeSelect";
 
   const DEFAULT_ORDER_TYPE = '-articul';
 
   export default {
     name: "Blackbox",
-    components: {TrackingPagination, TrackingTable, FilterBlock, Fragment},
+    components: {TrackingPagination, TrackingTable, FilterBlock, Fragment, TreeSelect},
     mixins: [tableMixins, paginationMixin],
     data() {
       return {
         list: [],
 
         tableHeaders: [
-          {name: 'goods', label: 'Товар', clazz: 'width30', sortable: false},
-          {name: 'articul', label: 'Артикул', clazz: 'width9', isOnlyAscSorting: true},
-          {name: 'currentPrice', label: 'Цена', clazz: 'width5'},
-          {name: 'currentQty', label: 'Остаток', clazz: 'width9'},
-          {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9'},
-          {name: 'avRevenue', label: 'Сумма заказов в неделю', clazz: 'width9'},
-          {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-right width9'},
-          {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width9'},
-          {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9'},
+          {name: 'name', label: 'Товар', clazz: 'width30 mw300', sortable: false},
+          {name: 'articul', label: 'Артикул', clazz: 'width9 mw100', isOnlyAscSorting: true},
+          {name: 'currentPrice', label: 'Цена', clazz: 'width5 mw100'},
+          {name: 'currentQty', label: 'Остаток', clazz: 'width9 mw100'},
+          {name: 'avOrdersSpeed', label: 'Заказов в неделю', clazz: 'width9 mw100'},
+          {name: 'avRevenue', label: 'Сумма заказов в неделю', clazz: 'width9 mw150'},
+          // {name: 'selesCount', label: 'Продажи', clazz: 'width5 mw100'},
+          // {name: 'salesRevenue', label: 'Сумма продаж', clazz: 'width9 mw100'},
+          {name: 'currentRating', label: 'Рейтинг', clazz: 'tracking-table__header-item_align-right width23 mw150'},
+          {name: 'currentFeedBackCount', label: 'Кол-во отзывов', clazz: 'width9 mw100'},
+          {name: 'add', label: 'Добавить в мои товары', sortable: false, clazz: 'width9 mw150'},
         ],
         orderType: DEFAULT_ORDER_TYPE,
 
@@ -77,15 +88,32 @@
 
         isLoadingAgregated: false,
 
-        downloadBtnStatus: 'hidden'
+        downloadBtnStatus: 'hidden',
+
+        days: 7,
+
+        columns: []
       }
     },
     computed: {
       tablePositions() {
         return this.list.map(item => ({
           ...this.$mapItemListToTableItem(item),
-          nested: {content: ProductBlackboxNested, articul: item.articul, clazz: 'tracking-table-dropdown__item-chart'}
+          nested: {content: ProductBlackboxNested, articul: item.articul, clazz: 'tracking-table-dropdown__item-chart', days: this.days}
         }));
+      },
+      columnsItems() {
+        const columnsItems = []
+        const nonDinamicColumns = ['Товар', 'Добавить в мои товары']
+        this.tableHeaders.forEach((column, idx) => {
+          if(!nonDinamicColumns.find(item => item === column.label)) {
+            columnsItems.push({
+              label: column.label,
+              id: idx
+            })
+          }
+        })
+        return columnsItems
       },
       searchID() {
         return this.$store.state.blackbox.searchID;
@@ -95,11 +123,19 @@
       }
     },
     methods: {
+      daysChange(days) {
+        this.days = days
+      },
       async searchHandler() {
+        this.isLoading = true
         this.paginationData.page = 1;
         this.orderType = DEFAULT_ORDER_TYPE;
-
-        this.debounceLoadGoods();
+        await this.debounceLoadGoods();
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.isLoading = false
+          }, 1000);
+        })
       },
       perPageHandler(value) {
         this.paginationData.page = 1;
@@ -122,20 +158,20 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
-          this.isLoading = true;
+          this.list = [];
           const service = new BlackboxService();
 
           const result = await service.getGoodsBySearchID(
-            this.searchID,
+            this.$store.state.blackbox.searchID,
             this.orderType,
             this.paginationData.page,
             this.paginationData.perPage
           );
     
           this.paginationData.totalCount = result.countAll;
-          this.list = [];
+          this.list = result.products;
+
           this.$nextTick(() => {
-            this.list = result.products;
             this.isLoading = false
           })
         }
@@ -221,11 +257,11 @@
           // this.tableHeaders.find(item => item.name === renamedHeaders[header].label)["subheaderValue"] = subHeaderValue
         })
       },
-      map_goods(item) {
+      map_name(item) {
         return {
           content: ProductContent,
           clazz: 'width30',
-          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link}
+          component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link, imagePath: item.image_link}
         };
       },
       map_currentPrice(item) {
@@ -239,7 +275,7 @@
           content: ImgBtn, component_data: {
             src: PlusImage,
             'click-handler': this.addGoodsPositionHandler.bind(this, item)
-          }, clazz: 'tracking-table__align-center width9'
+          }, clazz: 'tracking-table__align-right width9'
         }
       },
       addGoodsPositionHandler(item) {
@@ -249,9 +285,27 @@
     async mounted() {
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
     },
+    beforeDestroy() {
+      this.$store.commit('blackbox/saveSearchResultsLocal', this.$data)
+    },
+    created() {
+      const myLocalSearchResults = this.$store.getters['blackbox/myLocalSearchResults']
+      if(myLocalSearchResults) {
+        Object.keys(this.$data).forEach(key => {
+          if(key !== 'debounceLoadGoods') {
+            this.$nextTick(() => {
+              this.$data[key] = myLocalSearchResults[key]
+            })
+          }
+        })
+      }
+
+      for(let i = 0; i < this.columnsItems.length; i++) {
+        this.columns.push(this.columnsItems[i].id)
+      }
+    },
     watch: {
       searchID: function () {
-        console.log(this.searchID)
         if(this.searchID) {
           this.downloadBtnStatus = false
         }
@@ -262,7 +316,6 @@
       },
       agregatedData: {
         handler: function () {
-          this.isLoadingAgregated = true
           const result = this.agregatedData
           const mainInfo = ['onPage', 'products', "countAll"]
           const potentialHeaders = []
@@ -274,11 +327,28 @@
           if(potentialHeaders.length > 0) {
             this.insertHeaders(potentialHeaders)
           }
-          this.$nextTick(() => {
-            this.isLoadingAgregated = false
-          })
         },
         deep: true
+      },
+      columns: function () {
+        if(this.list.length > 0) {
+          this.isLoading = true
+        }
+        const nonDinamicColumns = ['Товар', 'Добавить в мои товары']
+        this.tableHeaders.forEach(column => {
+          if(!nonDinamicColumns.find(item => item === column.label)) {
+            column.status = 'hidden'
+          }
+        })
+        this.columns.forEach(id => {
+          const columnName = this.columnsItems.find(item => item.id === id).label
+          this.tableHeaders.find(header => header.label === columnName).status = `show`
+        })
+        if(this.list.length > 0 && this.isLoading) {
+          this.$nextTick(() => {
+            this.isLoading = false
+          })
+        }
       }
     }
   }
@@ -294,6 +364,13 @@
     flex: 1;
     position: relative;
     min-height: 200px;
+  }
+
+  .column-selector {
+    margin: 1.42rem 2.28rem 0;
+    @media screen and(max-width: 710px) {
+      margin: 10px;
+    }
   }
 
   .loading-table {

@@ -1,9 +1,9 @@
 <template>
   <div class="tracking-table-wrapper">
     
-    <tr class="tracking-table__header tracking-table__header-subheader">
+    <tr v-if="subheaders" class="tracking-table__header tracking-table__header-subheader">
         <th v-for="item in subheaders" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
-          <div v-show="false">
+          <div>
             <span :class="{'tracking-table__header-label': isSortable(item)}"
                   @click="headerClickHandler(item)">{{item.label}}</span>
             <Btn v-if="isSortable(item) && getSortClass(item)"
@@ -15,23 +15,25 @@
         </th>
       </tr>
     <table class="tracking-table tracking-table_sticky">
-      <tr class="tracking-table__header">
-        <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
-          <div>
-            <span :class="{'tracking-table__header-label': isSortable(item)}"
-                  @click="headerClickHandler(item)">{{item.label}}</span>
-            <Btn v-if="isSortable(item) && getSortClass(item)"
-                 @click="headerClickHandler(item)"
-                 without-default-class
-                 :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
-          </div>
-          <!-- <span v-if="item.subheader && item.subheaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subheaderValue }}</span></span> -->
-        </th>
-      </tr>
+      <tbody class="tracking-table-tbody">
+        <tr class="tracking-table__header">
+          <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="{[item.clazz]: item.clazz, [item.status]: item.status }|| ''">
+            <div>
+              <span :class="{'tracking-table__header-label': isSortable(item)}"
+                    @click="headerClickHandler(item)">{{item.label}}</span>
+              <Btn v-if="isSortable(item) && getSortClass(item)"
+                  @click="headerClickHandler(item)"
+                  without-default-class
+                  :clazz="`tracking-table__sort ${getSortClass(item)}`"/>
+            </div>
+            <!-- <span v-if="item.subheader && item.subheaderValue" class="tracking-table__header-item-subheader">{{ item.subheader }}: <span>{{ item.subheaderValue }}</span></span> -->
+          </th>
+        </tr>
+      </tbody>
     </table>
     <table class="tracking-table" v-if="items.length>0">
       <!-- {{ items[0].currentPrice.component_data.price }} -->
-      <TrackingTableRow :row-data="item" :header-keys="headers.map(h=>h.name)" v-for="(item, idx) in items" :key="idx"/>
+      <TrackingTableRow :row-data="item" :header-keys="headers.map(h=>h.name)" :headerWidth="headers" v-for="(item, idx) in items" :key="idx"/>
     </table>
   </div>
 </template>
@@ -97,29 +99,63 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
-  .width5{
-    width: 5%;
+  .mw400 {
+    min-width: 400px;
+    max-width: 400px;
   }
 
-  .width9{
-    width: 9%;
+  .mw300 {
+    min-width: 300px;
+    max-width: 300px;
   }
 
-  .width23{
-    width: 23%;
+  .mw200 {
+    min-width: 200px;
+    max-width: 200px;
   }
 
-  .width30 {
-    width: 30%;
+  .mw150 {
+    min-width: 150px;
+    max-width: 150px;
   }
 
-  .width10 {
-    width: 10%;
+  .mw100 {
+    min-width: 100px;
+    max-width: 100px;
   }
 
-  .width25 {
-    width: 100%;
+  .mw50 {
+    min-width: 50px;
+    max-width: 50px;
   }
+
+  .hidden {
+    display: none !important;
+  }
+
+  // .width5{
+  //   width: 5%;
+  // }
+
+  // .width9{
+  //   width: 9%;
+  // }
+
+  // .width23{
+  //   width: 23%;
+  // }
+
+  // .width30 {
+  //   width: 30%;
+  // }
+
+  // .width10 {
+  //   width: 10%;
+  // }
+
+  // .width25 {
+  //   width: 100%;
+  // }
 
   .tracking-table-wrapper {
     flex: 1;
@@ -135,6 +171,11 @@
     border-spacing: 0;
     & * {
       box-sizing: border-box;
+    }
+
+    &-tbody {
+      display: flex;
+      flex-direction: column;
     }
 
     &.tracking-table_sticky {
@@ -154,7 +195,9 @@
     background: white;
     top: 0px;
     width: 100%;
-    padding: 0px 10px;
+    // padding: 0px 10px;
+    padding: 0px;
+    min-width: 910px;
     // height: 95px;
   }
 
@@ -162,13 +205,18 @@
     position: static;
     display: flex;
     justify-content: center;
-    // border-bottom: 1px solid #DFE0EB;
-    min-width: 1140px;
+    // min-width: 100%;
+    min-width: 910px;
     & .tracking-table__header-item {
       min-width: 120px;
       border-bottom: 1px solid #DFE0EB;
       padding: 10px 5px !important;
       margin: 0px 5px;
+    }
+    @media screen and (max-width: 1615px) {
+      // justify-content: flex-start;
+      // overflow-x: scroll;
+      padding-bottom: 5px;
     }
   }
 
@@ -179,7 +227,8 @@
   .tracking-table__header-item {
     text-align: right;
     // padding: 1.85rem 1.21rem;
-    padding: 10px 10px 10px 5px;
+    // padding: 10px 10px 10px 5px;
+    padding: 10px 5px;
     background: white;
     height: 100%;
     display: flex;
@@ -224,7 +273,7 @@
     }
 
     &:first-child {
-      padding-left: 25px;
+      padding-left: 35px;
       justify-content: flex-start;
       & * {
         justify-content: flex-start;
@@ -232,7 +281,7 @@
     }
 
     &:last-child {
-      padding-right: 25px;
+      padding-right: 15px;
     }
 
     // &:first-child {
@@ -297,13 +346,13 @@
         line-height: 12px;
       }
     }
-  @media screen and (max-width: 1300px) {
+  @media screen and (max-width: 1615px) {
     .tracking-table-wrapper {
       overflow-x: auto;
       max-width: 100%;
       width: 100%;
       & .tracking-table {
-        width: 1140px;
+        max-width: 1450px;
       }
     }
   }

@@ -6,7 +6,11 @@
       :style="mappedList[0].linkTo === 'articul' ? 'cursor: pointer' : false" 
       @mousedown="mappedList[0].linkTo === 'articul' ? linkTo(mappedList[1].content) : false">
       <td class="tracking-table__cell"
-          :class=" {[item.clazz]: item.clazz, 'tracking-table__cell_open': isCellOpen(idx), 'tracking-table__cell_dropdown': isCellDropDown(idx)}"
+          :class=" {[headerWidth[idx].status]: headerWidth[idx].status, 
+          [headerWidth[idx].clazz]: headerWidth[idx].clazz, 
+          [item.clazz]: item.clazz, 
+          'tracking-table__cell_open': isCellOpen(idx), 
+          'tracking-table__cell_dropdown': isCellDropDown(idx)}"
           :style="{cursor: item.onClick ? 'pointer' : 'inherit'}"
           v-for="(item, idx) in mappedList"
           @click.exact="item.onClick ? item.onClick(item) : ()=>{}"
@@ -44,6 +48,10 @@
         type: Array,
         required: true,
       },
+      headerWidth: {
+        type: Array,
+        required: false
+      }
     },
     data() {
       return {
@@ -84,9 +92,6 @@
           return n.content
         }
       },
-      linkTo(articul) {
-        this.$router.push({name: 'trackingPositions.group', params: {name: articul}});
-      }
     }
   }
 </script>
@@ -94,36 +99,72 @@
 <style scoped lang="scss">
   @import "../assets/scss/variables";
 
-  .width5 {
-    width: 5%;
+  // .width5 {
+  //   width: 5%;
+  // }
+
+  // .width9 {
+  //   width: 9%;
+  //   white-space: nowrap;
+  // }
+
+  // .width23 {
+  //   width: 23%;
+  // }
+
+  // .width30 {
+  //   width: 30%;
+  // }
+
+  // .width10 {
+  //   width: 10%;
+  // }
+
+  // .width25 {
+  //   width: 25%;
+  // }
+
+  .hidden {
+    display: none;
   }
 
-  .width9 {
-    width: 9%;
-    white-space: nowrap;
+  .mw400 {
+    min-width: 400px;
+    max-width: 400px;
   }
 
-  .width23 {
-    width: 23%;
+  .mw300 {
+    min-width: 300px;
+    max-width: 300px;
   }
 
-  .width30 {
-    width: 30%;
+  .mw200 {
+    min-width: 200px;
+    max-width: 200px;
   }
 
-  .width10 {
-    width: 10%;
+  .mw150 {
+    min-width: 150px;
+    max-width: 150px;
   }
 
-  .width25 {
-    width: 25%;
+  .mw100 {
+    min-width: 100px;
+    max-width: 100px;
+  }
+
+  .mw50 {
+    min-width: 50px;
+    max-width: 50px;
   }
 
   .tracking-table {
-    width: 100%;
+    // width: 100%;
   }
 
   .tracking-table__row {
+    // width: 100%;
+    min-width: 910px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -154,7 +195,8 @@
     // padding: 1.85rem 1.21rem;
     // padding: 15px 15px 15px 15px;
     // padding-left: 1.21rem;
-    padding: 15px 15px 15px 5px;
+    // padding: 15px 15px 15px 5px;
+    padding: 15px 5px 15px 5px;
     text-align: right;
     letter-spacing: .2px;
     box-sizing: border-box;

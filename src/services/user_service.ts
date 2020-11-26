@@ -31,9 +31,25 @@ export class UserService {
     }
   }
 
-  async getPaymentLink(user: any) {
+  async getPaymentLink(subscriptionID: any) {
     try {
-      return (await this.authService.refreshWrapper(this.repo.getPaymentLink.bind(this.repo, user)));
+      return (await this.authService.refreshWrapper(this.repo.getPaymentLink.bind(this.repo, subscriptionID)));
+    } catch (e) {
+      return e
+    }
+  }
+
+  async getSubscriptions () {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.getSubscriptions.bind(this.repo)));
+    } catch (e) {
+      return e
+    }
+  }
+
+  async cancelSubscription() {
+    try {
+      return (await this.authService.refreshWrapper(this.repo.cancelSubscription.bind(this.repo)));
     } catch (e) {
       return e
     }

@@ -61,17 +61,29 @@
       isBuyable: {
         type: Boolean,
         default: true
+      },
+      id: {
+        type: Number, 
+        default: 2
       }
     },
     methods: {
       async handleBuyBtn() {
         AmplitudeService.subscription(this.name);
 
-        const response = await this[GET_PAYMENT_LINK_ACTION](this.name)
-        if(response.response) {
-          this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.response.data.detail, status: 'error'})
-        } else if (response.data) {
-          window.open(response.data.detail)
+        const results = await this[GET_PAYMENT_LINK_ACTION](this.id)
+        const response = results.response
+
+        if(response) {
+          if(response.status === 400) {
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: response.data.detail, status: 'error'})
+          } else if(response.status === 500) {
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Произошла ошибка', status: 'error'})
+          }
+        } else {
+          if (results.status === 200) {
+            window.open(results.data.detail)
+          }
         }
       },
       showOffer() {

@@ -61,11 +61,10 @@
               У меня есть промокод
             </div>
             <template v-if="showPromotionField">
-              <InputField :disabled="codeStatus === 'valid'" type="text" clazz="input-field__input" placeholder="Введите промокод" v-model="code"/>
+              <InputField :label="`Промокод${codeText ? '. ' + codeText : ''}`" type="text" :clazz="`input-field__input ${codeStatus}`" placeholder="Введите промокод" v-model="code"/>
               <button @click="promocodeCheking" class="modal-form__promocod-done" type="button"/>
             </template>
           </div>
-          <p class="promocode-status" :class="codeStatus" v-if="showPromotionField && codeStatus">{{ codeStatus === 'valid' ? 'Промокод применён' : 'Промокод больше не действителен'}}</p>
           <div class="modal-form__submit-item">
             <Btn :loading="loading" :isDisabled="isDisabled" label="Зарегистрироваться" type="submit"/>
           </div>
@@ -114,6 +113,8 @@
         name: '',
         
         codeStatus: null,
+
+        codeText: '',
 
         loading: false,
 
@@ -181,10 +182,14 @@
         if(!isError) {
           const service = AuthService.getInstance();
           const promocodeStatus = await service.getPromocode(this.code)
-          if(promocodeStatus && promocodeStatus != 'promocode is not valid') {
-            this.codeStatus = 'valid'
-          } else if(promocodeStatus && promocodeStatus === 'promocode is not valid') {
-            this.codeStatus = 'notValid'
+          if(promocodeStatus.status === 200) {
+            this.codeStatus = 'input-field__input_success'
+            this.codeText = promocodeStatus.data.detail
+            await service.setPromocode(this.promocode, this.user.email);
+            this.$store.commit('notifications/ADD_NOTIFICATION', {text: 'Промокод активирован', status: 'success'})
+          } else {
+            this.codeStatus = 'input-field__input_error'
+            this.codeText = promocodeStatus.data.detail
           }
         }
       }

@@ -91,9 +91,7 @@ export class AuthService {
       return response
     } catch (e) {
       const _e = e as AxiosError;
-      if (_e.response && _e.response.status === 400) {
-        return _e.response.data.detail
-      }
+      return _e.response
     }
   }
 

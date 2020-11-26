@@ -8,13 +8,14 @@
       :name="item.name"
       :list="item.list"
       :is-buyable="item.isBuyable"
+      :isLoaded="isLoaded"
     />
   </div>
 </template>
 
 <script>
   import Tariff from "./Tariff";
-  // import {GET_ALL_SUBSCRIBTIONS} from "@/store/modules/user/constants"
+  import {GET_ALL_SUBSCRIBTIONS} from "@/store/modules/user/constants"
 
   export default {
     name: "TariffList",
@@ -47,7 +48,7 @@
             ]
           },
         ],
-        isLoaded: false,
+        isLoaded: true,
       }
     },
   }

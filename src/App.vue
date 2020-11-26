@@ -47,7 +47,6 @@
         this[GET_PROFILE_ACTION]();
         this[GET_SUBSCRIPTION_ACTION]();
         this[LOAD_GROUPS_ACTION]();
-
         trackingService.getBrands();
       }
     },

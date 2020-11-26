@@ -53,7 +53,6 @@ export default {
   async [GET_AGREGATED_DATA](context: ActionContext<VuexBlackBoxStateInterface, any>) {
     const service = new BlackboxService();
     const response = await service.getAgregatedData(context.state.searchID);
-    console.log(context.state.searchID)
     if (response) {
       context.commit(SET_AGREGATED_MUTATION, response);
 

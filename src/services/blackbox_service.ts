@@ -1,5 +1,5 @@
 import {BlackboxRepository, GetSearchIDDataInterface, RangeOfIntegersType} from "@/repositories/blackbox_repository";
-import {AuthService} from "@/services/auth_service";
+import { AuthService } from "@/services/auth_service";
 import FileSaver from "file-saver";
 import {AmplitudeService} from "@/services/amplitude_service";
 
@@ -18,6 +18,7 @@ export class BlackboxService {
     _data.categories = [...data.categories];
     _data.addWords = [...data.addWords];
     _data.minusWords = [...data.minusWords];
+    _data.days = data.days;
 
     return _data;
   }
@@ -96,7 +97,15 @@ export class BlackboxService {
     try {
       return (await this.service.refreshWrapper(this.repo.getSavedSearches.bind(this.repo))).data;
     } catch (e) {
-      return {userSavedSearched: []};
+      return { userSavedSearched: [] };
+    }
+  }
+
+  async deleteSearch(name: any) {
+    try {
+      return (await this.service.refreshWrapper(this.repo.deleteSearch.bind(this.repo, name))).data;
+    } catch (e) {
+      return { userSavedSearched: [] };
     }
   }
 
@@ -125,9 +134,9 @@ export class BlackboxService {
     }
   }
 
-  async getChartData(articul: string) {
+  async getChartData(articul: string, days: number) {
     try {
-      return (await this.service.refreshWrapper(this.repo.getChartData.bind(this.repo, articul))).data.product;
+      return (await this.service.refreshWrapper(this.repo.getChartData.bind(this.repo, articul, days))).data.product;
     } catch (e) {
       return null;
     }
@@ -138,14 +147,6 @@ export class BlackboxService {
       return (await this.service.refreshWrapper(this.repo.getCategories.bind(this.repo))).data;
     } catch (e) {
       return [];
-    }
-  }
-
-  async deleteSearch(name: any) {
-    try {
-      return (await this.service.refreshWrapper(this.repo.deleteSearch.bind(this.repo, name))).data;
-    } catch (e) {
-      return { userSavedSearched: [] };
     }
   }
 }

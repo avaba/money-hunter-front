@@ -5,6 +5,7 @@ import auth from './modules/auth';
 import modal from './modules/modal';
 import blackbox from './modules/blackbox';
 import tracking from './modules/tracking';
+import trackingPositions from './modules/trackingPositions';
 import notifications from './modules/notifications'
 
 Vue.use(Vuex);

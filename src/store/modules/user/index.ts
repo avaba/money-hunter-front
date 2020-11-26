@@ -13,6 +13,7 @@ export interface VuexUserStateSubscriptionInterface {
   expDate: string;
   maxTrackingProducts: number;
   subscriptionType: string;
+  reccurent: boolean;
 }
 
 export interface VuexUserStateInterface {
@@ -34,6 +35,12 @@ export default {
     },
     getSubscription(state: VuexUserStateInterface) {
       return state.subscription
-    }
+    },
+    getExpDate(state: VuexUserStateInterface) {
+      return state.subscription?.expDate
+    },
+    isReccurent(state: VuexUserStateInterface) {
+      return state.subscription?.reccurent
+    },
   }
 }
