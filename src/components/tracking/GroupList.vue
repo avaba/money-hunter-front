@@ -14,7 +14,6 @@
         :text="`Товаров в отслеживании: ${progress} / ${maxTrackingProducts}`"
       />
     </div>
-
     <TrackingTable v-if="tablePositions && loaded && progress > 0"
                    :headers="tableHeaders"
                    :items="tablePositions"
@@ -45,18 +44,18 @@
     data() {
       return {
         tableHeaders: [
-          {name: 'name', label: 'Группы', clazz: 'width23', sortable: false},
+          {name: 'name', label: 'Группы', clazz: 'width23 mw200', sortable: false},
           {
             name: 'count',
             label: 'Количество товаров',
-            clazz: 'width23 tracking-table__header-item_align-center',
+            clazz: 'width23 tracking-table__header-item_align-center mw200',
           },
           {
             name: 'orders',
             label: 'Сумма заказов/шт.',
-            clazz: 'width23 tracking-table__header-item_align-center'
+            clazz: 'width23 tracking-table__header-item_align-center mw200'
           },
-          {name: 'revenue', label: 'Сумма заказов/руб.', clazz: 'width23 tracking-table__header-item_align-center'},
+          {name: 'revenue', label: 'Сумма заказов/руб.', clazz: 'width23 tracking-table__header-item_align-center mw200'},
         ],
 
         orderType: 'count',
@@ -102,6 +101,7 @@
       userService.getSubscription().then(res => {
         this.maxTrackingProducts = res.maxTrackingProducts
         const progressValue = res.trackingProductsCount
+        console.log(progressValue)
         if(progressValue <= 100 && progressValue >= 0) {
           this.progress = progressValue
         } else {

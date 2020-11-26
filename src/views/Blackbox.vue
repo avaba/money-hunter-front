@@ -21,7 +21,7 @@
       <div v-else-if="isLoading || isLoadingAgregated" class="loading-table">
         <img ondragstart="return false" src="../assets/img/loading.svg" alt="">
       </div>
-      <div v-else-if="isLoading === false && tablePositions.length <= 0 && isLoadingAgregated === false" class="table-notFounded">
+      <div v-else-if="isLoading === false && tablePositions.length <= 0 && isLoadingAgregated === false && loadedListError" class="table-notFounded">
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
@@ -93,7 +93,9 @@
 
         days: 7,
 
-        columns: []
+        columns: [],
+
+        loadedListError: false
       }
     },
     computed: {
@@ -132,11 +134,6 @@
         this.paginationData.page = 1;
         this.orderType = DEFAULT_ORDER_TYPE;
         await this.debounceLoadGoods();
-        this.$nextTick(() => {
-          setTimeout(() => {
-            this.isLoading = false
-          }, 1000);
-        })
       },
       perPageHandler(value) {
         this.paginationData.page = 1;
@@ -175,6 +172,11 @@
           this.$nextTick(() => {
             this.isLoading = false
           })
+          if(this.list.length <= 0) {
+            this.loadedListError = true
+          } else {
+            this.loadedListError = false
+          }
         }
       },
       async downloadSearchResults() {
