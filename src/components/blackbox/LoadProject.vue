@@ -45,7 +45,7 @@
     },
     computed: {
       checkedPositionName() {
-        return this.checked === null ? null : this.positions[this.checked].name;
+        return this.checked === null ? null : this.positions[this.checked];
       }
     },
     async created() {
@@ -62,7 +62,7 @@
           return;
         }
 
-        const searchResult = await this[FIND_SEARCH_ID_BY_NAME_ACTION](this.checkedPositionName);
+        const searchResult = await this[FIND_SEARCH_ID_BY_NAME_ACTION](this.checkedPositionName.pk);
         if (searchResult) {
           this.$eventBus.$emit('find_search_id_data', searchResult);
         }
