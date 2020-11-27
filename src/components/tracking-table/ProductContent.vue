@@ -35,40 +35,32 @@
       link: {
         type: String,
         default: null,
-      },
-      imagePath: {
-        type: String,
-        default: null
-      },
-      goodsName: {
-        type: String,
-        default: null
       }
     },
-    // data() {
-    //   return {
-    //     imagePath: null,
-    //     goodsName: null,
-    //   }
-    // },
-    // created() {
-    //   this.loadPath();
-    // },
-    // methods: {
-    //   async loadPath() {
-    //     const service = new BlackboxService();
-    //     const data = await service.getProductImagePathAndName(this.articul);
-    //     if (typeof data === 'object') {
-    //       this.imagePath = data.imageLink;
-    //       this.goodsName = data.name;
-    //     }
-    //   }
-    // },
-    // watch: {
-    //   articul: async function () {
-    //     this.loadPath()
-    //   }
-    // }
+    data() {
+      return {
+        imagePath: null,
+        goodsName: null,
+      }
+    },
+    created() {
+      this.loadPath();
+    },
+    methods: {
+      async loadPath() {
+        const service = new BlackboxService();
+        const data = await service.getProductImagePathAndName(this.articul);
+        if (typeof data === 'object') {
+          this.imagePath = data.imageLink;
+          this.goodsName = data.name;
+        }
+      }
+    },
+    watch: {
+      articul: async function () {
+        this.loadPath()
+      }
+    }
   }
 </script>
 
@@ -89,6 +81,7 @@
     width: 44px;
     height: 44px;
     object-fit: cover;
+    min-width: 44px;
   }
 
   .tracking-table__product-info {
@@ -96,7 +89,8 @@
   }
 
   .tracking-table__product-name {
-    letter-spacing: .2px;
+    letter-spacing: .2px;;
+    word-break: break-all;
   }
 
   .tracking-table__product-see {
