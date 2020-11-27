@@ -81,6 +81,7 @@
     width: 44px;
     height: 44px;
     object-fit: cover;
+    min-width: 44px;
   }
 
   .tracking-table__product-info {
@@ -88,7 +89,8 @@
   }
 
   .tracking-table__product-name {
-    letter-spacing: .2px;
+    letter-spacing: .2px;;
+    word-break: break-all;
   }
 
   .tracking-table__product-see {
