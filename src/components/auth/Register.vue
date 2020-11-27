@@ -181,6 +181,7 @@
         });
         if(!isError) {
           const service = AuthService.getInstance();
+          this.code = this.code.toUpperCase()
           const promocodeStatus = await service.getPromocode(this.code)
           console.log(promocodeStatus)
           if(promocodeStatus.status === 200) {

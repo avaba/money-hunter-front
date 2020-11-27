@@ -110,6 +110,7 @@
       },
       async setPromocode() {
         const service = AuthService.getInstance();
+        this.promocode = this.promocode.toUpperCase()
         const promocodeStatus = await service.getPromocode(this.promocode)
         console.log(promocodeStatus)
         if(promocodeStatus.status === 200) {
