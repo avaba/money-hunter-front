@@ -430,6 +430,7 @@
           })
         } else {
           categories = await this.loadUpdatedCategories()
+          localStorage.setItem('isCategoriesUpdated', true)
         }
         this.categories = [0]
         this.allCategories = categories.categories
@@ -441,7 +442,7 @@
           await this.loadUpdatedCategories()
           this.$nextTick(() => {
             this.isCategoriesLoading = false
-            JSON.parse(localStorage.setItem('isCategoriesUpdated', true))
+            localStorage.setItem('isCategoriesUpdated', true)
             
             this.categories = [0]
             this.allCategories = categories.categories
@@ -464,6 +465,7 @@
         this.$nextTick(() => {
           this.isCategoriesLoading = false
         })
+        return loadedCategories
       }
       ,
       loadOptions({ action, parentNode, callback }) {
