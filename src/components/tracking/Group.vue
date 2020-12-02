@@ -58,7 +58,7 @@
     data() {
       return {
         tableHeaders: [
-          {name: 'goods', label: 'Товар', clazz: 'width23', sortable: false},
+          {name: 'name', label: 'Товар', clazz: 'width23', sortable: false},
           {
             name: 'currentPrice',
             label: 'Цена',
@@ -126,7 +126,6 @@
     },
     methods: {
       map_name(item) {
-        console.log(item)
         return {
           content: ProductContent,
           clazz: 'width23',

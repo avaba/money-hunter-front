@@ -60,7 +60,6 @@ export default {
   async [POST_CANCEL_SUBSCRIPTION](conetext: ActionContext<VuexUserStateInterface, any>) {
     const userService = new UserService();
     const response = await userService.cancelSubscription();
-    console.log(response)
     return response
   }
 }

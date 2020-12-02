@@ -68,7 +68,6 @@ export class BlackboxService {
   }
 
   async getGoodsBySearchID(searchID: string, orderType: string, pageNum = 1, onPage = 25) {
-    console.log(searchID)
     try {
       const closure = this.repo.getGoodsBySearchID.bind(this.repo, searchID, orderType, pageNum, onPage);
       return (await this.service.refreshWrapper(closure)).data;

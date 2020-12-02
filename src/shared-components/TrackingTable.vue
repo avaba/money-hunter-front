@@ -1,6 +1,6 @@
 <template>
   <div class="tracking-table-wrapper">
-    
+    <Btn @click="selectItems" style="max-width: 200px; margin: 5px;" :label="!isSelecting ? 'Выбрать товары' : 'Добавить на отслеживание'"/>
     <tr v-if="subheaders" class="tracking-table__header tracking-table__header-subheader">
         <th v-for="item in subheaders" :key="item.name" class="tracking-table__header-item" :class="item.clazz || ''">
           <div>
@@ -16,7 +16,7 @@
       </tr>
     <table class="tracking-table tracking-table_sticky">
       <tbody class="tracking-table-tbody">
-        <tr class="tracking-table__header">
+        <tr :class="isSelecting ? `selecting` : ''" class="tracking-table__header">
           <th v-for="item in headers" :key="item.name" class="tracking-table__header-item" :class="{[item.clazz]: item.clazz, [item.status]: item.status }|| ''">
             <div>
               <span :class="{'tracking-table__header-label': isSortable(item)}"
@@ -33,7 +33,7 @@
     </table>
     <table class="tracking-table" v-if="items.length>0">
       <!-- {{ items[0].currentPrice.component_data.price }} -->
-      <TrackingTableRow :row-data="item" :header-keys="headers.map(h=>h.name)" :headerWidth="headers" v-for="(item, idx) in items" :key="idx"/>
+      <TrackingTableRow @selectItemsMethod="selectItemsMethod" :isSelecting="isSelecting" :row-data="item" :header-keys="headers.map(h=>h.name)" :headerWidth="headers" :index="idx" v-for="(item, idx) in items" :key="idx"/>
     </table>
   </div>
 </template>
@@ -41,6 +41,8 @@
 <script>
   import Btn from "@/shared-components/Btn";
   import TrackingTableRow from "@/shared-components/TrackingTableRow";
+  import {SHOW_MODAL_MUTATION} from "@/store/modules/modal/constants";
+  import AddToGroup from "@/components/blackbox/AddToGroup";
 
   export default {
     name: "TrackingTable",
@@ -65,10 +67,16 @@
       subheaders: {
         type: Object,
         required: false
+      },
+      selectAll: {
+        type: Boolean
       }
     },
     data() {
-      return {}
+      return {
+        isSelecting: false,
+        selectedItems: []
+      }
     },
     computed: {
       // subheaders() {
@@ -90,6 +98,26 @@
         }
         if (this.isSortable(item)) {
           this.orderHandler(item.name);
+        }
+      },
+      selectItems() {
+        if(this.isSelecting) {
+          if(this.selectedItems.length > 0) {
+            const selectedArticules = []
+            this.selectedItems.forEach(item => {
+              selectedArticules.push(this.items[item].articul.content)
+            })
+            this.$store.commit(`modal/${SHOW_MODAL_MUTATION}`, {component: AddToGroup, data: {articul: selectedArticules}})
+          }
+        } else {
+          this.isSelecting = true
+        }
+      },
+      selectItemsMethod(idx) {
+        if(this.selectedItems.indexOf(idx) <= -1) {
+          this.selectedItems.push(idx) 
+        } else {
+          this.selectedItems.splice(this.selectedItems.findIndex(item => item === idx), 1)
         }
       }
     },
@@ -353,6 +381,15 @@
       width: 100%;
       & .tracking-table {
         max-width: 1450px;
+      }
+    }
+  }
+
+  .selecting {
+    padding-left: 80px;
+    & .tracking-table__header-item {
+      &:first-child {
+        padding-left: 0px;
       }
     }
   }

@@ -63,7 +63,6 @@
         handler: function () {
           if(typeof this.value[0] === 'number' && !this.converting) {
             this.value.forEach(id => {
-              console.log(!this.brandOptions.find(item => item.id === id))
               if(!this.brandOptions.find(item => item.id === id)) {
                 this.converting = true
                 this.brandOptions.push(this.loadedBrands.find(item => item.id === id))

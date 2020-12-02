@@ -14,7 +14,6 @@ export default {
   },
   [SAVE_FILTERS_LOCAL_MUTATION](state: VuexBlackBoxStateInterface, payload: Record<string, any>) {
     state.myLocalFilters = payload
-    console.log(payload)
   },
   [SAVE_FILTERS_LOCAL_MUTATION](state: VuexBlackBoxStateInterface, payload: Record<string, any>) {
     state.myLocalFilters = payload

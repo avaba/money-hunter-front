@@ -183,7 +183,6 @@
           const service = AuthService.getInstance();
           this.code = this.code.toUpperCase()
           const promocodeStatus = await service.getPromocode(this.code)
-          console.log(promocodeStatus)
           if(promocodeStatus.status === 200) {
             this.codeStatus = 'input-field__input_success'
             this.codeText = promocodeStatus.data.detail

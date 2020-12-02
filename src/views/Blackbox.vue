@@ -16,7 +16,8 @@
                      :items="tablePositions"
                      :order="orderType"
                      :order-handler="$orderHandler"
-                     :subheaders="subheaders"/>
+                     :subheaders="subheaders"
+                     :select-all="true"/>
       <div v-else-if="isLoading || isLoadingAgregated" class="loading-table">
         <img ondragstart="return false" src="../assets/img/loading.svg" alt="">
       </div>
@@ -24,8 +25,7 @@
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
-
-    <div class="block_container">
+    <div class="block_container" v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated">
       <TrackingPagination :total-count="paginationData.totalCount"
                           :page="paginationData.page"
                           :per-page="paginationData.perPage"
@@ -92,12 +92,13 @@
 
         days: 7,
 
-        columns: []
+        columns: [],
+
+        cachedSearchResults: null
       }
     },
     computed: {
       tablePositions() {
-        console.log(this.list[0])
         return this.list.map(item => ({
           ...this.$mapItemListToTableItem(item),
           nested: {content: ProductBlackboxNested, articul: item.articul, clazz: 'tracking-table-dropdown__item-chart', days: this.days}
@@ -146,6 +147,8 @@
         this.loadGoods();
       },
       nextHandler() {
+        this.isLoading = true
+
         this.paginationData.page += 1;
 
         this.loadGoods();
@@ -167,8 +170,12 @@
           this.paginationData.totalCount = result.countAll;
           this.list = result.products;
 
+          this.cachedSearchResults = result
+
           this.$nextTick(() => {
-            this.isLoading = false
+            setTimeout(() => {
+              this.isLoading = false
+            }, 1000);
           })
 
         }
@@ -177,7 +184,6 @@
         this.downloadBtnStatus = 'loading'
         if (this.$store.state.blackbox.searchID) {
           const service = new BlackboxService();
-          console.log(this.searchID)
           const result = await service.downloadSearchResults(
             this.searchID,
             this.orderType
@@ -193,7 +199,6 @@
         }
       },
       insertHeaders(headers) {
-        console.log(headers)
         const renamedHeaders = {
           priceAvg: {
             label: "currentPrice",
@@ -257,10 +262,9 @@
         })
       },
       map_name(item) {
-        console.log(item)
         return {
           content: ProductContent,
-          clazz: 'width30',
+          clazz: 'width30 itemWidthImage',
           component_data: {goodsName: item.name, articul: item.articul, brand: item.brand, link: item.link, imagePath: item.image_link}
         };
       },
@@ -286,16 +290,27 @@
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
     },
     beforeDestroy() {
-      this.$store.commit('blackbox/saveSearchResultsLocal', this.$data)
+      const _data = {...this.$data}
+      delete _data.debounceLoadGoods;
+      this.$store.commit('blackbox/saveSearchResultsLocal', _data)
     },
     created() {
       const myLocalSearchResults = this.$store.getters['blackbox/myLocalSearchResults']
       if(myLocalSearchResults) {
-        Object.keys(this.$data).forEach(key => {
-          this.$nextTick(() => {
-            this.$data[key] = myLocalSearchResults[key]
-          })
+        Object.keys(myLocalSearchResults).forEach(key => {
+          if(key !== 'paginationData') {
+            this.$nextTick(() => {
+              this[key] = myLocalSearchResults[key]
+            })
+          } else {
+            this.paginationData.page = myLocalSearchResults[key].page
+            this.paginationData.perPage = myLocalSearchResults[key].perPage
+            this.paginationData.totalCount = myLocalSearchResults[key].totalCount
+          }
         })
+        if(myLocalSearchResults.cachedSearchResults) {
+          this.paginationData.totalCount = myLocalSearchResults.cachedSearchResults.countAll;
+        }
       }
 
       for(let i = 0; i < this.columnsItems.length; i++) {
@@ -304,7 +319,6 @@
     },
     watch: {
       searchID: function () {
-        console.log(this.searchID)
         if(this.searchID) {
           this.downloadBtnStatus = false
         }
@@ -315,7 +329,6 @@
       },
       agregatedData: {
         handler: function () {
-          console.log(this.agregatedData)
           const result = this.agregatedData
           const mainInfo = ['onPage', 'products', "countAll"]
           const potentialHeaders = []

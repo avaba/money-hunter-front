@@ -112,7 +112,6 @@
         const service = AuthService.getInstance();
         this.promocode = this.promocode.toUpperCase()
         const promocodeStatus = await service.getPromocode(this.promocode)
-        console.log(promocodeStatus)
         if(promocodeStatus.status === 200) {
           const setPromocodeResult = await service.setPromocode(this.promocode, this.user.email);
           if(setPromocodeResult && setPromocodeResult.non_field_errors) {
