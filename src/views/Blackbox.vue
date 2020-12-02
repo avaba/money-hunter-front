@@ -9,8 +9,8 @@
                     v-model="columns"
                     :multiple="true"
                     :options="columnsItems"
-                    class="column-selector"
-                    v-if="false"/>
+                    v-if="false"
+                    class="column-selector"/>
     <div class="blackbox">
       <TrackingTable v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated"
                      :headers="tableHeaders"
@@ -25,8 +25,7 @@
         <p class="table-notFounded-text">Товары по заданным критериям не найдены</p>
       </div>
     </div>
-
-    <div class="block_container">
+    <div class="block_container" v-if="!isLoading && tablePositions.length > 0 && !isLoadingAgregated">
       <TrackingPagination :total-count="paginationData.totalCount"
                           :page="paginationData.page"
                           :per-page="paginationData.perPage"
@@ -95,6 +94,8 @@
 
         columns: [],
 
+        cachedSearchResults: null,
+
         loadedListError: false
       }
     },
@@ -149,6 +150,8 @@
         this.loadGoods();
       },
       nextHandler() {
+        this.isLoading = true
+
         this.paginationData.page += 1;
 
         this.loadGoods();
@@ -156,8 +159,8 @@
 
       async loadGoods() {
         if (this.$store.state.blackbox.searchID) {
-          this.isLoading = true
           this.list = [];
+          this.isLoading = true
           const service = new BlackboxService();
 
           const result = await service.getGoodsBySearchID(
@@ -170,14 +173,18 @@
           this.paginationData.totalCount = result.countAll;
           this.list = result.products;
 
+          this.cachedSearchResults = result
+
           this.$nextTick(() => {
             this.isLoading = false
           })
+
           if(this.list.length <= 0) {
             this.loadedListError = true
           } else {
             this.loadedListError = false
           }
+
         }
       },
       async downloadSearchResults() {
@@ -290,18 +297,27 @@
       this.$initPaginationHandlers(this.prevHandler, this.nextHandler);
     },
     beforeDestroy() {
-      this.$store.commit('blackbox/saveSearchResultsLocal', this.$data)
+      const _data = {...this.$data}
+      delete _data.debounceLoadGoods;
+      this.$store.commit('blackbox/saveSearchResultsLocal', _data)
     },
     created() {
       const myLocalSearchResults = this.$store.getters['blackbox/myLocalSearchResults']
       if(myLocalSearchResults) {
-        Object.keys(this.$data).forEach(key => {
-          if(key !== 'debounceLoadGoods') {
+        Object.keys(myLocalSearchResults).forEach(key => {
+          if(key !== 'paginationData') {
             this.$nextTick(() => {
-              this.$data[key] = myLocalSearchResults[key]
+              this[key] = myLocalSearchResults[key]
             })
+          } else {
+            this.paginationData.page = myLocalSearchResults[key].page
+            this.paginationData.perPage = myLocalSearchResults[key].perPage
+            this.paginationData.totalCount = myLocalSearchResults[key].totalCount
           }
         })
+        if(myLocalSearchResults.cachedSearchResults) {
+          this.paginationData.totalCount = myLocalSearchResults.cachedSearchResults.countAll;
+        }
       }
 
       for(let i = 0; i < this.columnsItems.length; i++) {
