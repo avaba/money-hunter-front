@@ -6,7 +6,7 @@
       @click="open"
       @mousedown="mappedList[0].linkTo === 'articul' ? linkTo(mappedList[1].content) : false">
 
-      <input v-model="checkbox" type="checkbox" :id="index" class="cbx" style="display: none;">
+      <input @input="selectItemsEmit" v-model="checkbox" type="checkbox" :id="index" class="cbx" style="display: none;">
       <label v-if="isSelecting" :for="index" class="check">
         <svg width="18px" height="18px" viewBox="0 0 18 18">
           <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
@@ -66,6 +66,9 @@
       },
       isSelecting: {
         type: Boolean
+      },
+      selectedItems: {
+        type: Array
       }
     },
     data() {
@@ -110,11 +113,22 @@
       },
       linkTo(articul) {
         this.$router.push({name: 'trackingPositions.group', params: {name: articul}});
+      },
+      selectItemsEmit() {
+        console.log(11111111111111111111)
+        this.$emit("selectItemsMethod", this.index)
       }
     },
     watch: {
-      checkbox: function () {
-        this.$emit("selectItemsMethod", this.index)
+      // checkbox: function () {
+      //   this.$emit("selectItemsMethod", this.index)
+      // },
+      selectedItems: function () {
+        if(this.selectedItems.indexOf(this.index) > -1) {
+          this.checkbox = true
+        } else {
+          this.checkbox = false
+        }
       }
     }
   }

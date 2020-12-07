@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="mobile-sidebar">
-      <svg @click="burgerMenuShowen = !burgerMenuShowen" class="ham hamRotate ham1" viewBox="0 0 100 100" width="60" onclick="this.classList.toggle('active')">
+      <svg @click="burgerMenuShowen = !burgerMenuShowen" class="ham hamRotate ham1" :class="burgerMenuShowen ? 'active' : ''" viewBox="0 0 100 100" width="60">
         <path
               class="line top"
               d="m 30,33 h 40 c 0,0 9.044436,-0.654587 9.044436,-8.508902 0,-7.854315 -8.024349,-11.958003 -14.89975,-10.85914 -6.875401,1.098863 -13.637059,4.171617 -13.637059,16.368042 v 40" />
